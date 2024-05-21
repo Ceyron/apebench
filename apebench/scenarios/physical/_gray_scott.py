@@ -1,9 +1,8 @@
 from typing import Literal
 
-from anobench.exponax.exponax.ic import BaseRandomICGenerator
-
 from ..._base_scenario import BaseScenario
 from ...exponax import exponax as ex
+from ...exponax.exponax.ic import BaseRandomICGenerator
 
 
 class GrayScott(BaseScenario):
