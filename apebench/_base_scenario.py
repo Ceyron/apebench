@@ -948,8 +948,8 @@ class BaseScenario(eqx.Module, ABC):
 
         Notes:
             - A typical workflow is to use the functions
-              `anobench.utils.melt_loss`, `anobench.utils.melt_metrics`, and
-              `anobench.utils.melt_sample_rollouts` to melt the returned
+              `apebench.utils.melt_loss`, `apebench.utils.melt_metrics`, and
+              `apebench.utils.melt_sample_rollouts` to melt the returned
               dataframe into a long format that can be used for plotting with seaborn.
         """
         (
