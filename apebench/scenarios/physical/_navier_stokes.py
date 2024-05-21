@@ -6,7 +6,6 @@ from ...exponax import exponax as ex
 
 class DecayingTurbulence(BaseScenario):
     num_spatial_dims: int = 2
-    num_points: int = 160
     domain_extent: float = 1.0
     dt: float = 0.1
 
@@ -44,7 +43,6 @@ class DecayingTurbulence(BaseScenario):
 
 class KolmogorovFlow(BaseScenario):
     num_spatial_dims: int = 2
-    num_points: int = 160
     domain_extent: float = 2 * jnp.pi
     dt: float = 0.01
 

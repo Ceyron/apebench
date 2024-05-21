@@ -7,7 +7,6 @@ from ...exponax.exponax.ic import BaseRandomICGenerator
 
 class GrayScott(BaseScenario):
     num_spatial_dims: int = 2
-    num_points: int = 96
     domain_extent: float = 1.0
     dt: float = 10.0
     num_channels: int = 2
@@ -63,7 +62,6 @@ class GrayScott(BaseScenario):
 
 class GrayScottType(BaseScenario):
     num_spatial_dims: int = 2
-    num_points: int = 160
     domain_extent: float = 2.5
     dt: float = 20.0
     num_channels: int = 2
