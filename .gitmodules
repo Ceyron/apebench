@@ -1,0 +1,9 @@
+[submodule "apebench/exponax"]
+	path = apebench/exponax
+	url = git@github.com:Ceyron/exponax.git
+[submodule "apebench/pdequinox"]
+	path = apebench/pdequinox
+	url = git@github.com:Ceyron/pdequinox.git
+[submodule "apebench/trainax"]
+	path = apebench/trainax
+	url = git@github.com:Ceyron/trainax.git
