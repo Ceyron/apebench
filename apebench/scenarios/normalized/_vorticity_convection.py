@@ -99,12 +99,12 @@ class KolmogorovFlow(VorticityConvection):
     injection_mode: int = 4
     injection_scale: float = 0.1 * 1.0
 
-    num_warmup_steps: int = 500
-    ic_config: str = "diffused;0.001;True;True"
+    num_warmup_steps: int = 500  # Overwrite
+    ic_config: str = "diffused;0.001;True;True"  # Overwrite
 
-    vlim: tuple[float, float] = (-10.0, 10.0)
+    vlim: tuple[float, float] = (-10.0, 10.0)  # Overwrite
 
-    report_metrics: str = "mean_nRMSE,mean_correlation"
+    report_metrics: str = "mean_nRMSE,mean_correlation"  # Overwrite
 
     def __post_init__(self):
         self.alphas = (self.drag, 0, self.diffusivity)

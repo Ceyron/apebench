@@ -68,10 +68,10 @@ class KuramotoSivashinsky(GradientNorm):
 
     num_substeps: int = 3
 
-    num_warmup_steps: int = 500
-    vlim: tuple[float, float] = (-6.5, 6.5)
+    num_warmup_steps: int = 500  # Overwrite
+    vlim: tuple[float, float] = (-6.5, 6.5)  # Overwrite
 
-    report_metrics: str = "mean_nRMSE,mean_correlation"
+    report_metrics: str = "mean_nRMSE,mean_correlation"  # Overwrite
 
     def __post_init__(self):
         if self.num_spatial_dims == 2:

@@ -8,11 +8,11 @@ from ...exponax.exponax.ic import BaseRandomICGenerator
 class GrayScott(BaseScenario):
     domain_extent: float = 1.0
     dt: float = 10.0
-    num_channels: int = 2
+    num_channels: int = 2  # Overwrite
 
     num_substeps: int = 10
 
-    ic_config: str = "gray_scott_blobs"
+    ic_config: str = "gray_scott_blobs"  # Overwrite
 
     feed_rate: float = 0.04
     kill_rate: float = 0.06
@@ -62,13 +62,13 @@ class GrayScott(BaseScenario):
 class GrayScottType(BaseScenario):
     domain_extent: float = 2.5
     dt: float = 20.0
-    num_channels: int = 2
+    num_channels: int = 2  # Overwrite
 
     coarse_proportion: float = 0.5
 
     num_substeps: int = 20
 
-    ic_config: str = "gray_scott_blobs"
+    ic_config: str = "gray_scott_blobs"  # Overwrite
 
     diffusivity_1: float = 2e-5
     diffusivity_2: float = 1e-5

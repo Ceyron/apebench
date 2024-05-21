@@ -6,9 +6,9 @@ class Poisson(BaseScenario):
     domain_extent: float = 10.0
     order: int = 2
 
-    num_warmup_steps: int = 0
-    train_temporal_horizon: int = 1
-    test_temporal_horizon: int = 1
+    num_warmup_steps: int = 0  # Overwrite
+    train_temporal_horizon: int = 1  # Overwrite
+    test_temporal_horizon: int = 1  # Overwrite
 
     def __post_init__(self):
         if self.train_temporal_horizon != 1:

@@ -66,7 +66,7 @@ class FisherKPP(Nonlinear):
     )
     betas: tuple[float, ...] = (-0.001 * 10.0 / (10.0**0), 0.0, 0.0)
 
-    ic_config: str = "clamp;0.0;1.0;fourier;5;false;false"
+    ic_config: str = "clamp;0.0;1.0;fourier;5;false;false"  # Overwrite
 
     def get_scenario_name(self) -> str:
         return f"{self.num_spatial_dims}d_norm_fisher"

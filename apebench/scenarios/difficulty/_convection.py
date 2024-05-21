@@ -16,7 +16,7 @@ class Convection(BaseScenario):
     circle_radius: float = 1.0
 
     def __post_init__(self):
-        self.num_channels = self.num_spatial_dims
+        self.num_channels = self.num_spatial_dims  # Overwrite
 
     def _build_stepper(self, gammas, delta):
         substepped_gammas = tuple(g / self.num_substeps for g in gammas)
@@ -90,10 +90,10 @@ class KuramotoSivashinskyConservative(Convection):
     diff_difficulty: float = 0.2
     hyp_difficulty: float = 0.6
 
-    num_warmup_steps: int = 500
-    vlim: tuple[float, float] = (-2.5, 2.5)
+    num_warmup_steps: int = 500  # Overwrite
+    vlim: tuple[float, float] = (-2.5, 2.5)  # Overwrite
 
-    report_metrics: str = "mean_nRMSE,mean_correlation"
+    report_metrics: str = "mean_nRMSE,mean_correlation"  # Overwrite
 
     def __post_init__(self):
         if self.num_spatial_dims != 1:

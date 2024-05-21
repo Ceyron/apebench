@@ -52,9 +52,9 @@ class KolmogorovFlow(BaseScenario):
 
     coarse_proportion: float = 0.5
 
-    num_warmup_steps: int = 2500
+    num_warmup_steps: int = 2500  # Overwrite
 
-    vlim: tuple[float, float] = (-10.0, 10.0)
+    vlim: tuple[float, float] = (-10.0, 10.0)  # Overwrite
 
     def __post_init__(self):
         if self.num_spatial_dims != 2:
