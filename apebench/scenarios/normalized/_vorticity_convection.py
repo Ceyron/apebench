@@ -5,8 +5,6 @@ from ...exponax import exponax as ex
 
 
 class VorticityConvection(BaseScenario):
-    num_spatial_dims: int = 2
-
     vorticity_convection: float = 0.1 * 1.0 / ((1.0) ** 0)
     alphas: tuple[float, ...] = (0, 0, 0.1 * 0.0003 / (1.0**2))
     injection_scale: float = 0.0

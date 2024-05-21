@@ -5,7 +5,6 @@ from ...exponax import exponax as ex
 
 
 class SwiftHohenberg(BaseScenario):
-    num_spatial_dims: int = 2
     domain_extent: float = 20.0 * jnp.pi
     dt: float = 0.5
 
