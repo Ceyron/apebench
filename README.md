@@ -11,7 +11,7 @@
 Autoregressive neural emulators can be used to efficiently forecast transient
 phenomena, often associated with differential equations. Denote by
 $\mathcal{P}_h$ a reference numerical simulator (e.g., the [FTCS
-scheme](https://en.wikipedia.org/wiki/FTCS_scheme) for the heat equation). I
+scheme](https://en.wikipedia.org/wiki/FTCS_scheme) for the heat equation). It
 advances a state $u_h$ by
 
 $$
@@ -47,7 +47,8 @@ This is a suite of
 [ETDRK](https://www.sciencedirect.com/science/article/abs/pii/S0021999102969950)-based
 methods for semi-linear partial differential equations on periodic domains. This
 covers a wide range of dynamics. For the most common scenarios, a unique
-interface using normalized (non-dimensionalized) coefficients can be used. The
+interface using normalized (non-dimensionalized) coefficients or a
+difficulty-based interface (as described in the APEBench paper) can be used. The
 second (2) component is given by `PDEquinox`. This library uses `Equinox`, a
 JAX-based deep-learning framework, to implement many commonly found
 architectures like convolutional ResNets, U-Nets, and FNOs. The third (3)
@@ -63,20 +64,21 @@ to wrap up the former three and is given by this repository.
 A `BaseScenario` consists of all the workflow needed to train autoregressive
 neural operator. To access a pre-built scenario use either the
 `apebench.normalized.XX` for normalized (=dimensionless) scenarios or
-`apebench.physical.XX` for non-normalized scenarios. As an example consider the
-scenario with the 1d advection equation.
+`apebench.physical.XX` for non-normalized scenarios. Also consider using the
+difficulty based interface via `apebench.difficulty.XX`. As an example consider
+the scenario with the 1d advection equation.
 
 ```python
 import apebench
 
-adv_scene = apebench.scenarios.normalized.Advection()
+adv_scene = apebench.scenarios.difficulty.Advection()
 
 print(adv_scene)
 
 # Output:
 Advection(
   num_spatial_dims=1,
-  num_points=48,
+  num_points=160,
   num_channels=1,
   ic_config='fourier;5;true;true',
   num_warmup_steps=0,
@@ -93,9 +95,9 @@ Advection(
   vlim=(-1.0, 1.0),
   report_metrics='mean_nRMSE',
   callbacks='',
-  alphas=(0.0, -0.1),
+  gammas=(0.0, -4.0),
   coarse_proportion=0.5,
-  advectivity=0.1
+  adv_difficulty=4.0
 )
 ```
 
@@ -137,7 +139,7 @@ data, trained_nets = adv_scene(
 )
 ```
 
-A progress bar will appear. On a modern GPU training should be ~1.5 min.
+A progress bar will appear. On a modern GPU training should be ~2 min.
 
 The data is still in a raw format which means that each training loss recorded
 and each metric rollout step recorded have their own column. In the terminology
@@ -228,7 +230,7 @@ the `apebench.run_one_entry`. We can achieve the same result as above by
 import apebench
 
 apebench.run_one_entry(
-    scenario="norm_adv",
+    scenario="diff_adv",
     task="predict",
     net="Conv;26;10;relu",
     train="one",
@@ -252,7 +254,7 @@ would write
 ```python
 CONFIGS = [
     {
-        "scenario": "norm_adv",
+        "scenario": "diff_adv",
         "task": "predict",
         "net": "Conv;26;10;relu",
         "train": "one",
@@ -260,7 +262,7 @@ CONFIGS = [
         "num_seeds": 10,
     },
     {
-        "scenario": "norm_adv",
+        "scenario": "diff_adv",
         "task": "predict",
         "net": "FNO;12;8;4;gelu",
         "train": "one",
@@ -276,7 +278,7 @@ to create the `CONFIGS` list:
 ```python
 CONFIGS = [
     {
-        "scenario": "norm_adv",
+        "scenario": "diff_adv",
         "task": "predict",
         "net": net,
         "train": "one",
@@ -302,7 +304,7 @@ This function returns the the melted data for metrics, loss, and sample rollouts
 )
 ```
 
-Runtime for this experiment should be around 3 minutes on a modern GPU. (If you
+Runtime for this experiment should be around 4 minutes on a modern GPU. (If you
 ran the experiment a second time, it will load the results from disk.)
 
 Let's produce plots. First for the loss history
@@ -327,8 +329,32 @@ plt.ylim(-0.05, 1.05); plt.grid(); plt.show()
 
 ![](img/adv_experiment_metric_rollout.png)
 
-In a nutshell, we see that the FNO is better at the training loss which is
-one-step supervised but lacks in temporal generalization.
+We can also make a tabular export (using the median over the 10 seeds)
+
+```python
+print(metric_df.groupby(
+    ["net", "time_step"]
+)[["mean_nRMSE"]].median().reset_index().pivot(
+    index="time_step",
+    columns="net"
+).query(
+    "time_step in [1, 2, 3, 4, 5, 10, 20, 50, 100, 200]"
+).round(3).to_markdown())
+```
+
+|   time_step |   ('mean_nRMSE', 'Conv;26;10;relu') |   ('mean_nRMSE', 'FNO;12;8;4;gelu') |
+|------------:|------------------------------------:|------------------------------------:|
+|           1 |                               0.003 |                               0.002 |
+|           2 |                               0.006 |                               0.004 |
+|           3 |                               0.01  |                               0.005 |
+|           4 |                               0.013 |                               0.007 |
+|           5 |                               0.016 |                               0.009 |
+|          10 |                               0.031 |                               0.017 |
+|          20 |                               0.059 |                               0.033 |
+|          50 |                               0.141 |                               0.08  |
+|         100 |                               0.27  |                               0.155 |
+|         200 |                               0.507 |                               0.287 |
+
 
 
 ## Defining your own scenario
@@ -342,7 +368,7 @@ standard advection scenario.
 ```python
 import apebench
 
-modified_adv_scene = apebench.scenarios.normalized.Advection(
+modified_adv_scene = apebench.scenarios.difficulty.Advection(
     num_train_samples=10,
 )
 ```
@@ -353,7 +379,7 @@ Or if you use the string based interface, you can add additional keyword argumen
 import apebench
 
 apebench.run_one_entry(
-    scenario="norm_adv",
+    scenario="diff_adv",
     task="predict",
     net="Conv;26;10;relu",
     train="one",
@@ -369,7 +395,7 @@ Or if you run entire experiments, you can also add additional keyword arguments 
 ```python
 CONFIGS = [
     {
-        "scenario": "norm_adv",
+        "scenario": "diff_adv",
         "task": "predict",
         "net": net,
         "train": "one",
