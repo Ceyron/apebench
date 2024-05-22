@@ -31,11 +31,11 @@ class Linear(BaseScenario):
 
 
 class LinearSimple(Linear):
-    Linear_alpha: float = -0.025
-    Linear_term_order: int = 1
+    linear_alpha: float = -0.025
+    linear_term_order: int = 1
 
     def __post_init__(self):
-        self.alphas = (0.0,) * self.Linear_term_order + (self.Linear_alpha,)
+        self.alphas = (0.0,) * self.linear_term_order + (self.linear_alpha,)
 
 
 class Advection(Linear):
