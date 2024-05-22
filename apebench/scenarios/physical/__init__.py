@@ -18,6 +18,7 @@ from ._nonlinear import (
     Nonlinear,
 )
 from ._poisson import Poisson
+from ._polynomial import FisherKPP, Polynomial
 from ._swift_hohenberg import SwiftHohenberg
 
 scenario_dict = {
@@ -42,4 +43,6 @@ scenario_dict = {
     "phy_conv": Convection,
     "phy_burgers": Burgers,
     "phy_ks_cons": KuramotoSivashinskyConservative,
+    "phy_poly": Polynomial,
+    "phy_fisher": FisherKPP,
 }
