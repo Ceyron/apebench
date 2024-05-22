@@ -1,10 +1,4 @@
-from ._convection import (
-    Burgers,
-    Convection,
-    KortewegDeVries,
-    KuramotoSivashinskyConservative,
-)
-from ._gradient_norm import GradientNorm, KuramotoSivashinsky
+from ._convection import Burgers, Convection, KuramotoSivashinskyConservative
 from ._linear import (
     Advection,
     AdvectionDiffusion,
@@ -15,8 +9,13 @@ from ._linear import (
     Linear,
     LinearSimple,
 )
-from ._nonlinear import Nonlinear
-from ._stencil_learning import FOULearning, FTCSLearning
+from ._nonlinear import (
+    BurgersSingleChannel,
+    FisherKPP,
+    KortewegDeVries,
+    KuramotoSivashinsky,
+    Nonlinear,
+)
 
 scenario_dict = {
     "diff_lin": Linear,
@@ -25,15 +24,14 @@ scenario_dict = {
     "diff_diff": Diffusion,
     "diff_adv_diff": AdvectionDiffusion,
     "diff_disp": Dispersion,
-    "diff_hypdiff": HyperDiffusion,
+    "diff_hyp_diff": HyperDiffusion,
     "diff_four": FirstFour,
     "diff_conv": Convection,
     "diff_burgers": Burgers,
     "diff_kdv": KortewegDeVries,
     "diff_ks_cons": KuramotoSivashinskyConservative,
-    "diff_grad_norm": GradientNorm,
     "diff_ks": KuramotoSivashinsky,
-    "diff_fou": FOULearning,
-    "diff_ftcs": FTCSLearning,
     "diff_nonlin": Nonlinear,
+    "diff_burgers_sc": BurgersSingleChannel,
+    "diff_fisher": FisherKPP,
 }

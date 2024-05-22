@@ -78,7 +78,7 @@ class BurgersSingleChannel(Nonlinear):
         return f"{self.num_spatial_dims}d_diff_burgers_sc"
 
 
-class KortevegDeVries(Nonlinear):
+class KortewegDeVries(Nonlinear):
     convection_sc_delta: float = -2.0
     dispersion_gamma: float = -14.0
     hyp_diffusion_gamma: float = -9.0
