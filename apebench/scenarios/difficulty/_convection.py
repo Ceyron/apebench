@@ -7,7 +7,7 @@ from ...exponax import exponax as ex
 
 
 class Convection(BaseScenario):
-    gammas: tuple[float, ...] = (0.0, 0.0, 1.5)
+    gammas: tuple[float, ...] = (0.0, 0.0, 1.5, 0.0, 0.0)
     convection_delta: float = -2.0
 
     num_substeps: int = 1
