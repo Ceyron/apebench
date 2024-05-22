@@ -1,11 +1,11 @@
-import jax.numpy as jnp
+from math import pi
 
 from ..._base_scenario import BaseScenario
 from ...exponax import exponax as ex
 
 
 class SwiftHohenberg(BaseScenario):
-    domain_extent: float = 20.0 * jnp.pi
+    domain_extent: float = 20.0 * pi
     dt: float = 0.5
 
     num_substeps: int = 5

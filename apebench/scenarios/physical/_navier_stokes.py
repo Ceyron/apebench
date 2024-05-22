@@ -1,4 +1,4 @@
-import jax.numpy as jnp
+from math import pi
 
 from ..._base_scenario import BaseScenario
 from ...exponax import exponax as ex
@@ -41,7 +41,7 @@ class DecayingTurbulence(BaseScenario):
 
 
 class KolmogorovFlow(BaseScenario):
-    domain_extent: float = 2 * jnp.pi
+    domain_extent: float = 2 * pi
     dt: float = 0.01
 
     diffusivity: float = 1e-2  # Just Re=100 to have it almost scale-resolved
