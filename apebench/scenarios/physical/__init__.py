@@ -1,3 +1,4 @@
+from ._convection import Burgers, Convection, KuramotoSivashinskyConservative
 from ._gray_scott import GrayScott, GrayScottType
 from ._linear import (
     Advection,
@@ -38,4 +39,7 @@ scenario_dict = {
     "phy_burgers_sc": BurgersSingleChannel,
     "phy_kdv": KortewegDeVries,
     "phy_ks": KuramotoSivashinsky,
+    "phy_conv": Convection,
+    "phy_burgers": Burgers,
+    "phy_ks_cons": KuramotoSivashinskyConservative,
 }
