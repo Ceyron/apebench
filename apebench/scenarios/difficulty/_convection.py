@@ -1,3 +1,7 @@
+"""
+Scenarios using the general convection interface (growing channels over spatial
+dimensions)
+"""
 from ..._base_scenario import BaseScenario
 from ...exponax import exponax as ex
 
@@ -58,37 +62,22 @@ class Convection(BaseScenario):
 
 
 class Burgers(Convection):
-    conv_difficulty: float = 1.0
-    diff_difficulty: float = 0.5
+    convection_delta: float = -2.0
+    diffusion_gamma: float = 1.5
 
     def __post_init__(self):
-        self.gammas = (0.0, 0.0, self.diff_difficulty)
-        self.delta = self.conv_difficulty
+        self.gammas = (0.0, 0.0, self.diffusion_gamma)
+        self.delta = self.convection_delta
         super().__post_init__()
 
     def get_scenario_name(self) -> str:
         return f"{self.num_spatial_dims}d_diff_burgers"
 
 
-class KortewegDeVries(Convection):
-    conv_difficulty: float = 0.15
-    diff_difficulty: float = 0.0  # inviscid by default
-    disp_difficulty: float = 0.15
-
-    def __post_init__(self):
-        if self.num_spatial_dims != 1:
-            raise ValueError("KortewegDeVries is only defined for 1D")
-        self.gammas = (0.0, 0.0, self.diff_difficulty, self.disp_difficulty)
-        self.delta = self.conv_difficulty
-
-    def get_scenario_name(self) -> str:
-        return f"{self.num_spatial_dims}d_diff_kdv"
-
-
 class KuramotoSivashinskyConservative(Convection):
-    conv_difficulty: float = 0.1
-    diff_difficulty: float = 0.2
-    hyp_difficulty: float = 0.6
+    convection_delta: float = -1.0
+    diffusion_gamma: float = -2.0  # Negative diffusion; producing energy
+    hyp_diffusion_gamma: float = -15.0
 
     num_warmup_steps: int = 500  # Overwrite
     vlim: tuple[float, float] = (-2.5, 2.5)  # Overwrite
@@ -98,8 +87,8 @@ class KuramotoSivashinskyConservative(Convection):
     def __post_init__(self):
         if self.num_spatial_dims != 1:
             raise ValueError("KuramotoSivashinskyConservative is only defined for 1D")
-        self.gammas = (0.0, 0.0, -self.diff_difficulty, 0.0, -self.hyp_difficulty)
-        self.delta = self.conv_difficulty
+        self.gammas = (0.0, 0.0, self.diffusion_gamma, 0.0, self.hyp_diffusion_gamma)
+        self.delta = self.convection_delta
         super().__post_init__()
 
     def get_scenario_name(self) -> str:
