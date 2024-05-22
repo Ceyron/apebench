@@ -8,7 +8,7 @@ from ...exponax import exponax as ex
 
 class Convection(BaseScenario):
     gammas: tuple[float, ...] = (0.0, 0.0, 0.5)
-    delta: float = 1.0
+    convection_delta: float = 1.0
 
     num_substeps: int = 1
 
@@ -45,12 +45,12 @@ class Convection(BaseScenario):
         return stepper
 
     def get_ref_stepper(self):
-        return self._build_stepper(self.gammas, self.delta)
+        return self._build_stepper(self.gammas, self.convection_delta)
 
     def get_coarse_stepper(self) -> ex.BaseStepper:
         return self._build_stepper(
             tuple(f * self.coarse_proportion for f in self.gammas),
-            self.coarse_proportion * self.delta,
+            self.coarse_proportion * self.convection_delta,
         )
 
     def get_scenario_name(self) -> str:
@@ -62,12 +62,11 @@ class Convection(BaseScenario):
 
 
 class Burgers(Convection):
-    convection_delta: float = -2.0
+    convection_delta: float = -2.0  # Overwrite
     diffusion_gamma: float = 1.5
 
     def __post_init__(self):
         self.gammas = (0.0, 0.0, self.diffusion_gamma)
-        self.delta = self.convection_delta
         super().__post_init__()
 
     def get_scenario_name(self) -> str:
@@ -75,7 +74,7 @@ class Burgers(Convection):
 
 
 class KuramotoSivashinskyConservative(Convection):
-    convection_delta: float = -1.0
+    convection_delta: float = -1.0  # Overwrite
     diffusion_gamma: float = -2.0  # Negative diffusion; producing energy
     hyp_diffusion_gamma: float = -15.0
 
@@ -88,7 +87,6 @@ class KuramotoSivashinskyConservative(Convection):
         if self.num_spatial_dims != 1:
             raise ValueError("KuramotoSivashinskyConservative is only defined for 1D")
         self.gammas = (0.0, 0.0, self.diffusion_gamma, 0.0, self.hyp_diffusion_gamma)
-        self.delta = self.convection_delta
         super().__post_init__()
 
     def get_scenario_name(self) -> str:
