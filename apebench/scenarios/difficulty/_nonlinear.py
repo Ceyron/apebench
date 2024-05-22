@@ -15,7 +15,7 @@ class Nonlinear(BaseScenario):
     """
 
     gammas: tuple[float, ...] = (0.0, 0.0, 1.5, 0.0, 0.0)
-    deltas: tuple[float, ...] = (0.0, -2.0, 0.0)
+    deltas: tuple[float, float, float] = (0.0, -2.0, 0.0)
 
     num_substeps: int = 1
 
