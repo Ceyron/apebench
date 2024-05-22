@@ -1,10 +1,4 @@
-from ._convection import (
-    Burgers,
-    Convection,
-    KortewegDeVries,
-    KuramotoSivashinskyConservative,
-)
-from ._gradient_norm import GradientNorm, KuramotoSivashinsky
+from ._convection import Burgers, Convection, KuramotoSivashinskyConservative
 from ._linear import (
     Advection,
     AdvectionDiffusion,
@@ -13,13 +7,14 @@ from ._linear import (
     FirstFour,
     HyperDiffusion,
     Linear,
+    LinearSimple,
 )
-from ._nonlinear import FisherKPP, Nonlinear
-from ._stencil_learning import FOULearning, FTCSLearning
-from ._vorticity_convection import (
-    DecayingTurbulence,
-    KolmogorovFlow,
-    VorticityConvection,
+from ._nonlinear import (
+    BurgersSingleChannel,
+    FisherKPP,
+    KortewegDeVries,
+    KuramotoSivashinsky,
+    Nonlinear,
 )
 
 scenario_dict = {
@@ -36,11 +31,7 @@ scenario_dict = {
     "norm_burgers": Burgers,
     "norm_kdv": KortewegDeVries,
     "norm_ks_cons": KuramotoSivashinskyConservative,
-    "norm_grad_norm": GradientNorm,
     "norm_ks": KuramotoSivashinsky,
-    "norm_fou": FOULearning,
-    "norm_ftcs": FTCSLearning,
-    "norm_vort_conv": VorticityConvection,
-    "norm_decay_turb": DecayingTurbulence,
-    "norm_kolmogorov": KolmogorovFlow,
+    "norm_burgers_sc": BurgersSingleChannel,
+    "norm_lin_simple": LinearSimple,
 }
