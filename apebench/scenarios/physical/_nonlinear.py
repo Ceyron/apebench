@@ -26,14 +26,14 @@ class Nonlinear(BaseScenario):
     def __post_init__(self):
         pass
 
-    def _build_stepper(self, a_coefs, b_coefs):
+    def _build_stepper(self, dt):
         substepped_stepper = ex.stepper.GeneralNonlinearStepper(
             num_spatial_dims=self.num_spatial_dims,
             domain_extent=self.domain_extent,
             num_points=self.num_points,
-            dt=self.dt / self.num_substeps,
-            coefficients_linear=a_coefs,
-            coefficients_nonlinear=b_coefs,
+            dt=dt / self.num_substeps,
+            coefficients_linear=self.a_coefs,
+            coefficients_nonlinear=self.b_coefs,
             order=self.order,
             dealiasing_fraction=self.dealiasing_fraction,
             num_circle_points=self.num_circle_points,
@@ -48,13 +48,10 @@ class Nonlinear(BaseScenario):
         return stepper
 
     def get_ref_stepper(self):
-        return self._build_stepper(self.a_coefs, self.b_coefs)
+        return self._build_stepper(self.dt)
 
     def get_coarse_stepper(self):
-        return self._build_stepper(
-            tuple(f * self.coarse_proportion for f in self.a_coefs),
-            tuple(f * self.coarse_proportion for f in self.b_coefs),
-        )
+        return self._build_stepper(self.dt * self.coarse_proportion)
 
     def get_scenario_name(self) -> str:
         return f"{self.num_spatial_dims}d_phy_nonlin"
