@@ -105,4 +105,4 @@ class FirstFour(Linear):
         )
 
     def get_scenario_name(self) -> str:
-        return f"{self.num_spatial_dims}d_norm_first_four"
+        return f"{self.num_spatial_dims}d_norm_four"
