@@ -65,12 +65,12 @@ class Nonlinear(BaseScenario):
 
 
 class BurgersSingleChannel(Nonlinear):
-    convection_delta: float = -2.0
+    convection_sc_delta: float = -2.0
     diffusion_gamma: float = 1.5
 
     def __post_init__(self):
         self.gammas = (0.0, 0.0, self.diffusion_gamma, 0.0, 0.0)
-        self.deltas = (0.0, self.convection_delta, 0.0)
+        self.deltas = (0.0, self.convection_sc_delta, 0.0)
 
         super().__post_init__()
 
@@ -79,13 +79,13 @@ class BurgersSingleChannel(Nonlinear):
 
 
 class KortevegDeVries(Nonlinear):
-    convection_delta: float = -2.0
+    convection_sc_delta: float = -2.0
     dispersion_gamma: float = -14.0
     hyp_diffusion_gamma: float = -9.0
 
     def __post_init__(self):
         self.gammas = (0.0, 0.0, 0.0, self.dispersion_gamma, self.hyp_diffusion_gamma)
-        self.deltas = (0.0, self.convection_delta, 0.0)
+        self.deltas = (0.0, self.convection_sc_delta, 0.0)
 
         super().__post_init__()
 
