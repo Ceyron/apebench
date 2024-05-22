@@ -3,7 +3,7 @@ from ...exponax import exponax as ex
 
 
 class Linear(BaseScenario):
-    alphas: tuple[float, ...] = (-0.1,)
+    alphas: tuple[float, ...] = (0.0, -0.025, 0.0, 0.0, 0.0)
     coarse_proportion: float = 0.5
 
     def get_ref_stepper(self):
@@ -30,70 +30,78 @@ class Linear(BaseScenario):
         return f"{self.num_spatial_dims}d_norm_lin_{'_'.join(str(i) for i in active_indices)}"
 
 
-class Advection(Linear):
-    advectivity: float = 0.1
+class LinearSimple(Linear):
+    Linear_alpha: float = -0.025
+    Linear_term_order: int = 1
 
     def __post_init__(self):
-        self.alphas = (0.0, -self.advectivity)
+        self.alphas = (0.0,) * self.Linear_term_order + (self.Linear_alpha,)
+
+
+class Advection(Linear):
+    advection_alpha: float = -0.025
+
+    def __post_init__(self):
+        self.alphas = (0.0, self.advection_alpha, 0.0, 0.0, 0.0)
 
     def get_scenario_name(self) -> str:
         return f"{self.num_spatial_dims}d_norm_adv"
 
 
 class Diffusion(Linear):
-    diffusivity: float = 0.001
+    diffusion_alpha: float = 8e-4
 
     def __post_init__(self):
-        self.alphas = (0.0, 0.0, self.diffusivity)
+        self.alphas = (0.0, 0.0, self.diffusion_alpha, 0.0, 0.0)
 
     def get_scenario_name(self) -> str:
         return f"{self.num_spatial_dims}d_norm_diff"
 
 
 class AdvectionDiffusion(Linear):
-    advectivity: float = 0.1
-    diffusivity: float = 0.001
+    advection_alpha: float = -0.025
+    diffusion_alpha: float = 8e-4
 
     def __post_init__(self):
-        self.alphas = (0.0, -self.advectivity, self.diffusivity)
+        self.alphas = (0.0, self.advection_alpha, self.diffusion_alpha)
 
     def get_scenario_name(self) -> str:
         return f"{self.num_spatial_dims}d_norm_adv_diff"
 
 
 class Dispersion(Linear):
-    dispersivity: float = 1e-5
+    dispersion_alpha: float = 2.5e-7
 
     def __post_init__(self):
-        self.alphas = (0.0, 0.0, 0.0, self.dispersivity)
+        self.alphas = (0.0, 0.0, 0.0, self.dispersion_alpha, 0.0)
 
     def get_scenario_name(self) -> str:
         return f"{self.num_spatial_dims}d_norm_disp"
 
 
 class HyperDiffusion(Linear):
-    hyper_diffusivity: float = 3e-6
+    hyp_diffusion_alpha: float = -7.5e-10
 
     def __post_init__(self):
-        self.alphas = (0.0, 0.0, 0.0, 0.0, -self.hyper_diffusivity)
+        self.alphas = (0.0, 0.0, 0.0, 0.0, self.hyp_diffusion_alpha)
 
     def get_scenario_name(self) -> str:
-        return f"{self.num_spatial_dims}d_norm_hypdiff"
+        return f"{self.num_spatial_dims}d_norm_hyp_diff"
 
 
 class FirstFour(Linear):
-    advectivity: float = 0.1
-    diffusivity: float = 0.001
-    dispersivity: float = 1e-5
-    hyper_diffusivity: float = 3e-6
+    advection_alpha: float = -0.025
+    diffusion_alpha: float = 8e-4
+    dispersion_alpha: float = 2.5e-7
+    hyp_diffusion_alpha: float = -7.5e-10
 
     def __post_init__(self):
         self.alphas = (
             0.0,
-            -self.advectivity,
-            self.diffusivity,
-            self.dispersivity,
-            -self.hyper_diffusivity,
+            self.advection_alpha,
+            self.diffusion_alpha,
+            self.dispersion_alpha,
+            self.hyp_diffusion_alpha,
         )
 
     def get_scenario_name(self) -> str:
