@@ -3,8 +3,8 @@ from ...exponax import exponax as ex
 
 
 class Convection(BaseScenario):
-    convection: float = 1.0 * 0.1 / (1.0**1)
-    alphas: tuple[float, ...] = (0.0, 0.0, 0.05 * 0.1 / (1.0**2))
+    alphas: tuple[float, ...] = (0.0, 0.0, 3.0e-5, 0.0, 0.0)
+    convection_beta: float = -1.25e-2
 
     num_substeps: int = 1
 
@@ -41,11 +41,11 @@ class Convection(BaseScenario):
         return stepper
 
     def get_ref_stepper(self):
-        return self._build_stepper(self.convection, self.alphas)
+        return self._build_stepper(self.convection_beta, self.alphas)
 
     def get_coarse_stepper(self) -> ex.BaseStepper:
         return self._build_stepper(
-            self.coarse_proportion * self.convection,
+            self.coarse_proportion * self.convection_beta,
             tuple(f * self.coarse_proportion for f in self.alphas),
         )
 
@@ -58,36 +58,21 @@ class Convection(BaseScenario):
 
 
 class Burgers(Convection):
-    convection: float = 0.01 * 1.0 / (1.0**1)
-    diffusivity: float = 0.01 * 0.01 / (1.0**2)
+    convection_beta: float = -1.25e-2  # Overwrite
+    diffusion_alpha: float = 3.0e-5
 
     def __post_init__(self):
-        self.alphas = (0.0, 0.0, self.diffusivity)
+        self.alphas = (0.0, 0.0, self.diffusion_alpha, 0.0, 0.0)
         super().__post_init__()
 
     def get_scenario_name(self) -> str:
         return f"{self.num_spatial_dims}d_norm_burgers"
 
 
-class KortewegDeVries(Convection):
-    convection: float = 0.01 * (-6) / (20.0) ** 1
-    dipersivity: float = 0.01 * 1 / (20.0) ** 3
-
-    def __post_init__(self):
-        if self.num_spatial_dims != 1:
-            # TODO: Is there a way to nicely define this in 2d?
-            raise ValueError("Korteweg-DeVries is only defined for 1 spatial dimension")
-        self.alphas = (0.0, 0.0, 0.0, self.dipersivity)
-        super().__post_init__()
-
-    def get_scenario_name(self) -> str:
-        return f"{self.num_spatial_dims}d_norm_kdv"
-
-
 class KuramotoSivashinskyConservative(Convection):
-    convection: float = 0.1 * 1 / (60.0**1)
-    second_order: float = 0.1 * 1 / (60.0**2)
-    fourth_order: float = 0.1 * 1 / (60.0**4)
+    convection_delta: float = -6.0e-3
+    diffusion_alpha: float = -4.0e-5
+    hyp_diffusion_alpha: float = -3.0e-9
 
     num_warmup_steps: int = 500  # Overwrite
     vlim: tuple[float, float] = (-2.5, 2.5)  # Overwrite
@@ -96,11 +81,10 @@ class KuramotoSivashinskyConservative(Convection):
 
     def __post_init__(self):
         if self.num_spatial_dims != 1:
-            # TODO: Is there a way to nicely define this in 2d?
             raise ValueError(
                 "Conservative Kuramoto-Sivashinsky is only defined for 1 spatial dimension. Check out the non-conservative version for 2d."
             )
-        self.alphas = (0.0, 0.0, -self.second_order, 0.0, -self.fourth_order)
+        self.alphas = (0.0, 0.0, self.diffusion_alpha, 0.0, self.hyp_diffusion_alpha)
         super().__post_init__()
 
     def get_scenario_name(self) -> str:
