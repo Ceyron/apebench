@@ -8,8 +8,8 @@ class Nonlinear(BaseScenario):
     spatial dimensions.
     """
 
-    alphas: tuple[float, ...] = (0.0, 0.0, 0.1 * 0.05 / (1.0**2))
-    betas: tuple[float, ...] = (0.0, -0.1 * 0.1 / (1.0**1), 0.0)
+    alphas: tuple[float, ...] = (0.0, 0.0, 0.00003, 0.0, 0.0)
+    betas: tuple[float, float, float] = (0.0, -0.0125, 0.0)
 
     num_substeps: int = 1
 
@@ -58,15 +58,67 @@ class Nonlinear(BaseScenario):
         return f"{self.num_spatial_dims}d_norm_nonlin"
 
 
+class BurgersSingleChannel(Nonlinear):
+    convection_sc_beta: float = -0.0125
+    diffusion_alpha: float = 0.00003
+
+    def __post_init__(self):
+        self.alphas = (0.0, 0.0, self.diffusion_alpha, 0.0, 0.0)
+        self.betas = (0.0, self.convection_sc_beta, 0.0)
+
+        super().__post_init__()
+
+    def get_scenario_name(self) -> str:
+        return f"{self.num_spatial_dims}d_norm_burgers_sc"
+
+
+class KortewegDeVries(Nonlinear):
+    convection_sc_beta: float = -0.0125
+    dispersion_alpha: float = -8.5e-7
+    hyp_diffusion_alpha: float = -2e-9
+
+    def __post_init__(self):
+        self.alphas = (0.0, 0.0, 0.0, self.dispersion_alpha, self.hyp_diffusion_alpha)
+        self.betas = (0.0, self.convection_sc_beta, 0.0)
+
+        super().__post_init__()
+
+    def get_scenario_name(self) -> str:
+        return f"{self.num_spatial_dims}d_norm_kdv"
+
+
+class KuramotoSivashinsky(Nonlinear):
+    gradient_norm_beta: float = -0.00025
+    diffusion_alpha: float = -0.000025
+    hyp_diffusion_alpha: float = -3.0e-9
+
+    num_warmup_steps: int = 500  # Overwrite
+    vlim: tuple[float, float] = (-6.5, 6.5)  # Overwrite
+
+    report_metrics: str = "mean_nRMSE,mean_correlation"  # Overwrite
+
+    def __post_init__(self):
+        self.alphas = (0.0, 0.0, self.diffusion_alpha, 0.0, self.hyp_diffusion_alpha)
+        self.betas = (0.0, 0.0, self.gradient_norm_beta)
+
+        super().__post_init__()
+
+    def get_scenario_name(self) -> str:
+        return f"{self.num_spatial_dims}d_norm_ks"
+
+
 class FisherKPP(Nonlinear):
-    alphas: tuple[float, ...] = (
-        0.001 * 10.0 / (10.0**0),
-        0.0,
-        0.001 * 1.0 / (10.0**2),
-    )
-    betas: tuple[float, ...] = (-0.001 * 10.0 / (10.0**0), 0.0, 0.0)
+    quadratic_beta: float = -0.02
+    drag_alpha: float = 0.02
+    diffusion_alpha: float = 4e-6
 
     ic_config: str = "clamp;0.0;1.0;fourier;10;false;false"  # Overwrite
+
+    def __post_init__(self):
+        self.alphas = (self.drag_alpha, 0.0, self.diffusion_alpha, 0.0, 0.0)
+        self.betas = (self.quadratic_beta, 0.0, 0.0)
+
+        super().__post_init__()
 
     def get_scenario_name(self) -> str:
         return f"{self.num_spatial_dims}d_norm_fisher"
