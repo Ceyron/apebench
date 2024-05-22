@@ -64,12 +64,12 @@ class Nonlinear(BaseScenario):
         return f"{self.num_spatial_dims}d_diff_nonlin"
 
 class BurgersSingleChannel(Nonlinear):
-    delta_convection: float = -2.0
-    gamma_diffusion: float = 1.5
+    convection_delta: float = -2.0
+    diffusion_gamma: float = 1.5
 
     def __post_init__(self):
-        self.gammas = (0.0, 0.0, self.gamma_diffusion, 0.0, 0.0)
-        self.deltas = (0.0, self.delta_convection, 0.0)
+        self.gammas = (0.0, 0.0, self.diffusion_gamma, 0.0, 0.0)
+        self.deltas = (0.0, self.convection_delta, 0.0)
 
         super().__post_init__()
 
@@ -77,13 +77,13 @@ class BurgersSingleChannel(Nonlinear):
         return f"{self.num_spatial_dims}d_diff_burgers_sc"
     
 class KortevegDeVries(Nonlinear):
-    delta_convection: float = -2.0
-    gamma_dispersion: float = -14.0
-    gamma_hyperdiffusion: float = -9.0
+    convection_delta: float = -2.0
+    dispersion_gamma: float = -14.0
+    hypdiffusion_gamma: float = -9.0
 
     def __post_init__(self):
-        self.gammas = (0.0, 0.0, 0.0, self.gamma_dispersion, self.gamma_hyperdiffusion)
-        self.deltas = (0.0, self.delta_convection, 0.0)
+        self.gammas = (0.0, 0.0, 0.0, self.dispersion_gamma, self.hypdiffusion_gamma)
+        self.deltas = (0.0, self.convection_delta, 0.0)
 
         super().__post_init__()
 
@@ -91,9 +91,9 @@ class KortevegDeVries(Nonlinear):
         return f"{self.num_spatial_dims}d_diff_kdv"
     
 class KuramotoSivashinsky(Nonlinear):
-    delta_gradient_norm: float = -6.0
-    gamma_diffusion: float = -1.2  # Negative diffusion! producing energy
-    gamma_hyperdiffusion: float = -15.0
+    gradient_norm_delta: float = -6.0
+    diffusion_gamma: float = -1.2  # Negative diffusion! producing energy
+    hypdiffusion_gamma: float = -15.0
     
     num_warmup_steps: int = 500  # Overwrite
     vlim: tuple[float, float] = (-6.5, 6.5)  # Overwrite
@@ -101,8 +101,8 @@ class KuramotoSivashinsky(Nonlinear):
     report_metrics: str = "mean_nRMSE,mean_correlation"  # Overwrite
 
     def __post_init__(self):
-        self.gammas = (0.0, 0.0, self.gamma_diffusion, 0.0, self.gamma_hyperdiffusion)
-        self.deltas = (0.0, 0.0, self.delta_gradient_norm)
+        self.gammas = (0.0, 0.0, self.diffusion_gamma, 0.0, self.hypdiffusion_gamma)
+        self.deltas = (0.0, 0.0, self.gradient_norm_delta)
 
         super().__post_init__()
 
@@ -110,15 +110,15 @@ class KuramotoSivashinsky(Nonlinear):
         return f"{self.num_spatial_dims}d_diff_ks"
 
 class FisherKPP(Nonlinear):
-    delta_quadratic: float = -0.02
-    gamma_drag: float = 0.02
-    gamma_diffusion: float = 0.2
+    quadratic_delta: float = -0.02
+    drag_gamma: float = 0.02
+    diffusion_gamma: float = 0.2
 
     ic_config: str = "clamp;0.0;1.0;fourier;10;false;false"  # Overwrite
 
     def __post_init__(self):
-        self.gammas = (self.gamma_drag, 0.0, self.gamma_diffusion)
-        self.deltas = (self.delta_quadratic, 0.0, 0.0)
+        self.gammas = (self.drag_gamma, 0.0, self.diffusion_gamma)
+        self.deltas = (self.quadratic_delta, 0.0, 0.0)
 
         super().__post_init__()
 
