@@ -19,6 +19,13 @@ from ._nonlinear import (
 )
 from ._poisson import Poisson
 from ._polynomial import FisherKPP, Polynomial
+from ._special_linear import (
+    AnisotropicDiffusion,
+    DiagonalDiffusion,
+    SpatiallyMixedDispersion,
+    SpatiallyMixedHyperDiffusion,
+    UnbalancedAdvection,
+)
 from ._swift_hohenberg import SwiftHohenberg
 
 scenario_dict = {
@@ -45,4 +52,9 @@ scenario_dict = {
     "phy_ks_cons": KuramotoSivashinskyConservative,
     "phy_poly": Polynomial,
     "phy_fisher": FisherKPP,
+    "phy_unbal_adv": UnbalancedAdvection,
+    "phy_diag_diff": DiagonalDiffusion,
+    "phy_aniso_diff": AnisotropicDiffusion,
+    "phy_mix_disp": SpatiallyMixedDispersion,
+    "phy_mix_hyp": SpatiallyMixedHyperDiffusion,
 }
