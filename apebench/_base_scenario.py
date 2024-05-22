@@ -25,7 +25,7 @@ class BaseScenario(eqx.Module, ABC):
     num_channels: int = 1
 
     # Settings for both training and testing
-    ic_config: str = "fourier;5;true;true"
+    ic_config: str = "fourier;10;true;true"
     num_warmup_steps: int = 0
 
     # Setting up the training
