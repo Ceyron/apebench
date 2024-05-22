@@ -7,8 +7,8 @@ from ...exponax import exponax as ex
 
 
 class Convection(BaseScenario):
-    gammas: tuple[float, ...] = (0.0, 0.0, 0.5)
-    convection_delta: float = 1.0
+    gammas: tuple[float, ...] = (0.0, 0.0, 1.5)
+    convection_delta: float = -2.0
 
     num_substeps: int = 1
 
@@ -66,7 +66,7 @@ class Burgers(Convection):
     diffusion_gamma: float = 1.5
 
     def __post_init__(self):
-        self.gammas = (0.0, 0.0, self.diffusion_gamma)
+        self.gammas = (0.0, 0.0, self.diffusion_gamma, 0.0, 0.0)
         super().__post_init__()
 
     def get_scenario_name(self) -> str:
