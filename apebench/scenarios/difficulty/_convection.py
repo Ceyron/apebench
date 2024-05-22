@@ -30,7 +30,8 @@ class Convection(BaseScenario):
             self.num_spatial_dims,
             self.num_points,
             linear_difficulties=substepped_gammas,
-            convection_difficulty=substepped_delta,
+            # Need minus to move the convection to the right hand side
+            convection_difficulty=-substepped_delta,
             order=self.order,
             dealiasing_fraction=self.dealiasing_fraction,
             num_circle_points=self.num_circle_points,

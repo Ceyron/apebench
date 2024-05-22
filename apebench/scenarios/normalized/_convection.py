@@ -26,7 +26,8 @@ class Convection(BaseScenario):
             self.num_spatial_dims,
             self.num_points,
             normalized_coefficients=substepped_alphas,
-            normalized_convection_scale=substepped_convection,
+            # Need minus to move the convection to the right hand side
+            normalized_convection_scale=-substepped_convection,
             order=self.order,
             dealiasing_fraction=self.dealiasing_fraction,
             num_circle_points=self.num_circle_points,
