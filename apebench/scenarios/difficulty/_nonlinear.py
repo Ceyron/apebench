@@ -63,6 +63,7 @@ class Nonlinear(BaseScenario):
     def get_scenario_name(self) -> str:
         return f"{self.num_spatial_dims}d_diff_nonlin"
 
+
 class BurgersSingleChannel(Nonlinear):
     convection_delta: float = -2.0
     diffusion_gamma: float = 1.5
@@ -75,39 +76,42 @@ class BurgersSingleChannel(Nonlinear):
 
     def get_scenario_name(self) -> str:
         return f"{self.num_spatial_dims}d_diff_burgers_sc"
-    
+
+
 class KortevegDeVries(Nonlinear):
     convection_delta: float = -2.0
     dispersion_gamma: float = -14.0
-    hypdiffusion_gamma: float = -9.0
+    hyp_diffusion_gamma: float = -9.0
 
     def __post_init__(self):
-        self.gammas = (0.0, 0.0, 0.0, self.dispersion_gamma, self.hypdiffusion_gamma)
+        self.gammas = (0.0, 0.0, 0.0, self.dispersion_gamma, self.hyp_diffusion_gamma)
         self.deltas = (0.0, self.convection_delta, 0.0)
 
         super().__post_init__()
 
     def get_scenario_name(self) -> str:
         return f"{self.num_spatial_dims}d_diff_kdv"
-    
+
+
 class KuramotoSivashinsky(Nonlinear):
     gradient_norm_delta: float = -6.0
     diffusion_gamma: float = -1.2  # Negative diffusion! producing energy
-    hypdiffusion_gamma: float = -15.0
-    
+    hyp_diffusion_gamma: float = -15.0
+
     num_warmup_steps: int = 500  # Overwrite
     vlim: tuple[float, float] = (-6.5, 6.5)  # Overwrite
 
     report_metrics: str = "mean_nRMSE,mean_correlation"  # Overwrite
 
     def __post_init__(self):
-        self.gammas = (0.0, 0.0, self.diffusion_gamma, 0.0, self.hypdiffusion_gamma)
+        self.gammas = (0.0, 0.0, self.diffusion_gamma, 0.0, self.hyp_diffusion_gamma)
         self.deltas = (0.0, 0.0, self.gradient_norm_delta)
 
         super().__post_init__()
 
     def get_scenario_name(self) -> str:
         return f"{self.num_spatial_dims}d_diff_ks"
+
 
 class FisherKPP(Nonlinear):
     quadratic_delta: float = -0.02
