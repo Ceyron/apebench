@@ -143,7 +143,7 @@ class SpatiallyMixedDispersion(BaseScenario):
             domain_extent=self.domain_extent,
             num_points=self.num_points,
             dt=self.dt,
-            dispersion_coef=self.dispersion_coef,
+            dispersivity=self.dispersion_coef,
             advect_on_diffusion=True,
         )
 
@@ -153,7 +153,7 @@ class SpatiallyMixedDispersion(BaseScenario):
             domain_extent=self.domain_extent,
             num_points=self.num_points,
             dt=self.dt * self.coarse_proportion,
-            dispersion_coef=self.dispersion_coef,
+            dispersivity=self.dispersion_coef,
             advect_on_diffusion=True,
         )
 
