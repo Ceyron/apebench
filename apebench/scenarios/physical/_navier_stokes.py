@@ -57,7 +57,7 @@ class DecayingTurbulence(BaseScenario):
 
 class KolmogorovFlow(BaseScenario):
     domain_extent: float = 2 * pi
-    dt: float = 0.01
+    dt: float = 0.1
 
     diffusivity: float = 1e-2  # Just Re=100 to have it almost scale-resolved
 
@@ -65,11 +65,11 @@ class KolmogorovFlow(BaseScenario):
     injection_scale: float = 1.0
     drag: float = -0.1
 
-    num_substeps: int = 1
+    num_substeps: int = 20
 
     coarse_proportion: float = 0.5
 
-    num_warmup_steps: int = 2500  # Overwrite
+    num_warmup_steps: int = 500  # Overwrite
 
     vlim: tuple[float, float] = (-10.0, 10.0)  # Overwrite
 
