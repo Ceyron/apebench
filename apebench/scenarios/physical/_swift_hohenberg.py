@@ -18,24 +18,29 @@ class SwiftHohenberg(BaseScenario):
         if self.num_spatial_dims == 1:
             raise ValueError("Swift-Hohenberg is only supported for 2D and 3D")
 
-    def get_ref_stepper(self):
-        return ex.RepeatedStepper(
-            ex.reaction.SwiftHohenberg(
-                num_spatial_dims=self.num_spatial_dims,
-                domain_extent=self.domain_extent,
-                num_points=self.num_points,
-                dt=self.dt / self.num_substeps,
-                reactivity=self.reactivity,
-                critical_number=self.critical_number,
-                polynomial_coefficients=self.polynomial_coefficients,
-            ),
-            self.num_substeps,
+    def _build_stepper(self, dt):
+        substepped_stepper = ex.reaction.SwiftHohenberg(
+            num_spatial_dims=self.num_spatial_dims,
+            domain_extent=self.domain_extent,
+            num_points=self.num_points,
+            dt=dt / self.num_substeps,
+            reactivity=self.reactivity,
+            critical_number=self.critical_number,
+            polynomial_coefficients=self.polynomial_coefficients,
         )
 
+        if self.num_substeps == 1:
+            stepper = substepped_stepper
+        else:
+            stepper = ex.RepeatedStepper(substepped_stepper, self.num_substeps)
+
+        return stepper
+
+    def get_ref_stepper(self):
+        return self._build_stepper(self.dt)
+
     def get_coarse_stepper(self):
-        raise NotImplementedError(
-            "Coarse stepper is not implemented for Swift-Hohenberg"
-        )
+        return self._build_stepper(self.dt * self.coarse_proportion)
 
     def get_scenario_name(self) -> str:
         return f"{self.num_spatial_dims}d_sh"

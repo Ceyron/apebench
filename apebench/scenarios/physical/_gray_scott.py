@@ -19,6 +19,8 @@ class GrayScott(BaseScenario):
     diffusivity_1: float = 2e-5
     diffusivity_2: float = 1e-5
 
+    coarse_proportion: float = 0.5
+
     def __post_init__(self):
         if self.num_spatial_dims == 1:
             raise ValueError("GrayScott is only supported for 2D and 3D")
@@ -33,23 +35,30 @@ class GrayScott(BaseScenario):
             ]
         )
 
-    def get_ref_stepper(self):
-        return ex.RepeatedStepper(
-            ex.reaction.GrayScott(
-                num_spatial_dims=self.num_spatial_dims,
-                domain_extent=self.domain_extent,
-                num_points=self.num_points,
-                dt=self.dt / self.num_substeps,
-                feed_rate=self.feed_rate,
-                kill_rate=self.kill_rate,
-                diffusivity_1=self.diffusivity_1,
-                diffusivity_2=self.diffusivity_2,
-            ),
-            self.num_substeps,
+    def _build_stepper(self, dt):
+        substepped_stepper = ex.reaction.GrayScott(
+            num_spatial_dims=self.num_spatial_dims,
+            domain_extent=self.domain_extent,
+            num_points=self.num_points,
+            dt=dt / self.num_substeps,
+            feed_rate=self.feed_rate,
+            kill_rate=self.kill_rate,
+            diffusivity_1=self.diffusivity_1,
+            diffusivity_2=self.diffusivity_2,
         )
 
+        if self.num_substeps == 1:
+            stepper = substepped_stepper
+        else:
+            stepper = ex.RepeatedStepper(substepped_stepper, self.num_substeps)
+
+        return stepper
+
+    def get_ref_stepper(self):
+        return self._build_stepper(self.dt)
+
     def get_coarse_stepper(self):
-        raise NotImplementedError("Coarse stepper is not implemented for GrayScott")
+        return self._build_stepper(self.dt * self.coarse_proportion)
 
     def get_scenario_name(self) -> str:
         return f"{self.num_spatial_dims}d_phy_gs"
@@ -165,37 +174,31 @@ class GrayScottType(BaseScenario):
             ]
         )
 
-    def get_ref_stepper(self) -> ex.BaseStepper:
+    def _build_stepper(self, dt):
         feed_rate, kill_rate = self.get_feed_and_kill_rate(self.pattern_type)
-        return ex.RepeatedStepper(
-            ex.reaction.GrayScott(
-                num_spatial_dims=self.num_spatial_dims,
-                domain_extent=self.domain_extent,
-                num_points=self.num_points,
-                dt=self.dt / self.num_substeps,
-                feed_rate=feed_rate,
-                kill_rate=kill_rate,
-                diffusivity_1=self.diffusivity_1,
-                diffusivity_2=self.diffusivity_2,
-            ),
-            self.num_substeps,
+        substepped_stepper = ex.reaction.GrayScott(
+            num_spatial_dims=self.num_spatial_dims,
+            domain_extent=self.domain_extent,
+            num_points=self.num_points,
+            dt=dt / self.num_substeps,
+            feed_rate=feed_rate,
+            kill_rate=kill_rate,
+            diffusivity_1=self.diffusivity_1,
+            diffusivity_2=self.diffusivity_2,
         )
 
+        if self.num_substeps == 1:
+            stepper = substepped_stepper
+        else:
+            stepper = ex.RepeatedStepper(substepped_stepper, self.num_substeps)
+
+        return stepper
+
+    def get_ref_stepper(self) -> ex.BaseStepper:
+        return self._build_stepper(self.dt)
+
     def get_coarse_stepper(self) -> ex.BaseStepper:
-        feed_rate, kill_rate = self.get_feed_and_kill_rate(self.pattern_type)
-        return ex.RepeatedStepper(
-            ex.reaction.GrayScott(
-                num_spatial_dims=self.num_spatial_dims,
-                domain_extent=self.domain_extent,
-                num_points=self.num_points,
-                dt=self.dt / self.num_substeps * self.coarse_proportion,
-                feed_rate=feed_rate,
-                kill_rate=kill_rate,
-                diffusivity_1=self.diffusivity_1,
-                diffusivity_2=self.diffusivity_2,
-            ),
-            self.num_substeps,
-        )
+        return self._build_stepper(self.dt * self.coarse_proportion)
 
     def get_scenario_name(self) -> str:
         return f"{self.num_spatial_dims}d_phy_gs_{self.pattern_type}"
