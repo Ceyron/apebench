@@ -14,6 +14,7 @@ class UnbalancedAdvection(BaseScenario):
     advection_coef_vector: tuple[float, ...] = (
         0.01,
         -0.04,
+        0.005,
     )  # Needs to be as long as num_spatial_dims
 
     def __post_init__(self):
