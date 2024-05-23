@@ -146,6 +146,12 @@ class SpatiallyMixedDispersion(BaseScenario):
 
     coarse_porportion: float = 0.5
 
+    def __post_init__(self):
+        if self.num_spatial_dims == 1:
+            raise ValueError(
+                "Spatially mixed dispersion is only supported for 2D and 3D"
+            )
+
     def get_ref_stepper(self) -> ex.BaseStepper:
         return ex.stepper.Dispersion(
             num_spatial_dims=self.num_spatial_dims,
@@ -176,6 +182,12 @@ class SpatiallyMixedHyperDiffusion(BaseScenario):
     hyp_diffusion_coef: float = -0.000075
 
     coarse_porportion: float = 0.5
+
+    def __post_init__(self):
+        if self.num_spatial_dims == 1:
+            raise ValueError(
+                "Spatially mixed hyperdiffusion is only supported for 2D and 3D"
+            )
 
     def get_ref_stepper(self) -> ex.BaseStepper:
         return ex.stepper.HyperDiffusion(
