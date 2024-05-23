@@ -15,8 +15,8 @@ class SwiftHohenberg(BaseScenario):
     polynomial_coefficients: tuple[float, ...] = (0.0, 0.0, 1.0, -1.0)
 
     def __post_init__(self):
-        if self.num_spatial_dims != 2:
-            raise ValueError("Only 2 spatial dimensions are supported for CahnHilliard")
+        if self.num_spatial_dims == 1:
+            raise ValueError("Swift-Hohenberg is only supported for 2D and 3D")
 
     def get_ref_stepper(self):
         return ex.RepeatedStepper(
@@ -33,7 +33,9 @@ class SwiftHohenberg(BaseScenario):
         )
 
     def get_coarse_stepper(self):
-        raise NotImplementedError("Coarse stepper is not implemented for CahnHilliard")
+        raise NotImplementedError(
+            "Coarse stepper is not implemented for Swift-Hohenberg"
+        )
 
     def get_scenario_name(self) -> str:
         return f"{self.num_spatial_dims}d_sh"

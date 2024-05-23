@@ -20,16 +20,16 @@ class GrayScott(BaseScenario):
     diffusivity_2: float = 1e-5
 
     def __post_init__(self):
-        if self.num_spatial_dims != 2:
-            raise ValueError("Only 2 spatial dimensions are supported for GrayScott")
+        if self.num_spatial_dims == 1:
+            raise ValueError("GrayScott is only supported for 2D and 3D")
         if self.num_channels != 2:
             raise ValueError("Number of channels must be 2 for GrayScott")
 
     def get_ic_generator(self) -> BaseRandomICGenerator:
         return ex.ic.RandomMultiChannelICGenerator(
             [
-                ex.ic.RandomGaussianBlobs(2, one_complement=True),
-                ex.ic.RandomGaussianBlobs(2),
+                ex.ic.RandomGaussianBlobs(self.num_spatial_dims, one_complement=True),
+                ex.ic.RandomGaussianBlobs(self.num_spatial_dims),
             ]
         )
 
