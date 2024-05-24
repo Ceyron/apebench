@@ -112,7 +112,7 @@ class FisherKPP(Nonlinear):
     drag_alpha: float = 0.02
     diffusion_alpha: float = 4e-6
 
-    ic_config: str = "clamp;0.0;1.0;fourier;10;false;false"  # Overwrite
+    ic_config: str = "clamp;0.0;1.0;fourier;5;false;false"  # Overwrite
 
     def __post_init__(self):
         self.alphas = (self.drag_alpha, 0.0, self.diffusion_alpha, 0.0, 0.0)

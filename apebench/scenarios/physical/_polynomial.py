@@ -57,7 +57,7 @@ class FisherKPP(Polynomial):
     diffusion_coef: float = 0.004
     quadratic_coef: float = -20.0
 
-    ic_config: str = "clamp;0.0;1.0;fourier;10;false;false"  # Overwrite
+    ic_config: str = "clamp;0.0;1.0;fourier;5;false;false"  # Overwrite
 
     def __post_init__(self):
         self.a_coefs = (self.drag_coef, 0.0, self.diffusion_coef, 0.0, 0.0)

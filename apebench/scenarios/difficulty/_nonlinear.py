@@ -118,7 +118,7 @@ class FisherKPP(Nonlinear):
     drag_gamma: float = 0.02
     diffusion_gamma: float = 0.2
 
-    ic_config: str = "clamp;0.0;1.0;fourier;10;false;false"  # Overwrite
+    ic_config: str = "clamp;0.0;1.0;fourier;5;false;false"  # Overwrite
 
     def __post_init__(self):
         self.gammas = (self.drag_gamma, 0.0, self.diffusion_gamma)
