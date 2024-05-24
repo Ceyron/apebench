@@ -195,7 +195,8 @@ class SpatiallyMixedHyperDiffusion(BaseScenario):
             domain_extent=self.domain_extent,
             num_points=self.num_points,
             dt=self.dt,
-            hyper_diffusivity=self.hyp_diffusion_coef,
+            # Need minus to match the sign of the diffusion coefficient
+            hyper_diffusivity=-self.hyp_diffusion_coef,
             diffuse_on_diffuse=True,
         )
 
@@ -205,7 +206,8 @@ class SpatiallyMixedHyperDiffusion(BaseScenario):
             domain_extent=self.domain_extent,
             num_points=self.num_points,
             dt=self.dt * self.coarse_proportion,
-            hyper_diffusivity=self.hyp_diffusion_coef,
+            # Need minus to match the sign of the diffusion coefficient
+            hyper_diffusivity=-self.hyp_diffusion_coef,
             diffuse_on_diffuse=True,
         )
 
