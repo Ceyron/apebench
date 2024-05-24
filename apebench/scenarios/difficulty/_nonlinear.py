@@ -15,7 +15,7 @@ class Nonlinear(BaseScenario):
     """
 
     gammas: tuple[float, ...] = (0.0, 0.0, 1.5, 0.0, 0.0)
-    deltas: tuple[float, float, float] = (0.0, -2.0, 0.0)
+    deltas: tuple[float, float, float] = (0.0, -1.5, 0.0)
 
     num_substeps: int = 1
 
@@ -65,7 +65,7 @@ class Nonlinear(BaseScenario):
 
 
 class BurgersSingleChannel(Nonlinear):
-    convection_sc_delta: float = -2.0
+    convection_sc_delta: float = -1.5
     diffusion_gamma: float = 1.5
 
     def __post_init__(self):

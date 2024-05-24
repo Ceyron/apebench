@@ -8,7 +8,7 @@ from ...exponax import exponax as ex
 
 class Convection(BaseScenario):
     gammas: tuple[float, ...] = (0.0, 0.0, 1.5, 0.0, 0.0)
-    convection_delta: float = -2.0
+    convection_delta: float = -1.5
 
     num_substeps: int = 1
 
@@ -63,7 +63,7 @@ class Convection(BaseScenario):
 
 
 class Burgers(Convection):
-    convection_delta: float = -2.0  # Overwrite
+    convection_delta: float = -1.5  # Overwrite
     diffusion_gamma: float = 1.5
 
     def __post_init__(self):
