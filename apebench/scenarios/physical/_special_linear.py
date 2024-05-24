@@ -83,7 +83,7 @@ class DiagonalDiffusion(BaseScenario):
             domain_extent=self.domain_extent,
             num_points=self.num_points,
             dt=self.dt * self.coarse_proportion,
-            diffusivity=self.diffusion_coef_vector,
+            diffusivity=jnp.array(self.diffusion_coef_vector),
         )
 
     def get_scenario_name(self) -> str:
@@ -132,7 +132,7 @@ class AnisotropicDiffusion(BaseScenario):
             domain_extent=self.domain_extent,
             num_points=self.num_points,
             dt=self.dt * self.coarse_proportion,
-            diffusivity=self.diffusion_coef_matrix,
+            diffusivity=jnp.array(self.diffusion_coef_matrix),
         )
 
     def get_scenario_name(self) -> str:
