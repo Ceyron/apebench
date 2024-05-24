@@ -43,4 +43,4 @@ class SwiftHohenberg(BaseScenario):
         return self._build_stepper(self.dt * self.coarse_proportion)
 
     def get_scenario_name(self) -> str:
-        return f"{self.num_spatial_dims}d_sh"
+        return f"{self.num_spatial_dims}d_phy_sh"
