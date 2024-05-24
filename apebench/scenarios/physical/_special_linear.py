@@ -17,7 +17,7 @@ class UnbalancedAdvection(BaseScenario):
         0.005,
     )  # Needs to be as long as num_spatial_dims
 
-    coarse_porportion: float = 0.5
+    coarse_proportion: float = 0.5
 
     def __post_init__(self):
         if self.num_spatial_dims == 1:
@@ -58,7 +58,7 @@ class DiagonalDiffusion(BaseScenario):
         0.02,
     )  # Needs to be as long as num_spatial_dims
 
-    coarse_porportion: float = 0.5
+    coarse_proportion: float = 0.5
 
     def __post_init__(self):
         if self.num_spatial_dims == 1:
@@ -102,7 +102,7 @@ class AnisotropicDiffusion(BaseScenario):
     Also has to be symmetric and positive definite.
     """
 
-    coarse_porportion: float = 0.5
+    coarse_proportion: float = 0.5
 
     def __post_init__(self):
         if self.num_spatial_dims == 1:
@@ -144,7 +144,7 @@ class SpatiallyMixedDispersion(BaseScenario):
     dt: float = 0.001
     dispersion_coef: float = 0.00025
 
-    coarse_porportion: float = 0.5
+    coarse_proportion: float = 0.5
 
     def __post_init__(self):
         if self.num_spatial_dims == 1:
@@ -181,7 +181,7 @@ class SpatiallyMixedHyperDiffusion(BaseScenario):
     dt: float = 0.00001
     hyp_diffusion_coef: float = -0.000075
 
-    coarse_porportion: float = 0.5
+    coarse_proportion: float = 0.5
 
     def __post_init__(self):
         if self.num_spatial_dims == 1:
