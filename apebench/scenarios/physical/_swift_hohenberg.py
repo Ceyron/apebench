@@ -14,6 +14,8 @@ class SwiftHohenberg(BaseScenario):
     critical_number: float = 1.0
     polynomial_coefficients: tuple[float, ...] = (0.0, 0.0, 1.0, -1.0)
 
+    coarse_proportion: float = 0.5
+
     def __post_init__(self):
         if self.num_spatial_dims == 1:
             raise ValueError("Swift-Hohenberg is only supported for 2D and 3D")
