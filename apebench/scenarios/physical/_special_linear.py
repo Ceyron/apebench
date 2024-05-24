@@ -42,7 +42,7 @@ class UnbalancedAdvection(BaseScenario):
             domain_extent=self.domain_extent,
             num_points=self.num_points,
             dt=self.dt * self.coarse_proportion,
-            velocity=self.advection_coef_vector,
+            velocity=jnp.array(self.advection_coef_vector),
         )
 
     def get_scenario_name(self) -> str:
