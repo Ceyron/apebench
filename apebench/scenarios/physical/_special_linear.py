@@ -94,7 +94,10 @@ class AnisotropicDiffusion(BaseScenario):
     domain_extent: float = 1.0
     dt: float = 0.1
 
-    diffusion_coef_matrix: tuple[tuple[float, ...], ...] = ((0.01, 0.0), (0.0, 0.02))
+    diffusion_coef_matrix: tuple[tuple[float, ...], ...] = (
+        (0.01, 0.005),
+        (0.005, 0.02),
+    )
     """
     Needs to be a square matrix with the same size as the number of spatial
     dimensions, given as a tuple of tuples.
