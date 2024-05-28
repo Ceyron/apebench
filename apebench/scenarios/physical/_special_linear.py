@@ -54,8 +54,8 @@ class DiagonalDiffusion(BaseScenario):
     dt: float = 0.1
 
     diffusion_coef_vector: tuple[float, ...] = (
-        0.01,
-        0.02,
+        0.001,
+        0.002,
     )  # Needs to be as long as num_spatial_dims
 
     coarse_proportion: float = 0.5
@@ -95,8 +95,8 @@ class AnisotropicDiffusion(BaseScenario):
     dt: float = 0.1
 
     diffusion_coef_matrix: tuple[tuple[float, ...], ...] = (
-        (0.01, 0.005),
-        (0.005, 0.02),
+        (0.001, 0.0005),
+        (0.0005, 0.002),
     )
     """
     Needs to be a square matrix with the same size as the number of spatial
