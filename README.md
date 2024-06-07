@@ -7,6 +7,30 @@
 
 <h4 align="center">A benchmark for Autoregressive PDE Emulators in <a href="https://github.com/google/jax" target="_blank">JAX</a>.</h4>
 
+## Installation
+
+0. (Optional) Create a fresh conda environment
+```bash
+conda create -n apebench python=3.12 -y
+conda activate apebench
+```
+1. Install JAX (here the CUDA version, more versions [here](https://jax.readthedocs.io/en/latest/installation.html))
+```bash
+pip install -U "jax[cuda12]"
+```
+2. Clone repository
+```bash
+git clone --recurse-submodule git@github.com:Ceyron/apebench.git
+```
+3. Change into the repository
+```bash
+cd apebench
+```
+4. Install the requirements
+```bash
+pip install -r requirements.txt
+```
+
 ### Quickstart
 
 Train a ConvNet to emulate 1D advection, display train loss, test error metric
