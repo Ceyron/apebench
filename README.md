@@ -298,12 +298,12 @@ plt.xlabel("time"); plt.ylabel("space"); plt.show()
 
 Instead of instantiating a scenario and calling it, we can also index it from
 the `apebench.scenarios.scenario_dict`. Most conveniently, this can be done with
-the `apebench.run_one_entry`. We can achieve the same result as above by
+the `apebench.run_experiment`. We can achieve the same result as above by
 
 ```python
 import apebench
 
-apebench.run_one_entry(
+apebench.run_experiment(
     scenario="diff_adv",
     task="predict",
     net="Conv;26;10;relu",
@@ -316,7 +316,7 @@ apebench.run_one_entry(
 (Smaller variations due to non-determinism of some operations on the GPU can
 occur.)
 
-### Workflow for an experiment
+### Workflow for a study of multiple experiments
 
 The above workflow is for a single training run. For apebench, we are interested
 in comparing multiple architectures, training methodologies, and scenarios. So,
@@ -363,7 +363,7 @@ CONFIGS = [
 ]
 ```
 
-We will use the `apebench.run_experiment_convenience` to run the experiment.
+We will use the `apebench.run_study_convenience` to run the entire study.
 This function returns the the melted data for metrics, loss, and sample rollouts
 (in this order) and a list of paths where the network weights are stored.
 
@@ -373,13 +373,13 @@ This function returns the the melted data for metrics, loss, and sample rollouts
     loss_df,
     sample_rollout_df,
     network_weights_list,
-) = apebench.run_experiment_convenience(
+) = apebench.run_study_convenience(
     CONFIGS, do_loss=True, do_metrics=True, do_sample_rollouts=True
 )
 ```
 
-Runtime for this experiment should be around 4 minutes on a modern GPU. (If you
-ran the experiment a second time, it will load the results from disk.)
+Runtime for this study should be around 4 minutes on a modern GPU. (If you
+ran the study a second time, it will load the results from disk.)
 
 Let's produce plots. First for the loss history
 
@@ -452,7 +452,7 @@ Or if you use the string based interface, you can add additional keyword argumen
 ```python
 import apebench
 
-apebench.run_one_entry(
+apebench.run_experiment(
     scenario="diff_adv",
     task="predict",
     net="Conv;26;10;relu",
@@ -464,7 +464,7 @@ apebench.run_one_entry(
 )
 ```
 
-Or if you run entire experiments, you can also add additional keyword arguments that match the attribute names of the scenario.
+Or if you run entire study, you can also add additional keyword arguments that match the attribute names of the scenario.
 
 ```python
 CONFIGS = [
