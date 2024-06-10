@@ -11,6 +11,7 @@ from .scenarios import scenario_dict
 
 
 def run_one_entry(
+    *,
     scenario: str,
     task: str,
     net: str,
