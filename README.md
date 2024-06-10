@@ -429,6 +429,52 @@ print(metric_df.groupby(
 |         100 |                               0.27  |                               0.155 |
 |         200 |                               0.507 |                               0.287 |
 
+## Extending APEBench
+
+You can have experiments run with your architectures. For this, you have to
+register them in the `apebench.arch_extensions` dictionary.
+
+```python
+import apebench
+
+def conv_net_extension(
+    config_str: str,
+    num_spatial_dims: int,
+    num_channels: int,
+    *,
+    key: PRNGKeyArray,
+):
+    config_args = config_str.split(";")
+
+    depth = int(config_args[1])
+
+    return pdeqx.arch.ConvNet(
+        num_spatial_dims=num_spatial_dims,
+        in_channels=num_channels,
+        out_channels=num_channels,
+        hidden_channels=42,
+        depth=depth,
+        activation=jax.nn.relu,
+        key=key,
+    )
+
+apebench.arch_extensions.update(
+    {"MyConvNet": conv_net_extension}
+)
+```
+
+Then you can use the `Conv` architecture in the `net` configuration string.
+
+```python
+apebench.run_experiment(
+    scenario="diff_adv",
+    task="predict",
+    net="MyConvNet;42",
+    train="one",
+    start_seed=0,
+    num_seeds=10,
+)
+```
 
 
 ## Defining your own scenario

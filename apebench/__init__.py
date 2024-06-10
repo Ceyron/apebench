@@ -1,4 +1,5 @@
 from . import scenarios
+from ._extensions import arch_extensions
 from ._run import (
     get_experiment_name,
     melt_concat_from_list,
@@ -32,4 +33,5 @@ __all__ = [
     "melt_metrics",
     "melt_sample_rollouts",
     "read_in_kwargs",
+    "arch_extensions",
 ]

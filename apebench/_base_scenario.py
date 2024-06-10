@@ -9,6 +9,7 @@ import pandas as pd
 from jaxtyping import Array, Float, PRNGKeyArray
 
 from ._corrected_stepper import CorrectedStepper
+from ._extensions import arch_extensions
 from .exponax import exponax as ex
 from .exponax.exponax import BaseStepper
 from .exponax.exponax.ic import BaseRandomICGenerator
@@ -489,10 +490,13 @@ class BaseScenario(eqx.Module, ABC):
             blocks per level. `WIDTH` describes the hidden layer's size on the
             highest resolution level. `LEVELS` indicates the number of times the
             spatial resolution is halved by a factor of two while the channel
-            count doubles. Skip connections exist between the encoder and decoder
-            part of the network.
+            count doubles. Skip connections exist between the encoder and
+            decoder part of the network.
 
         The `key` is used to initialize the parameters of the neural network.
+
+        To registor your custom architecture use the `arch_extensions`
+        dictionary.
 
         Returns:
             - `network`: eqx.Module, the neural architecture
@@ -638,7 +642,15 @@ class BaseScenario(eqx.Module, ABC):
                 key=key,
             )
         else:
-            raise ValueError("Unknown network argument")
+            try:
+                network = arch_extensions[network_args[0].lower()](
+                    network_config,
+                    self.num_spatial_dims,
+                    self.num_channels,
+                    key=key,
+                )
+            except KeyError:
+                raise ValueError("Unknown network argument")
 
         return network
 
