@@ -4,6 +4,7 @@ from typing import Optional, Union
 
 import equinox as eqx
 import pandas as pd
+from tqdm.autonotebook import tqdm
 
 from ._utils import melt_loss, melt_metrics, melt_sample_rollouts, read_in_kwargs
 from .scenarios import scenario_dict
@@ -115,6 +116,59 @@ def run_experiment(
     return raw_file_list, network_weights_list
 
 
+def melt_concat_metrics_from_list(
+    raw_file_list: list[pathlib.Path],
+    *,
+    metric_name: Union[str, list[str]] = "mean_nRMSE",
+):
+    metric_df_s = []
+    for file_name in tqdm(
+        raw_file_list,
+        desc="Melt and Concat metrics",
+    ):
+        data = pd.read_csv(file_name)
+        data = melt_metrics(data, metric_name=metric_name)
+        metric_df_s.append(data)
+
+    metric_df = pd.concat(metric_df_s)
+
+    return metric_df
+
+
+def melt_concat_loss_from_list(
+    raw_file_list: list[pathlib.Path],
+):
+    loss_df_s = []
+    for file_name in tqdm(
+        raw_file_list,
+        desc="Melt and Concat loss",
+    ):
+        data = pd.read_csv(file_name)
+        data = melt_loss(data)
+        loss_df_s.append(data)
+
+    loss_df = pd.concat(loss_df_s)
+
+    return loss_df
+
+
+def melt_concat_sample_rollouts_from_list(
+    raw_file_list: list[pathlib.Path],
+):
+    sample_rollout_df_s = []
+    for file_name in tqdm(
+        raw_file_list,
+        desc="Melt and Concat sample rollouts",
+    ):
+        data = pd.read_csv(file_name)
+        data = melt_sample_rollouts(data)
+        sample_rollout_df_s.append(data)
+
+    sample_rollout_df = pd.concat(sample_rollout_df_s)
+
+    return sample_rollout_df
+
+
 def melt_concat_from_list(
     raw_file_list: list[pathlib.Path],
     base_path: str,
@@ -127,40 +181,28 @@ def melt_concat_from_list(
     do_loss: bool = False,
     do_sample_rollouts: bool = False,
 ):
+    """
+    And save to file
+    """
     if do_metrics:
-        metric_df_s = []
-        for file_name in raw_file_list:
-            data = pd.read_csv(file_name)
-            data = melt_metrics(data, metric_name=metric_name)
-            metric_df_s.append(data)
-
-        metric_df = pd.concat(metric_df_s)
+        metric_df = melt_concat_metrics_from_list(
+            raw_file_list,
+            metric_name=metric_name,
+        )
         metric_df.to_csv(
             base_path / pathlib.Path(f"{metric_file_name}.csv"),
             index=False,
         )
 
     if do_loss:
-        loss_df_s = []
-        for file_name in raw_file_list:
-            data = pd.read_csv(file_name)
-            data = melt_loss(data)
-            loss_df_s.append(data)
-
-        loss_df = pd.concat(loss_df_s)
+        loss_df = melt_concat_loss_from_list(raw_file_list)
         loss_df.to_csv(
             base_path / pathlib.Path(f"{loss_file_name}.csv"),
             index=False,
         )
 
     if do_sample_rollouts:
-        sample_rollout_df_s = []
-        for file_name in raw_file_list:
-            data = pd.read_csv(file_name)
-            data = melt_sample_rollouts(data)
-            sample_rollout_df_s.append(data)
-
-        sample_rollout_df = pd.concat(sample_rollout_df_s)
+        sample_rollout_df = melt_concat_sample_rollouts_from_list(raw_file_list)
         sample_rollout_df.to_csv(
             base_path / pathlib.Path(f"{sample_rollout_file_name}.csv"),
             index=False,
