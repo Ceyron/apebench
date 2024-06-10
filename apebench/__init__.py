@@ -3,8 +3,8 @@ from ._run import (
     get_experiment_name,
     melt_concat_from_list,
     run_experiment,
-    run_experiment_convenience,
-    run_one_entry,
+    run_study,
+    run_study_convenience,
 )
 from ._utils import (
     melt_data,
@@ -23,8 +23,8 @@ __all__ = [
     "get_experiment_name",
     "melt_concat_from_list",
     "run_experiment",
-    "run_experiment_convenience",
-    "run_one_entry",
+    "run_study_convenience",
+    "run_study",
     "scenarios",
     "trainax",
     "melt_data",

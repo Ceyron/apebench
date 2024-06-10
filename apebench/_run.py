@@ -10,7 +10,7 @@ from ._utils import melt_loss, melt_metrics, melt_sample_rollouts, read_in_kwarg
 from .scenarios import scenario_dict
 
 
-def run_one_entry(
+def run_experiment(
     *,
     scenario: str,
     task: str,
@@ -20,6 +20,37 @@ def run_one_entry(
     num_seeds: int,
     **scenario_kwargs,
 ) -> tuple[pd.DataFrame, eqx.Module]:
+    """
+    Execute a single experiment.
+
+    Only accepts keyword arguments, requires some main arguments and additional
+    arguments that can depend on the chosen
+
+    **Arguments:**
+
+    * `scenario` (str): The scenario to run, must be a key in
+        `apebench.scenarios.scenario_dict`.
+    * `task` (str): The task to run, can be `"predict"` or `"correct;XX"`
+        where `"XX"` is the correction mode, e.g., `"correct;sequential"`.
+    * `net` (str): The network to use, must be compatible descriptor of a
+        network architecture, e.g., `"Conv;34;10;relu"`.
+    * `train` (str): The training methodology to use, i.e., how reference
+        solver and emulator interact during training. One-step supervised
+        training is achieved by `"one"`.
+    * `start_seed` (int): The integer at which the list of seeds starts from.
+    * `num_seeds` (int): The number of seeds to run (in parallel). For
+        scenarios in 2D and 3D at realistic resolutions, this likely has to be
+        set to 1 and seed processing must be done sequentially via `run_study`.
+
+    **Returns:**
+
+    * `data` (pd.DataFrame): The DataFrame containing the results of the
+        experiment. Will contain the columns `seed`, `scenario`, `task`, `net`,
+        `train`, `scenario_kwargs`, the metrics, losses and sample rollouts.
+    * `trained_neural_stepper_s` (eqx.Module): Equinox modules containing the
+        trained neural emulators. Note that if `num_seeds` is greater than 1,
+        weight arrays have a leading batch axis.
+    """
     scenario = scenario_dict[scenario](**scenario_kwargs)
 
     data, trained_neural_stepper_s = scenario(
@@ -48,7 +79,9 @@ def get_experiment_name(
     num_seeds: int,
     **scenario_kwargs,
 ):
-    # to consider anything beyond the default arguments
+    """
+    Produce a unique name for an experiment.
+    """
     additional_infos = []
     for key, value in scenario_kwargs.items():
         additional_infos.append(f"{key}={value}")
@@ -63,14 +96,28 @@ def get_experiment_name(
     return experiment_name
 
 
-def run_experiment(
+def run_study(
     configs: list[dict],
     base_path: str,
     *,
     overwrite: bool = False,
 ):
     """
-    Configs must contain keys: 'scenario', .. todo
+    Execute a study with multiple experiments.
+
+    By default skips experiments that have already been conducted.
+
+    **Arguments:**
+
+    * `configs` (list[dict]): A list of dictionaries, each containing the
+        keyword arguments for `run_experiment`.
+    * `base_path` (str): The base path to store the results in.
+    * `overwrite` (bool): Whether to overwrite existing results.
+
+    **Returns:**
+
+    * `raw_file_list` (list[pathlib.Path]): A list of paths to the raw data files.
+    * `network_weights_list` (list[pathlib.Path]): A list of paths to the network weights.
     """
     raw_file_list = []
     network_weights_list = []
@@ -103,7 +150,7 @@ def run_experiment(
             print()
             continue
 
-        data, trained_neural_stepper_s = run_one_entry(**config)
+        data, trained_neural_stepper_s = run_experiment(**config)
 
         data.to_csv(raw_data_path)
         eqx.tree_serialise_leaves(
@@ -125,6 +172,18 @@ def melt_concat_metrics_from_list(
     *,
     metric_name: Union[str, list[str]] = "mean_nRMSE",
 ):
+    """
+    Melt and concatenate metrics from a list of raw files.
+
+    **Arguments:**
+
+    * `raw_file_list` (list[pathlib.Path]): A list of paths to the raw data files.
+    * `metric_name` (Union[str, list[str]]): The name of the metric to melt.
+
+    **Returns:**
+
+    * `metric_df` (pd.DataFrame): The DataFrame containing the metrics.
+    """
     metric_df_s = []
     for file_name in tqdm(
         raw_file_list,
@@ -142,6 +201,17 @@ def melt_concat_metrics_from_list(
 def melt_concat_loss_from_list(
     raw_file_list: list[pathlib.Path],
 ):
+    """
+    Melt and concatenate loss from a list of raw files.
+
+    **Arguments:**
+
+    * `raw_file_list` (list[pathlib.Path]): A list of paths to the raw data files.
+
+    **Returns:**
+
+    * `loss_df` (pd.DataFrame): The DataFrame containing the loss.
+    """
     loss_df_s = []
     for file_name in tqdm(
         raw_file_list,
@@ -159,6 +229,17 @@ def melt_concat_loss_from_list(
 def melt_concat_sample_rollouts_from_list(
     raw_file_list: list[pathlib.Path],
 ):
+    """
+    Melt and concatenate sample rollouts from a list of raw files.
+
+    **Arguments:**
+
+    * `raw_file_list` (list[pathlib.Path]): A list of paths to the raw data files.
+
+    **Returns:**
+
+    * `sample_rollout_df` (pd.DataFrame): The DataFrame containing the sample rollouts.
+    """
     sample_rollout_df_s = []
     for file_name in tqdm(
         raw_file_list,
@@ -186,34 +267,66 @@ def melt_concat_from_list(
     do_sample_rollouts: bool = False,
 ):
     """
-    And save to file
+    Melt and concatenate metrics, loss and sample rollouts from a list of raw
+    files and save the resulting DataFrames to disk as CSV files.
+
+    **Arguments:**
+
+    * `raw_file_list` (list[pathlib.Path]): A list of paths to the raw data files.
+    * `base_path` (str): The base path to store the results in.
+    * `metric_name` (Union[str, list[str]]): The name of the metric to melt.
+    * `metric_file_name` (str): The name of the file to save the metrics to.
+    * `loss_file_name` (str): The name of the file to save the loss to.
+    * `sample_rollout_file_name` (str): The name of the file to save the sample rollouts to.
+    * `do_metrics` (bool): Whether to melt and save the metrics.
+    * `do_loss` (bool): Whether to melt and save the loss.
+    * `do_sample_rollouts` (bool): Whether to melt and save the sample rollouts.
+
+    **Returns:**
+
+    * `metric_df_file_name` (Optional[pathlib.Path]): The path to the metrics file.
+    * `loss_df_file_name` (Optional[pathlib.Path]): The path to the loss file.
+    * `sample_rollout_df_file_name` (Optional[pathlib.Path]): The path to the sample rollouts file.
     """
     if do_metrics:
         metric_df = melt_concat_metrics_from_list(
             raw_file_list,
             metric_name=metric_name,
         )
+        metric_df_file_name = base_path / pathlib.Path(f"{metric_file_name}.csv")
         metric_df.to_csv(
-            base_path / pathlib.Path(f"{metric_file_name}.csv"),
+            metric_df_file_name,
             index=False,
         )
+    else:
+        metric_df_file_name = None
 
     if do_loss:
         loss_df = melt_concat_loss_from_list(raw_file_list)
+        loss_df_file_name = base_path / pathlib.Path(f"{loss_file_name}.csv")
         loss_df.to_csv(
-            base_path / pathlib.Path(f"{loss_file_name}.csv"),
+            loss_df_file_name,
             index=False,
         )
+    else:
+        loss_df_file_name = None
 
     if do_sample_rollouts:
         sample_rollout_df = melt_concat_sample_rollouts_from_list(raw_file_list)
+        sample_rollout_df_file_name = base_path / pathlib.Path(
+            f"{sample_rollout_file_name}.csv"
+        )
         sample_rollout_df.to_csv(
-            base_path / pathlib.Path(f"{sample_rollout_file_name}.csv"),
+            sample_rollout_df_file_name,
             index=False,
         )
+    else:
+        sample_rollout_df_file_name = None
+
+    return metric_df_file_name, loss_df_file_name, sample_rollout_df_file_name
 
 
-def run_experiment_convenience(
+def run_study_convenience(
     configs: list[dict],
     base_path: Optional[str] = None,
     *,
@@ -224,11 +337,34 @@ def run_experiment_convenience(
     do_sample_rollouts: bool = False,
     parse_kwargs: bool = True,
 ):
+    """
+    Run a study with multiple experiments and melt and concatenate the results.
+
+    **Arguments:**
+
+    * `configs` (list[dict]): A list of dictionaries, each containing the
+        keyword arguments for `run_experiment`.
+    * `base_path` (Optional[str]): The base path to store the results in. If
+        `None`, a path is generated based on the hash of the `configs`.
+    * `overwrite` (bool): Whether to overwrite existing results.
+    * `metric_name` (Union[str, list[str]]): The name of the metric to melt.
+    * `do_metrics` (bool): Whether to melt and save the metrics.
+    * `do_loss` (bool): Whether to melt and save the loss.
+    * `do_sample_rollouts` (bool): Whether to melt and save the sample rollouts.
+    * `parse_kwargs` (bool): Whether to parse the scenario kwargs.
+
+    **Returns:**
+
+    * `metric_df` (pd.DataFrame): The DataFrame containing the metrics.
+    * `loss_df` (pd.DataFrame): The DataFrame containing the loss.
+    * `sample_rollout_df` (pd.DataFrame): The DataFrame containing the sample rollouts.
+    * `network_weights_list` (list[pathlib.Path]): A list of paths to the network weights.
+    """
     if base_path is None:
         config_hash = hash(str(configs))
         base_path = pathlib.Path(f"_results_{config_hash}")
 
-    raw_file_list, network_weights_list = run_experiment(
+    raw_file_list, network_weights_list = run_study(
         configs,
         base_path,
         overwrite=overwrite,
