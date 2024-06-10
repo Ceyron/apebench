@@ -78,7 +78,6 @@ def run_experiment(
 
         print("Considering")
         print(experiment_name)
-        print()
 
         raw_data_folder = base_path / pathlib.Path("raw")
         os.makedirs(raw_data_folder, exist_ok=True)
@@ -99,6 +98,7 @@ def run_experiment(
             and not overwrite
         ):
             print("Skipping, already trained ...")
+            print()
             continue
 
         data, trained_neural_stepper_s = run_one_entry(**config)
