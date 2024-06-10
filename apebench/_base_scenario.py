@@ -211,11 +211,11 @@ class BaseScenario(eqx.Module, ABC):
         """
         Default generation of data:
 
-        1. Instantiat the intial condition distribution
-        2. Create the grid according to the discretization configuration
-        3. Generate the number of initial conditions as samples requested
-        4. Warmup these initial conditions if necessary
-        5. Rollout these initial conditions for as many time steps as in the
+        1. Instantiate the intial condition distribution
+        2. Generate the number of initial conditions as samples requested and
+           discretize them on the grid
+        3. Warmup the initial conditions if necessary
+        4. Rollout these initial conditions for as many time steps as in the
            configuration
 
         The returned array has the shape:
@@ -434,6 +434,68 @@ class BaseScenario(eqx.Module, ABC):
         """
         Parse the `network_config` to the corresponding neural architectue and
         instantiate it, use the `key` to initialize the parameters.
+
+        "Conv;34;10;relu" for a feedforward convolutional network with 34 hidden
+        channels, 10 hidden layers, and the ReLU activation function.
+
+        Currently, the following constructors are available: -
+        `Conv;HIDDEN_CHANNELS;DEPTH;ACTIVATION`: A feedforward
+            convolutional network with `DEPTH` hidden layers of `WIDTH` size.
+            Each layer transition except for the last uses `ACTIVATION`. The
+            effective receptive field is `DEPTH + 1`
+        - `Res;WIDTH;BLOCKS;ACTIVATION`: A classical/legacy ResNet with
+            post-activation and no normalization scheme. Each residual block has
+            two convolutions and operates at `WIDTH` channel size. The
+            `ACTIVATION` follows each of the convolutions in the residual block.
+            There are `BLOCKS` number of residual blocks. Lifting and projection
+            are point-wise linear convolutions (=1x1 convs).
+        - `UNet;WIDTH;LEVELS;ACTIVATION`: A classical UNet using double
+            convolution blocks with group activation in-between (number of
+            groups is set to one). `WIDTH` describes the hidden layer's size on
+            the highest resolution level. `LEVELS` indicates the number of times
+            the spatial resolution is halved by a factor of two while the
+            channel count doubles. Skip connections exist between the encoder
+            and decoder part of the network.
+        - `Dil;DIL-FACTOR;WIDTH;BLOCKS;ACTIVATION`: Similar to the
+            classical post-activation ResNet but uses a series of stacked
+            convolutions of different dilation rates. Each convolution is
+            followed by a group normalization (number of groups is set to one)
+            and the `ACTIVATION`. `DIL-FACTOR` of 1 refers to one convolution of
+            dilation rate 1. If it is set to 2, this refers to three
+            convolutions of rates [1, 2, 1]. If it is 3, then this is [1, 2, 4,
+            2, 1], etc.
+        - `FNO;MODES;WIDTH;BLOCKS;ACTIVATION`: A vanilla FNO using spectral
+            convolutions with `MODES` equally across all spatial dimensions.
+            Each block operates at `WIDTH` channel size and has one spectral
+            convolution with a point-wise linear bypass. The activation is
+            applied to the sum of spectral convolution and bypass result. There
+            are `BLOCKS` total blocks. Lifting and projection are point-wise
+            linear (=1x1) convolutions.
+        - `MLP;WIDTH;DEPTH;ACTIVATION`: A multi-layer perceptron with `DEPTH`
+            hidden layers of `WIDTH` size. Each layer transition except for the
+            last uses `ACTIVATION`. Channel and spatial axes are flattened into
+            one feature axis. Hence, the MLP is hard-coded to one specific
+            resolution.
+        - `Pure;KERNEL_SIZE`: A purely linear convolution (with no bias) with
+            kernel size `KERNEL_SIZE`. Use this to learn finite difference
+            stencils. It has as many learnable parameters as the kernel size.
+        - `MoRes;WIDTH;BLOCKS;ACTIVATION`: A modern ResNet using pre-activation
+            and group normalization. Each residual block has two convolutions
+            and operates at `WIDTH` channel size. The `ACTIVATION` follows each
+            of the convolutions in the residual block. There are `BLOCKS` number
+            of residual blocks. Lifting and projection are point-wise linear
+            convolutions (=1x1 convs).
+        - `MoUNet;WIDTH;LEVELS;ACTIVATION`: A modern UNet using two resnet
+            blocks per level. `WIDTH` describes the hidden layer's size on the
+            highest resolution level. `LEVELS` indicates the number of times the
+            spatial resolution is halved by a factor of two while the channel
+            count doubles. Skip connections exist between the encoder and decoder
+            part of the network.
+
+        The `key` is used to initialize the parameters of the neural network.
+
+        Returns:
+            - `network`: eqx.Module, the neural architecture
         """
         network_args = network_config.split(";")
 
@@ -464,22 +526,6 @@ class BaseScenario(eqx.Module, ABC):
                 num_blocks=num_blocks,
                 activation=activation,
                 boundary_mode="periodic",
-                key=key,
-            )
-        elif network_args[0].lower() == "fno":
-            num_modes = int(network_args[1])
-            hidden_channels = int(network_args[2])
-            num_blocks = int(network_args[3])
-            activation = self.get_activation(network_args[4])
-
-            network = pdeqx.arch.ClassicFNO(
-                num_spatial_dims=self.num_spatial_dims,
-                in_channels=self.num_channels,
-                out_channels=self.num_channels,
-                hidden_channels=hidden_channels,
-                num_blocks=num_blocks,
-                num_modes=num_modes,
-                activation=activation,
                 key=key,
             )
         elif network_args[0].lower() == "unet":
@@ -515,6 +561,22 @@ class BaseScenario(eqx.Module, ABC):
                 dilation_rates=dilation_rates,
                 activation=activation,
                 boundary_mode="periodic",
+                key=key,
+            )
+        elif network_args[0].lower() == "fno":
+            num_modes = int(network_args[1])
+            hidden_channels = int(network_args[2])
+            num_blocks = int(network_args[3])
+            activation = self.get_activation(network_args[4])
+
+            network = pdeqx.arch.ClassicFNO(
+                num_spatial_dims=self.num_spatial_dims,
+                in_channels=self.num_channels,
+                out_channels=self.num_channels,
+                hidden_channels=hidden_channels,
+                num_blocks=num_blocks,
+                num_modes=num_modes,
+                activation=activation,
                 key=key,
             )
         elif network_args[0].lower() == "mlp":
@@ -689,22 +751,14 @@ class BaseScenario(eqx.Module, ABC):
         loss = trainer.full_loss(model)
         return loss
 
-    def nRMSE(
-        self,
-        pred,
-        ref,
-    ):
-        diff_rmse = jnp.sqrt(jnp.mean(jnp.square(pred - ref)))
-        ref_rmse = jnp.sqrt(jnp.mean(jnp.square(ref)))
-        return diff_rmse / ref_rmse
-
     def perform_test_rollout(
         self,
         neural_stepper: eqx.Module,
         mean_error_fn: Callable = ex.metrics.mean_nRMSE,
-    ):
+    ) -> Float[Array, "test_temporal_horizon"]:
         """
-        return shape = (self.test_temporal_horizon, )
+        Rollout the neural stepper starting from the test initial condition and
+        compare it to the reference trajectory.
         """
         test_trjs = self.get_test_data()
         test_ics = test_trjs[:, 0]
@@ -773,6 +827,10 @@ class BaseScenario(eqx.Module, ABC):
         return results
 
     def sample_trjs(self, neural_stepper: eqx.Module):
+        """
+        Use the neural_stepper to produce a sample of trajectories. The initial
+        conditions are the ones from the test set.
+        """
         test_trjs = self.get_test_data()
         test_ics_subset = test_trjs[: self.num_trjs_returned, 0]
         sample_trj_s = jax.vmap(
@@ -802,7 +860,20 @@ class BaseScenario(eqx.Module, ABC):
         Returns:
             - `trained_neural_stepper_s`: eqx.Module, the trained neural stepper
                 for the scenario. If `num_seeds` is 1, the singleton dimension
-                along the batch axis is removed.
+                along the batch axis is removed (if `remove_singleton_axis` is
+                True).
+            - `loss_history_s`: Array, the loss history of the training. The
+                shape is `(num_seeds, num_training_steps//record_loss_every)`
+            - `aux_history_s`: Array, the auxiliary history of the training. The
+                shape is `(num_seeds, num_training_steps)`
+            - `metric_trj_s`: dict, the metrics computed on the test set. The
+                keys are the metric names and the values are arrays with the
+                shape `(num_seeds, test_temporal_horizon)`
+            - `sample_rollout_s`: Array, the sample rollouts produced by the
+                trained neural stepper. The shape is `(num_seeds,
+                num_trjs_returned, test_temporal_horizon+1, num_channels,
+                *num_points)`
+            - `seeds`: Array, the seeds used for the run
         """
         trainer = self.get_trainer(train_config=train_config)
 
@@ -819,10 +890,6 @@ class BaseScenario(eqx.Module, ABC):
                 shuffle_key,
                 record_loss_every=self.record_loss_every,
             )
-
-            # mean_nRMSE_rollout = self.perform_tests(
-            #     trained_neural_stepper,
-            # )
 
             sample_rollout = self.sample_trjs(trained_neural_stepper)
 
@@ -866,7 +933,7 @@ class BaseScenario(eqx.Module, ABC):
         self,
         *,
         task_config: str = "predict",
-        network_config: str = "Conv;26;10;relu",
+        network_config: str = "Conv;34;10;relu",
         train_config: str = "one",
         start_seed: int = 0,
         num_seeds: int = 1,
@@ -877,80 +944,83 @@ class BaseScenario(eqx.Module, ABC):
         additional configuration strings.
 
         Args:
-            - `task_config`: str, what the trained neural predictor should
-                represent. Can be either 'predict' or 'correct;XX' where XX is
-                the mode of correction. `predict` refers to a pure neural
-                architecture. The neural network will fully replace the
-                numerical timesteppe. In the case of `correct;XX`, the neural
-                network interacts with a coarse stepper. To inference such a
-                system after training, the corresponding coarse solver is
-                needed, but is already baked into the returning module. Default
-                is 'predict'.
-            - `network_config`: str, the configuration of the neural network.
-                This begins with a generarch architecture type, followed by a
-                architecture-dependent length list of parameters. See the method
-                `get_network` for the available architectures and their
-                configuration. Default is 'Conv;26;10;relu' which is a
-                feed-forward convolutional network with 26 hidden channels over
-                10 hidden layers and the ReLU activation function.
-            - `train_config`: str, the training configuration. This determines
-                how neural stepper and reference numerical stepper interact
-                during training. See the method `get_trainer` for the available
-                training configurations. Default is 'one' which refers to a
-                one-step supervised approach in which one batch of samples with
-                a length 2 window is sampled across all initial conditions and
-                temporal horizon.
-            - `start_seed`: int, the starting seed for the random number
-                generator. Default is 0.
-            - `num_seeds`: int, the number of seeds to use. Default is 1.
-            - `remove_singleton_axis`: bool, if True and `num_seeds` is 1, the
-                singleton axis resulting from the seed parallel runs is removed
-                which allows to directly use the returned neural stepper.
 
-        TODO: update below to consider more metrics and the aux history
-        Returns:
-            - `result_df`: pd.DataFrame, a dataframe with the results of the
-                scenario. Each row represents one seed. It contains the
-                following columns:
-                    - 'scenario': str, the name of the scenario, created by the
-                        method `get_scenario_name`
-                    - 'task': str, the task configuration (as given in the
-                        argument)
-                    - 'train': str, the training configuration (as given in the
-                        argument)
-                    - 'net': str, the network configuration (as given in the
-                        argument)
-                    - 'seed': int, the seed used for the run (this varies
-                        between the rows if multiple seeds are used at the same
-                        time)
-                    - 'mean_nRMSE_XXXX': float, the mean nRMSE metric produced
-                        in an error rollout **after the training has finished**.
-                        Each temporal entry (staring at 1 all the way to
-                        `self.test_temporal_horizon`) is represented by a
-                        separate column.
-                    - 'train_loss_XXXXXX': float, the training loss at each
-                        training step. Each step is represented by a separate
-                        column (starting at 0 all the way to
-                        `self.num_training_steps - 1`)
-                    - 'sample_rollout_XXX': list, a list of lists representing
-                        the sample rollouts produced by the trained neural
-                        stepper. The outer list represents the different initial
-                        conditions, the inner lists represent the different time
-                        steps. The length of the outer list is given by the
-                        attribute `num_trjs_returned`. We use list to store
-                        (jax.)numpy arrays.
-            - `trained_neural_stepper_s`: eqx.Module, the trained neural stepper
-                for the scenario. This follows an structure of arrays approach
-                to represent the colleciton of networks trained based on
-                different initialization seeds. If `num_seeds` is 1 (it is only
-                intended to train one network), use the `remove_singleton_axis`
-                argument to remove the singleton dimension (True by default).
+        - `task_config`: str, what the trained neural predictor should
+            represent. Can be either 'predict' or 'correct;XX' where XX is the
+            mode of correction. `predict` refers to a pure neural architecture.
+            The neural network will fully replace the numerical timestepper. In
+            the case of `correct;XX`, the neural network interacts with a coarse
+            stepper. To inference such a system after training, the
+            corresponding coarse solver is needed, but is already baked into the
+            returning module. Default is 'predict'.
+        - `network_config`: str, the configuration of the neural network.
+            This begins with a general architecture type, followed by a
+            architecture-dependent length list of parameters. See the method
+            `get_network` for the available architectures and their
+            configuration. Default is 'Conv;34;10;relu' which is a feed-forward
+            convolutional network with 34 hidden channels over 10 hidden layers
+            and the ReLU activation function (about 30k parameters for 1D
+            problems)
+        - `train_config`: str, the training configuration. This determines
+            how neural stepper and reference numerical stepper interact during
+            training. See the method `get_trainer` for the available training
+            configurations. Default is 'one' which refers to a one-step
+            supervised approach in which one batch of samples with a length 2
+            window is sampled across all initial conditions and temporal
+            horizon.
+        - `start_seed`: int, the starting seed for the random number
+            generator. Default is 0.
+        - `num_seeds`: int, the number of seeds to use. Default is 1.
+        - `remove_singleton_axis`: bool, if True and `num_seeds` is 1, the
+            singleton axis resulting from the seed parallel runs is removed
+            which allows to directly use the returned neural stepper.
+        - `result_df`: pd.DataFrame, a dataframe with the results of the
+            scenario. Each row represents one seed. It contains the following
+            columns:
+                - 'scenario': str, the name of the scenario, created by the
+                    method `get_scenario_name`
+                - 'task': str, the task configuration (as given in the
+                    argument)
+                - 'train': str, the training configuration (as given in the
+                    argument)
+                - 'net': str, the network configuration (as given in the
+                    argument)
+                - 'seed': int, the seed used for the run (this varies
+                    between the rows if multiple seeds are used at the same
+                    time)
+                - 'mean_nRMSE_XXXX': float, the mean nRMSE metric produced
+                    in an error rollout **after the training has finished**.
+                    Each temporal entry (staring at 1 all the way to
+                    `self.test_temporal_horizon`) is represented by a separate
+                    column.
+                - `METRICS_XXXX`: float, additional metrics (e.g., mean
+                    correlation rollout)
+                - 'train_loss_XXXXXX': float, the training loss at each
+                    training step. Each step is represented by a separate column
+                    (starting at 0 all the way to `self.num_training_steps - 1`)
+                - 'aux_XXXXXX': list, the history of auxiliary information
+                    produced by callbacks. If there is no callback active, each
+                    entry is an empty dictionary.
+                - 'sample_rollout_XXX': list, a list of lists representing
+                    the sample rollouts produced by the trained neural stepper.
+                    The outer list represents the different initial conditions,
+                    the inner lists represent the different time steps. The
+                    length of the outer list is given by the attribute
+                    `num_trjs_returned`. We use list to store (jax.)numpy
+                    arrays.
+        - `trained_neural_stepper_s`: eqx.Module, the trained neural stepper
+            for the scenario. This follows an structure of arrays approach to
+            represent the colleciton of networks trained based on different
+            initialization seeds. If `num_seeds` is 1 (it is only intended to
+            train one network), use the `remove_singleton_axis` argument to
+            remove the singleton dimension (True by default).
 
         Notes:
-            - A typical workflow is to use the functions
-              `apebench.utils.melt_loss`, `apebench.utils.melt_metrics`, and
-              `apebench.utils.melt_sample_rollouts` to melt the returned
-              dataframe into a long format that can be used for plotting with seaborn.
+
+        - A typical workflow is to use the functions
+            `apebench.utils.melt_loss`, `apebench.utils.melt_metrics`, and
+            `apebench.utils.melt_sample_rollouts` to melt the returned dataframe
+            into a long format that can be used for plotting with seaborn.
         """
         (
             trained_neural_stepper_s,
