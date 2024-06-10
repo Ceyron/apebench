@@ -111,6 +111,9 @@ def run_experiment(
             trained_neural_stepper_s,
         )
 
+        del data
+        del trained_neural_stepper_s
+
         print("Finished training!")
         print()
 
