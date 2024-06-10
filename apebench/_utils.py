@@ -27,6 +27,23 @@ def melt_data(
     *,
     base_columns: list[str] = BASE_NAMES,
 ):
+    """
+    Melt a wide APEBench result DataFrame into a long format suitable for
+    visualization (e.g. with seaborn or plotly).
+
+    Args:
+    * `wide_data`: The wide DataFrame to melt, must contain `quantity_name` and
+        `base_columns` as columns.
+    * `quantity_name`: The name of the column(s) to melt.
+    * `uniquifier_name`: The name of the column that will be used to uniquely
+        identify the melted rows.
+    * `base_columns`: The columns that should be kept as is in the melted
+        DataFrame.
+
+    Returns:
+    * A long DataFrame with the same columns as `base_columns` and the melted
+        `quantity_name`.
+    """
     if isinstance(quantity_name, str):
         quantity_name = [
             quantity_name,
@@ -48,6 +65,9 @@ def melt_metrics(
     wide_data: pd.DataFrame,
     metric_name: Union[str, list[str]] = "mean_nRMSE",
 ):
+    """
+    Melt the metrics from a wide DataFrame.
+    """
     return melt_data(
         wide_data,
         quantity_name=metric_name,
@@ -56,6 +76,9 @@ def melt_metrics(
 
 
 def melt_loss(wide_data: pd.DataFrame, loss_name: str = "train_loss"):
+    """
+    Melt the loss from a wide DataFrame.
+    """
     return melt_data(
         wide_data,
         quantity_name=loss_name,
@@ -67,6 +90,9 @@ def melt_sample_rollouts(
     wide_data: pd.DataFrame,
     sample_rollout_name: str = "sample_rollout",
 ):
+    """
+    Melt the sample rollouts from a wide DataFrame.
+    """
     return melt_data(
         wide_data,
         quantity_name=sample_rollout_name,
@@ -77,6 +103,9 @@ def melt_sample_rollouts(
 def split_train(
     metric_data: pd.DataFrame,
 ):
+    """
+    Decode the `train` column into `category`, `type`, and `rollout` columns.
+    """
     metric_data["category"] = metric_data["train"].apply(lambda x: x.split(";")[0])
     metric_data["type"] = metric_data["category"].apply(
         lambda x: "sup" if x in ["one", "sup"] else "div"
@@ -91,10 +120,28 @@ def split_train(
 def aggregate_gmean(
     metric_data: pd.DataFrame,
     *,
+    up_to: int = 100,
     grouping_cols: list[str] = BASE_NAMES,
 ):
+    """
+    Aggregate an error rollout over time via the geometric mean.
+
+    Args:
+
+    * `metric_data`: The DataFrame to aggregate, must contain `grouping_cols`
+        and `mean_nRMSE` as columns. When grouped by `grouping_cols`, the groups
+        shall only contain values at different time steps.
+    * `up_to`: The time step up to which to aggregate. (inclusive)
+    * `grouping_cols`: The columns to group by.
+
+    Returns:
+
+    * A DataFrame with the new column `gmean_mean_nRMSE` containing the
+        geometric mean of the `mean_nRMSE` values up to `up_to` for each group.
+    """
     return (
-        metric_data.groupby(grouping_cols)
+        metric_data.query(f"time_step <= {up_to}")
+        .groupby(grouping_cols)
         .agg(gmean_mean_nRMSE=("mean_nRMSE", gmean))
         .reset_index()
     )
@@ -124,6 +171,13 @@ def relative_by_config(
 def read_in_kwargs(
     df: pd.DataFrame,
 ):
+    """
+    Parse the `scenario_kwargs` column of a DataFrame and add the parsed entries
+    as new columns.
+
+    Requires that the dictionary in `scenario_kwargs` has the same keys for all
+    rows.
+    """
     col = df["scenario_kwargs"].apply(eval)
     entries = list(col[0].keys())
     for entry in entries:
