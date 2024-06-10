@@ -1,11 +1,27 @@
 <h1 align="center">
-  <img src="img/apebench_logo.png" width="200">
+  <img src="img/apebench_logo.png" width="150">
   <br>
     APEBench
   <br>
 </h1>
 
 <h4 align="center">A benchmark for Autoregressive PDE Emulators in <a href="https://github.com/google/jax" target="_blank">JAX</a>.</h4>
+
+<p align="center">
+  <a href="#installation">Installation</a> •
+  <a href="#quickstart">Quickstart</a> •
+    <a href="#background">Background</a> •
+    <a href="#typical-workflow">Typical Workflow</a> •
+    <a href="#extending-apebench">Extending APEBench</a> •
+    <a href="#defining-your-own-scenario">Defining your own Scenario</a> •
+    <a href="#common-patterns-in-apebench">Common Patterns</a> •
+    <a href="#gotchas">Gotchas</a> •
+    <a href="#tips-and-tricks">Tips and tricks</a>
+</p>
+
+<p align="center">
+    <img src="img/apebench_teaser_burgers.png">
+</p>
 
 ## Installation
 
@@ -31,7 +47,7 @@ cd apebench
 pip install -r requirements.txt
 ```
 
-### Quickstart
+## Quickstart
 
 Train a ConvNet to emulate 1D advection, display train loss, test error metric
 rollout, and a sample rollout.
@@ -80,7 +96,14 @@ axs[2].set_title("Sample rollout")
 plt.show()
 ```
 
-### More details
+You can explore the apebench scenarios using an interactive streamlit notebook
+by running
+
+```bash
+streamlit run explore_sample_data_streamlit.py
+```
+
+## Background
 
 Autoregressive neural emulators can be used to efficiently forecast transient
 phenomena, often associated with differential equations. Denote by
@@ -92,7 +115,7 @@ $$
 u_h^{[t+1]} = \mathcal{P}_h(u_h^{[t]}).
 $$
 
-An autoregressive neural operator $f_\theta$ is trained to mimic $\mathcal{P}_h$, i.e., $f_\theta \approx \mathcal{P}_h$. Doing so requires the following choices:
+An autoregressive neural emulator $f_\theta$ is trained to mimic $\mathcal{P}_h$, i.e., $f_\theta \approx \mathcal{P}_h$. Doing so requires the following choices:
 
 1. What is the reference simulator $\mathcal{P}_h$?
     1. What is its corresponding continuous transient partial differential
@@ -100,7 +123,7 @@ An autoregressive neural operator $f_\theta$ is trained to mimic $\mathcal{P}_h$
         Navier-Stokes, etc.)
     2. What consistent numerical scheme is used to discretize the continuous
         transient partial differential equation?
-2. What is the architecture of the autoregressive neural operator $f_\theta$?
+2. What is the architecture of the autoregressive neural emulator $f_\theta$?
 3. How do $f_\theta$ and $\mathcal{P}_h$ interact during training (=optimization
     of $\theta$)?
     1. For how many steps are their predictions unrolled and compared?
@@ -130,13 +153,19 @@ component is `Trainax`, an abstract implementation of "trainers" that provide
 supervised rollout training and many other features. The fourth (4) component is
 to wrap up the former three and is given by this repository.
 
+### About APEBench
+
+APEBench encapsulates the entire pipeline of training and evaluating an
+autoregressive neural emulator in a scenario. A scenario is a callable
+dataclass.
+
 
 ## Typical Workflow
 
 ### Workflow for a single training run
 
 A `BaseScenario` consists of all the workflow needed to train autoregressive
-neural operator. To access a pre-built scenario use either the
+neural emulatoAs. To access a pre-built scenario use either the
 `apebench.normalized.XX` for normalized (=dimensionless) scenarios or
 `apebench.physical.XX` for non-normalized scenarios. Also consider using the
 difficulty based interface via `apebench.difficulty.XX`. As an example consider
@@ -477,9 +506,9 @@ apebench.run_experiment(
 ```
 
 
-## Defining your own scenario
+## Defining your own Scenario
 
-### Modify an existing scenario
+### Modify an existing Scenario
 
 When instantiating a scenario, use keyword based arguments to change some of the
 attributes. For example, this uses less initial conditions for training the
@@ -528,7 +557,7 @@ CONFIGS = [
 ]
 ```
 
-### Your truly own scenario
+### Your truly own Scenario
 
 If you decide to implement your own scenario, you have to subclass `BaseScenario` and implement the following methods:
 
@@ -541,7 +570,7 @@ Of course, feel free to overwrite some of the other methods if you are unhappy
 witht the options, for example to support more network architectures or training
 methodologies.
 
-## Common patterns in apebench
+## Common Patterns in Apebench
 
 * Configuration strings: many configurations (like network architecture, initial
   condition distribution, optimization config, learning methodology, etc.) are
@@ -554,9 +583,9 @@ methodologies.
 attributes those need to be typed similarly to the base class.
 
 
-## Tips and tricks
+## Tips and Tricks
 
-### Avoid excessive storage usage for experiments
+**Avoid excessive storage usage for experiments**:
 
 * Reduce the number of exported trajectories. This is 1 by default, but in 2d
     this can cause excessive memory usage
