@@ -590,3 +590,13 @@ attributes those need to be typed similarly to the base class.
 * Reduce the number of exported trajectories. This is 1 by default, but in 2d
     this can cause excessive memory usage
 * Reduce the logging frequency with `record_loss_every`.
+
+## License
+
+MIT, see [here](LICENSE.txt)
+
+---
+
+> [fkoehler.site](https://fkoehler.site/) &nbsp;&middot;&nbsp;
+> GitHub [@ceyron](https://github.com/ceyron) &nbsp;&middot;&nbsp;
+> X [@felix_m_koehler](https://twitter.com/felix_m_koehler)
