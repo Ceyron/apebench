@@ -19,9 +19,22 @@ def scrape_data_and_metadata(
     **scenario_kwargs,
 ):
     """
-    If `folder` is not None, saves the data and metadata to the folder as
-    `folder/{name}.npy` and `folder/{name}.json`. Otherwise, returns the data
-    and metadata as jax arrays and a dictionary, respectively.
+    Produce train data, test data, and metadata for a given scenario. Optionally
+    write them to disk.
+
+    **Arguments:**
+
+    - `folder` (str, optional): Folder to save the data and metadata to. If
+        None, returns the data and metadata as jax arrays and a dictionary,
+        respectively.
+    - `scenario` (str): Name of the scenario to produce data for. Must be one of
+        `apebench.scenarios.scenario_dict`.
+    - `name` (str, optional): Name of the scenario. If "auto", the name is
+        automatically generated based on the scenario and its additional
+        arguments.
+    - `**scenario_kwargs`: Additional arguments to pass to the scenario. All
+        attributes of a scenario can be modified by passing them as keyword
+        arguments.
     """
     scenario = scenario_dict[scenario](**scenario_kwargs)
     if name == "auto":
