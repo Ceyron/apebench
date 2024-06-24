@@ -38,15 +38,12 @@ def scrape_data_and_metadata(
 
         name += additional_infos
 
-    logging.info(f"Producing data for {name}")
-    data = scenario.get_train_data()
-    num_nans = jnp.sum(jnp.isnan(data))
-    if num_nans > 0:
-        logging.warning(f"Data contains {num_nans} NaNs")
-
+    logging.info(f"Producing train data for {name}")
+    train_data = scenario.get_train_data()
+    train_num_nans = jnp.sum(jnp.isnan(train_data))
+    if train_num_nans > 0:
+        logging.warning(f"Train data contains {train_num_nans} NaNs")
     logging.info(f"Writing data for {name}")
-
-    jnp.save(f"{name}.npy", data)
 
     info = asdict(scenario)
 
@@ -58,6 +55,98 @@ def scrape_data_and_metadata(
     if folder is not None:
         with open(f"{folder}/{name}.json", "w") as f:
             json.dump(metadata, f)
-        jnp.save(f"{folder}/{name}.npy", data)
+        jnp.save(f"{folder}/{name}.npy", train_data)
     else:
-        return data, metadata
+        return train_data, metadata
+
+
+CURATION_APEBENCH_V1 = [
+    # 1D - Linear
+    {
+        "scenario": "diff_adv",
+    },
+    {
+        "scenario": "diff_diff",
+    },
+    {
+        "scenario": "diff_adv_diff",
+    },
+    {
+        "scenario": "diff_disp",
+    },
+    {
+        "scenario": "diff_hyp_diff",
+    },
+    # 1D - Nonlinear
+    {"scenario": "diff_burgers"},
+    {"scenario": "diff_kdv"},
+    {"scenario": "diff_ks"},
+    {"scenario": "diff_ks_cons"},
+    # 1D - Reaction-Diffusion
+    {"scenario": "diff_fisher"},
+    # 2D - Linear
+    {"scenario": "diff_adv", "num_spatial_dims": 2},
+    {"scenario": "diff_diff", "num_spatial_dims": 2},
+    {"scenario": "diff_adv_diff", "num_spatial_dims": 2},
+    {"scenario": "diff_disp", "num_spatial_dims": 2},
+    {"scenario": "diff_hyp_diff", "num_spatial_dims": 2},
+    # 2D - Linear Special
+    {
+        "scenario": "phy_unbal_adv",
+        "num_spatial_dims": 2,
+        "advection_coef_vector": (0.01, -0.04),
+    },
+    {"scenario": "phy_diag_diff", "num_spatial_dims": 2},
+    {"scenario": "phy_aniso_diff", "num_spatial_dims": 2},
+    {"scenario": "phy_mix_disp", "num_spatial_dims": 2},
+    {"scenario": "phy_mix_hyp", "num_spatial_dims": 2},
+    # 2D - Nonlinear
+    {"scenario": "diff_burgers", "num_spatial_dims": 2},
+    {"scenario": "diff_burgers_sc", "num_spatial_dims": 2},
+    {"scenario": "diff_kdv", "num_spatial_dims": 2},
+    {"scenario": "diff_ks", "num_spatial_dims": 2},
+    {"scenario": "phy_decay_turb", "num_spatial_dims": 2},
+    {"scenario": "phy_kolm_flow", "num_spatial_dims": 2},
+    # 2D - Reaction-Diffusion
+    {"scenario": "diff_fisher", "num_spatial_dims": 2},
+    {"scenario": "phy_gs_type", "num_spatial_dims": 2},
+    {"scenario": "phy_sh", "num_spatial_dims": 2},
+    # 3D - Linear
+    {"scenario": "diff_adv", "num_spatial_dims": 3, "num_points": 32},
+    {"scenario": "diff_diff", "num_spatial_dims": 3, "num_points": 32},
+    {"scenario": "diff_adv_diff", "num_spatial_dims": 3, "num_points": 32},
+    {"scenario": "diff_disp", "num_spatial_dims": 3, "num_points": 32},
+    {"scenario": "diff_hyp_diff", "num_spatial_dims": 3, "num_points": 32},
+    # 3D - Linear Special
+    {"scenario": "phy_unbal_adv", "num_spatial_dims": 3, "num_points": 32},
+    {
+        "scenario": "phy_diag_diff",
+        "num_spatial_dims": 3,
+        "num_points": 32,
+        "diffusion_coef_vector": (0.001, 0.002, 0.0004),
+    },
+    {
+        "scenario": "phy_aniso_diff",
+        "num_spatial_dims": 3,
+        "num_points": 32,
+        "diffusion_coef_matrix": (
+            (0.001, 0.0005, 0.0003),
+            (0.0005, 0.002, 0.0002),
+            (0.0003, 0.0002, 0.0004),
+        ),
+    },
+    {"scenario": "phy_mix_disp", "num_spatial_dims": 3, "num_points": 32},
+    {"scenario": "phy_mix_hyp", "num_spatial_dims": 3, "num_points": 32},
+    # 3D - Nonlinear
+    {"scenario": "diff_burgers", "num_spatial_dims": 3, "num_points": 32},
+    {"scenario": "diff_burgers_sc", "num_spatial_dims": 3, "num_points": 32},
+    {"scenario": "diff_kdv", "num_spatial_dims": 3, "num_points": 32},
+    {"scenario": "diff_ks", "num_spatial_dims": 3, "num_points": 32},
+    # 3D - Reaction-Diffusion
+    {"scenario": "diff_fisher", "num_spatial_dims": 3, "num_points": 32},
+    {"scenario": "phy_gs_type", "num_spatial_dims": 3, "num_points": 32},
+    {"scenario": "phy_sh", "num_spatial_dims": 3, "num_points": 32},
+]
+"""
+Collection of default scenarios as used in the original APEBench paper
+"""
