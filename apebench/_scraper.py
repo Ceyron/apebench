@@ -2,6 +2,7 @@
 Utilities to scrape APEBench datasets into numpy arrays and save them to disk.
 """
 
+import json
 import logging
 from dataclasses import asdict
 
@@ -11,11 +12,17 @@ from .scenarios import scenario_dict
 
 
 def scrape_data_and_metadata(
+    folder: str = None,
     *,
     scenario: str,
     name: str = "auto",
     **scenario_kwargs,
 ):
+    """
+    If `folder` is not None, saves the data and metadata to the folder as
+    `folder/{name}.npy` and `folder/{name}.json`. Otherwise, returns the data
+    and metadata as jax arrays and a dictionary, respectively.
+    """
     scenario = scenario_dict[scenario](**scenario_kwargs)
     if name == "auto":
         name = scenario.get_scenario_name()
@@ -48,4 +55,9 @@ def scrape_data_and_metadata(
         "info": info,
     }
 
-    return data, metadata
+    if folder is not None:
+        with open(f"{folder}/{name}.json", "w") as f:
+            json.dump(metadata, f)
+        jnp.save(f"{folder}/{name}.npy", data)
+    else:
+        return data, metadata
