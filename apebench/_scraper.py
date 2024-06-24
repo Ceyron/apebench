@@ -62,6 +62,8 @@ def scrape_data_and_metadata(
             json.dump(metadata, f)
         jnp.save(f"{folder}/{name}_train.npy", train_data)
         jnp.save(f"{folder}/{name}_test.npy", test_data)
+
+        del train_data, test_data
     else:
         return train_data, metadata
 
