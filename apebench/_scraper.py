@@ -43,7 +43,12 @@ def scrape_data_and_metadata(
     train_num_nans = jnp.sum(jnp.isnan(train_data))
     if train_num_nans > 0:
         logging.warning(f"Train data contains {train_num_nans} NaNs")
-    logging.info(f"Writing data for {name}")
+
+    logging.info(f"Producing test data for {name}")
+    test_data = scenario.get_test_data()
+    test_num_nans = jnp.sum(jnp.isnan(test_data))
+    if test_num_nans > 0:
+        logging.warning(f"Test data contains {test_num_nans} NaNs")
 
     info = asdict(scenario)
 
@@ -55,7 +60,8 @@ def scrape_data_and_metadata(
     if folder is not None:
         with open(f"{folder}/{name}.json", "w") as f:
             json.dump(metadata, f)
-        jnp.save(f"{folder}/{name}.npy", train_data)
+        jnp.save(f"{folder}/{name}_train.npy", train_data)
+        jnp.save(f"{folder}/{name}_test.npy", test_data)
     else:
         return train_data, metadata
 
