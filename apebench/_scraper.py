@@ -120,18 +120,49 @@ CURATION_APEBENCH_V1 = [
     {"scenario": "phy_gs_type", "num_spatial_dims": 2},
     {"scenario": "phy_sh", "num_spatial_dims": 2},
     # 3D - Linear
-    {"scenario": "diff_adv", "num_spatial_dims": 3, "num_points": 32},
-    {"scenario": "diff_diff", "num_spatial_dims": 3, "num_points": 32},
-    {"scenario": "diff_adv_diff", "num_spatial_dims": 3, "num_points": 32},
-    {"scenario": "diff_disp", "num_spatial_dims": 3, "num_points": 32},
-    {"scenario": "diff_hyp_diff", "num_spatial_dims": 3, "num_points": 32},
+    {
+        "scenario": "diff_adv",
+        "num_spatial_dims": 3,
+        "num_points": 32,
+        "num_test_samples": 10,
+    },
+    {
+        "scenario": "diff_diff",
+        "num_spatial_dims": 3,
+        "num_points": 32,
+        "num_test_samples": 10,
+    },
+    {
+        "scenario": "diff_adv_diff",
+        "num_spatial_dims": 3,
+        "num_points": 32,
+        "num_test_samples": 10,
+    },
+    {
+        "scenario": "diff_disp",
+        "num_spatial_dims": 3,
+        "num_points": 32,
+        "num_test_samples": 10,
+    },
+    {
+        "scenario": "diff_hyp_diff",
+        "num_spatial_dims": 3,
+        "num_points": 32,
+        "num_test_samples": 10,
+    },
     # 3D - Linear Special
-    {"scenario": "phy_unbal_adv", "num_spatial_dims": 3, "num_points": 32},
+    {
+        "scenario": "phy_unbal_adv",
+        "num_spatial_dims": 3,
+        "num_points": 32,
+        "num_test_samples": 10,
+    },
     {
         "scenario": "phy_diag_diff",
         "num_spatial_dims": 3,
         "num_points": 32,
         "diffusion_coef_vector": (0.001, 0.002, 0.0004),
+        "num_test_samples": 10,
     },
     {
         "scenario": "phy_aniso_diff",
@@ -142,18 +173,64 @@ CURATION_APEBENCH_V1 = [
             (0.0005, 0.002, 0.0002),
             (0.0003, 0.0002, 0.0004),
         ),
+        "num_test_samples": 10,
     },
-    {"scenario": "phy_mix_disp", "num_spatial_dims": 3, "num_points": 32},
-    {"scenario": "phy_mix_hyp", "num_spatial_dims": 3, "num_points": 32},
+    {
+        "scenario": "phy_mix_disp",
+        "num_spatial_dims": 3,
+        "num_points": 32,
+        "num_test_samples": 10,
+    },
+    {
+        "scenario": "phy_mix_hyp",
+        "num_spatial_dims": 3,
+        "num_points": 32,
+        "num_test_samples": 10,
+    },
     # 3D - Nonlinear
-    {"scenario": "diff_burgers", "num_spatial_dims": 3, "num_points": 32},
-    {"scenario": "diff_burgers_sc", "num_spatial_dims": 3, "num_points": 32},
-    {"scenario": "diff_kdv", "num_spatial_dims": 3, "num_points": 32},
-    {"scenario": "diff_ks", "num_spatial_dims": 3, "num_points": 32},
+    {
+        "scenario": "diff_burgers",
+        "num_spatial_dims": 3,
+        "num_points": 32,
+        "num_test_samples": 10,
+    },
+    {
+        "scenario": "diff_burgers_sc",
+        "num_spatial_dims": 3,
+        "num_points": 32,
+        "num_test_samples": 10,
+    },
+    {
+        "scenario": "diff_kdv",
+        "num_spatial_dims": 3,
+        "num_points": 32,
+        "num_test_samples": 10,
+    },
+    {
+        "scenario": "diff_ks",
+        "num_spatial_dims": 3,
+        "num_points": 32,
+        "num_test_samples": 10,
+    },
     # 3D - Reaction-Diffusion
-    {"scenario": "diff_fisher", "num_spatial_dims": 3, "num_points": 32},
-    {"scenario": "phy_gs_type", "num_spatial_dims": 3, "num_points": 32},
-    {"scenario": "phy_sh", "num_spatial_dims": 3, "num_points": 32},
+    {
+        "scenario": "diff_fisher",
+        "num_spatial_dims": 3,
+        "num_points": 32,
+        "num_test_samples": 10,
+    },
+    {
+        "scenario": "phy_gs_type",
+        "num_spatial_dims": 3,
+        "num_points": 32,
+        "num_test_samples": 10,
+    },
+    {
+        "scenario": "phy_sh",
+        "num_spatial_dims": 3,
+        "num_points": 32,
+        "num_test_samples": 10,
+    },
 ]
 """
 Collection of default scenarios as used in the original APEBench paper
