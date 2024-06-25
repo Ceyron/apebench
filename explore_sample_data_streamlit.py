@@ -171,7 +171,7 @@ class VolumeRenderer(DisplayObject):
         np.save(buffer2, colormap_data)
         cmap_code = base64.b64encode(buffer2.getvalue())
 
-        canvas_id = f"v4dv_canvas_{str(random.randint(0,2**32))}"
+        canvas_id = f"v4dv_canvas_{str(random.randint(0, 2**32))}"
         html_code = TEMPLATE_IFRAME.format(
             canvas_id=canvas_id,
             data_code=data_code.decode("utf-8"),
