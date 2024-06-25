@@ -2,6 +2,7 @@ import exponax
 import pdequinox
 import trainax
 
+from . import _scraper as scraper
 from . import scenarios
 from ._extensions import arch_extensions
 from ._run import (
@@ -35,4 +36,5 @@ __all__ = [
     "melt_sample_rollouts",
     "read_in_kwargs",
     "arch_extensions",
+    "scraper",
 ]
