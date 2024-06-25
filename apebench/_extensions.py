@@ -4,9 +4,8 @@ architecture.
 """
 
 import jax
+import pdequinox as pdeqx
 from jaxtyping import PRNGKeyArray
-
-from .pdequinox import pdequinox as pdeqx
 
 
 def conv_net_extension(

@@ -2,8 +2,9 @@
 Scenarios using the general convection interface (growing channels over spatial
 dimensions)
 """
+import exponax as ex
+
 from ..._base_scenario import BaseScenario
-from ...exponax import exponax as ex
 
 
 class Convection(BaseScenario):
