@@ -2,19 +2,19 @@ from abc import ABC, abstractmethod
 from typing import Callable
 
 import equinox as eqx
+import exponax as ex
 import jax
 import jax.numpy as jnp
 import optax
 import pandas as pd
+import pdequinox as pdeqx
+import trainax as tx
+from exponax import BaseStepper
+from exponax.ic import BaseRandomICGenerator
 from jaxtyping import Array, Float, PRNGKeyArray
 
 from ._corrected_stepper import CorrectedStepper
 from ._extensions import arch_extensions
-from .exponax import exponax as ex
-from .exponax.exponax import BaseStepper
-from .exponax.exponax.ic import BaseRandomICGenerator
-from .pdequinox import pdequinox as pdeqx
-from .trainax import trainax as tx
 
 
 class BaseScenario(eqx.Module, ABC):

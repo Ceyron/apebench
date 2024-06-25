@@ -1,5 +1,6 @@
+import exponax as ex
+
 from ..._base_scenario import BaseScenario
-from ...exponax import exponax as ex
 
 
 class Polynomial(BaseScenario):

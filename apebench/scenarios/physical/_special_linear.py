@@ -1,10 +1,10 @@
 """
 This special modules is for variations that do easily fit into othet categories
 """
+import exponax as ex
 import jax.numpy as jnp
 
 from ..._base_scenario import BaseScenario
-from ...exponax import exponax as ex
 
 
 class UnbalancedAdvection(BaseScenario):

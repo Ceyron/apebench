@@ -25,26 +25,21 @@
 
 ## Installation
 
-0. (Optional) Create a fresh conda environment
+```bash
+pip install git+ssh://git@github.com/Ceyron/apebench@main
+```
+
+Requires Python 3.10+ and JAX 0.4.12+ 👉 [JAX install guide](https://jax.readthedocs.io/en/latest/installation.html).
+
+Quick instruction with fresh Conda environment and JAX CUDA 12.
+
 ```bash
 conda create -n apebench python=3.12 -y
 conda activate apebench
 ```
-1. Install JAX (here the CUDA version, more versions [here](https://jax.readthedocs.io/en/latest/installation.html))
 ```bash
 pip install -U "jax[cuda12]"
-```
-2. Clone repository
-```bash
-git clone --recurse-submodule git@github.com:Ceyron/apebench.git
-```
-3. Change into the repository
-```bash
-cd apebench
-```
-4. Install the requirements
-```bash
-pip install -r requirements.txt
+pip install git+ssh://git@github.com/Ceyron/apebench@main
 ```
 
 ## Quickstart
