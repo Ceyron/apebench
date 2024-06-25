@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="img/apebench_logo.png" width="150">
+  <img src="docs/imgs/apebench_logo.png" width="150">
   <br>
     APEBench
   <br>
@@ -20,7 +20,7 @@
 </p>
 
 <p align="center">
-    <img src="img/apebench_teaser_burgers.png">
+    <img src="docs/imgs/apebench_teaser_burgers.png">
 </p>
 
 ## Installation
