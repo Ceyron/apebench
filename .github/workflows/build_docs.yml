@@ -20,6 +20,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          git config --global url."https://${{ secrets.ACESS_TOKEN }}@github".insteadOf ssh://git@github
           python -m pip install --upgrade pip
           python -m pip install .
           python -m pip install -r docs/requirements.txt
