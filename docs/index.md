@@ -1,29 +1,4 @@
-<h1 align="center">
-  <img src="docs/imgs/apebench_logo.png" width="150">
-  <br>
-    APEBench
-  <br>
-</h1>
-
-<h4 align="center">A benchmark for Autoregressive PDE Emulators in <a href="https://github.com/google/jax" target="_blank">JAX</a>.</h4>
-
-<p align="center">
-  <a href="#installation">Installation</a> •
-  <a href="#quickstart">Quickstart</a> •
-    <a href="#background">Background</a> •
-    <a href="#typical-workflow">Typical Workflow</a> •
-    <a href="#extending-apebench">Extending APEBench</a> •
-    <a href="#defining-your-own-scenario">Defining your own Scenario</a> •
-    <a href="#common-patterns-in-apebench">Common Patterns</a> •
-    <a href="#gotchas">Gotchas</a> •
-    <a href="#tips-and-tricks">Tips and tricks</a>
-</p>
-
-<p align="center">
-    <img src="docs/imgs/apebench_teaser_burgers.png">
-</p>
-
-## Installation
+# Getting Started
 
 ```bash
 pip install git+ssh://git@github.com/Ceyron/apebench@main
@@ -290,7 +265,7 @@ sns.lineplot(data_loss, x="update_step", y="train_loss")
 plt.yscale("log"); plt.show()
 ```
 
-![](img/adv_training.png)
+![](imgs/adv_training.png)
 
 The training decreased the loss by five orders of magnitude.
 
@@ -303,7 +278,7 @@ sns.lineplot(data_metrics, x="time_step", y="mean_nRMSE")
 plt.ylim(-0.05, 1.05); plt.grid(); plt.show()
 ```
 
-![](img/adv_metric_rollout.png)
+![](imgs/adv_metric_rollout.png)
 
 And we can also plot a sample rollout
 
@@ -316,7 +291,7 @@ plt.imshow(np.array(data_sample_rollout["sample_rollout"][0])[:, 0, :].T, origin
 plt.xlabel("time"); plt.ylabel("space"); plt.show()
 ```
 
-![](img/adv_sample_rollout.png)
+![](imgs/adv_sample_rollout.png)
 
 ### Running interface
 
@@ -415,7 +390,7 @@ sns.lineplot(loss_df, x="update_step", y="train_loss", hue="net")
 plt.yscale("log"); plt.show()
 ```
 
-![](img/adv_experiment_training.png)
+![](imgs/adv_experiment_training.png)
 
 Then for the metric rollout
 
@@ -425,7 +400,7 @@ sns.lineplot(metric_df, x="time_step", y="mean_nRMSE", hue="net")
 plt.ylim(-0.05, 1.05); plt.grid(); plt.show()
 ```
 
-![](img/adv_experiment_metric_rollout.png)
+![](imgs/adv_experiment_metric_rollout.png)
 
 We can also make a tabular export (using the median over the 10 seeds)
 
@@ -588,7 +563,7 @@ attributes those need to be typed similarly to the base class.
 
 ## License
 
-MIT, see [here](LICENSE.txt)
+MIT, see [here](https://github.com/Ceyron/apebench/blob/main/LICENSE.txt)
 
 ---
 
