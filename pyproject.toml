@@ -1,0 +1,53 @@
+[project]
+name = "apebench"
+version = "0.0.1"
+description = "Benchmark suite for Autoregressive Neural Emulators of PDEs in JAX."
+readme = "README.md"
+requires-python ="~=3.10"
+authors = [
+  {name = "Felix Koehler"},
+]
+keywords = ["jax", "sciml", "deep-learning", "pde", "neural operator"]
+urls = {repository = "https://github.com/Ceyron/apebench" }
+dependencies = [
+  "jax>=0.4.13",
+  "jaxtyping>=0.2.20",
+  "typing_extensions>=4.5.0",
+  "equinox>=0.11.3",
+  "optax>=0.2.0",
+  "tqdm>=4.63.2",
+  "matplotlib>=3.8.1",
+  "pandas>=2.2.0",
+  "seaborn>=0.13.0",
+  "exponax @ git+ssh://git@github.com/Ceyron/exponax@main#e7823426ca030c62336125fbacccbd50374aadf2",
+  "pdequinox @ git+ssh://git@github.com/Ceyron/pdequinox@main#fc88c3344e6a2714535e263d6c3256cf0bb47e90",
+  "trainax @ git+ssh://git@github.com/Ceyron/trainax@main#4af1f7b748d364b56f65d792158e7be9a48ad7aa",
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py38', 'py39', 'py310', 'py311', 'py312']
+include = '\.pyi?$'
+exclude = '''
+(
+  /(
+      \.eggs
+    | \.git
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+    | docs
+  )/
+)
+'''
+
+[tool.setuptools.packages.find]
+where = ["."]  # list of folders that contain the packages (["."] by default)
+include = ["apebench*"]  # package names should match these glob patterns (["*"] by default)
+exclude = []  # exclude packages matching these glob patterns (empty by default)
+namespaces = false  # to disable scanning PEP 420 namespaces (true by default)
