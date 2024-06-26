@@ -86,6 +86,11 @@ nav:
     - 'index.md'
     - 'typical_workflow.md'
     - 'extending_apebench.md'
+    - Examples:
+        - Introductory:
+            - Simple Advection 1D Emulation: 'examples/simple_advection_1d_learning.ipynb'
+        - Advanced:
+            - Difficulty & Receptive Field in 1D Advection: 'examples/difficulty_and_receptive_field_advection_1d.ipynb'
     - Scenarios:
         - Overview: 'api/scenarios/overview.md'
         - Base Scenario: 'api/scenarios/base.md'

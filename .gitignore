@@ -160,3 +160,4 @@ cython_debug/
 #.idea/
 
 docs/examples/_results*
+docs/examples/difficulty_and_receptive_field_advection
