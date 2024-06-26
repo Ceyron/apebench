@@ -16,9 +16,9 @@ jobs:
       - uses: webfactory/ssh-agent@v0.9.0
         with:
             ssh-private-key: |
-                  ${{ secrets.ID_RSA_1 }}
-                  ${{ secrets.ID_RSA_2 }}
-                  ${{ secrets.ID_RSA_3 }}
+                  ${{ secrets.ID_RSA_EXPONAX }}
+                  ${{ secrets.ID_RSA_PDEQUINOX }}
+                  ${{ secrets.ID_RSA_TRAINAX }}
       - uses: actions/setup-python@v5
         with:
           python-version: 3.x
