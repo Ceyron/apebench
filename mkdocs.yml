@@ -90,6 +90,7 @@ nav:
         - Introductory:
             - Simple Advection 1D Emulation: 'examples/simple_advection_1d_learning.ipynb'
             - Scrape Datasets: 'examples/scrape_datasets.ipynb'
+            - Animate Learning 1D Burgers: 'examples/animate_emulator_learning_burgers.ipynb'
         - Advanced:
             - Difficulty & Receptive Field in 1D Advection: 'examples/difficulty_and_receptive_field_advection_1d.ipynb'
     - Scenarios:
