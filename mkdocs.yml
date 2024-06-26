@@ -97,3 +97,7 @@ nav:
             - Linear: 'api/scenarios/physical/linear.md'
         - Normalized:
             - Linear: 'api/scenarios/normalized/linear.md'
+    - API:
+        - Run:
+            - One Experiment: 'api/run/one_experiment.md'
+            - Study: 'api/run/study.md'
