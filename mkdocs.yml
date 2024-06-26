@@ -101,3 +101,7 @@ nav:
         - Run:
             - One Experiment: 'api/run/one_experiment.md'
             - Study: 'api/run/study.md'
+        - Postprocess:
+            - High Level: 'api/postprocess/high_level.md'
+            - Low Level: 'api/postprocess/low_level.md'
+            - Dataframe Manipulation: 'api/postprocess/dataframe_manipulation.md'
