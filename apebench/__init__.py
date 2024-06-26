@@ -4,6 +4,7 @@ import trainax
 
 from . import _scraper as scraper
 from . import scenarios
+from ._base_scenario import BaseScenario
 from ._extensions import arch_extensions
 from ._run import (
     get_experiment_name,
@@ -37,4 +38,5 @@ __all__ = [
     "read_in_kwargs",
     "arch_extensions",
     "scraper",
+    "BaseScenario",
 ]
