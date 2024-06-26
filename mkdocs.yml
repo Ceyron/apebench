@@ -90,3 +90,5 @@ nav:
         - Base Scenario: 'api/scenarios/base.md'
         - Difficulty:
             - Linear: 'api/scenarios/difficulty/linear.md'
+            - Nonlinear: 'api/scenarios/difficulty/nonlinear.md'
+            - Convection: 'api/scenarios/difficulty/convection.md'
