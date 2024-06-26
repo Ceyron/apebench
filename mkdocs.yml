@@ -87,8 +87,13 @@ nav:
     - 'typical_workflow.md'
     - 'extending_apebench.md'
     - Scenarios:
+        - Overview: 'api/scenarios/overview.md'
         - Base Scenario: 'api/scenarios/base.md'
         - Difficulty:
             - Linear: 'api/scenarios/difficulty/linear.md'
             - Nonlinear: 'api/scenarios/difficulty/nonlinear.md'
             - Convection: 'api/scenarios/difficulty/convection.md'
+        - Physical:
+            - Linear: 'api/scenarios/physical/linear.md'
+        - Normalized:
+            - Linear: 'api/scenarios/normalized/linear.md'
