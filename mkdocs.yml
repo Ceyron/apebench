@@ -84,3 +84,5 @@ plugins:
 
 nav:
     - 'index.md'
+    - 'typical_workflow.md'
+    - 'extending_apebench.md'
