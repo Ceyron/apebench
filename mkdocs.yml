@@ -86,3 +86,25 @@ nav:
     - 'index.md'
     - 'typical_workflow.md'
     - 'extending_apebench.md'
+    - Scenarios:
+        - Overview: 'api/scenarios/overview.md'
+        - Base Scenario: 'api/scenarios/base.md'
+        - Difficulty:
+            - Linear: 'api/scenarios/difficulty/linear.md'
+            - Nonlinear: 'api/scenarios/difficulty/nonlinear.md'
+            - Convection: 'api/scenarios/difficulty/convection.md'
+        - Physical:
+            - Linear: 'api/scenarios/physical/linear.md'
+        - Normalized:
+            - Linear: 'api/scenarios/normalized/linear.md'
+    - API:
+        - Run:
+            - One Experiment: 'api/run/one_experiment.md'
+            - Study: 'api/run/study.md'
+        - Postprocess:
+            - High Level: 'api/postprocess/high_level.md'
+            - Low Level: 'api/postprocess/low_level.md'
+            - Dataframe Manipulation: 'api/postprocess/dataframe_manipulation.md'
+        - Scrape:
+            - Utilities: 'api/scrape/utilities.md'
+            - Curations: 'api/scrape/curations.md'
