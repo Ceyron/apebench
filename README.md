@@ -10,6 +10,7 @@
 <p align="center">
   <a href="#installation">Installation</a> •
   <a href="#quickstart">Quickstart</a> •
+    <a href="#documentation">Documentation</a> •
     <a href="#background">Background</a> •
     <a href="#typical-workflow">Typical Workflow</a> •
     <a href="#extending-apebench">Extending APEBench</a> •
@@ -97,6 +98,10 @@ by running
 ```bash
 streamlit run explore_sample_data_streamlit.py
 ```
+
+## Documentation
+
+[https://fkoehler.site/apebench/](https://fkoehler.site/apebench/)
 
 ## Background
 
