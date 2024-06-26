@@ -86,3 +86,7 @@ nav:
     - 'index.md'
     - 'typical_workflow.md'
     - 'extending_apebench.md'
+    - Scenarios:
+        - Base Scenario: 'api/scenarios/base.md'
+        - Difficulty:
+            - Linear: 'api/scenarios/difficulty/linear.md'
