@@ -337,6 +337,17 @@ class BaseScenario(eqx.Module, ABC):
                         return {"metrics": None}
 
                 callback_fns.append(metrics_callback_fn)
+            elif callback_args[0] == "sample_rollout":
+                every = int(callback_args[1])
+
+                def sample_rollout_callback_fn(update_i, model, data):
+                    if update_i % every == 0:
+                        sample_rollout = self.sample_trjs(model)
+                        return {"sample_rollout": sample_rollout}
+                    else:
+                        return {"sample_rollout": None}
+
+                callback_fns.append(sample_rollout_callback_fn)
             elif callback_args[0] == "":
                 continue
             else:
