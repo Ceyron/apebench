@@ -17,11 +17,14 @@ from ._run import (
     run_study_convenience,
 )
 from ._utils import (
+    aggregate_gmean,
     melt_data,
     melt_loss,
     melt_metrics,
     melt_sample_rollouts,
     read_in_kwargs,
+    relative_by_config,
+    split_train,
 )
 
 __all__ = [
@@ -45,4 +48,7 @@ __all__ = [
     "arch_extensions",
     "scraper",
     "BaseScenario",
+    "aggregate_gmean",
+    "relative_by_config",
+    "split_train",
 ]
