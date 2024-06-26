@@ -78,7 +78,7 @@ def scrape_data_and_metadata(
 
         del train_data, test_data
     else:
-        return train_data, metadata
+        return train_data, test_data, metadata
 
 
 CURATION_APEBENCH_V1 = [
