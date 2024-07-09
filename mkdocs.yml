@@ -86,6 +86,7 @@ nav:
     - 'index.md'
     - 'typical_workflow.md'
     - 'extending_apebench.md'
+    - 'using_cli.md'
     - Scenarios:
         - Overview: 'api/scenarios/overview.md'
         - Base Scenario: 'api/scenarios/base.md'
