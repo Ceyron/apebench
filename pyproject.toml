@@ -24,6 +24,9 @@ dependencies = [
   "trainax @ git+ssh://git@github.com/Ceyron/trainax@main#4af1f7b748d364b56f65d792158e7be9a48ad7aa",
 ]
 
+[project.scripts]
+apebench = "apebench._cli:app"
+
 [tool.black]
 line-length = 88
 target-version = ['py38', 'py39', 'py310', 'py311', 'py312']
