@@ -104,3 +104,90 @@ facet = sns.relplot(
 for ax in facet.axes.flat:
     ax.set_ylim(-0.05, 1.05)
 ```
+
+## Using the CLI together with custom APEBench extensions
+
+### Architectures
+
+Similar to [here](extending_apebench.md#defining-your-own-architecture), you can
+define your own architecture. You have to register it right before the config
+file, like this
+```python
+import apebench
+
+def conv_net_extension(
+    config_str: str,
+    num_spatial_dims: int,
+    num_channels: int,
+    *,
+    key,
+):
+    config_args = config_str.split(";")
+
+    depth = int(config_args[1])
+
+    return apebench.pdequinox.arch.ConvNet(
+        num_spatial_dims=num_spatial_dims,
+        in_channels=num_channels,
+        out_channels=num_channels,
+        hidden_channels=42,
+        depth=depth,
+        activation=jax.nn.relu,
+        key=key,
+    )
+
+apebench.arch_extensions.update(
+    {"myconvnet": conv_net_extension}
+)
+
+CONFIGS = [
+    {
+        "scenario": "diff_adv",
+        "task": "predict",
+        "net": "MyConvNet;42",
+        "train": "one",
+        "start_seed": 0,
+        "num_seeds": 10,
+    }
+]
+```
+
+!!! warning
+
+    The spelling of the key in the arch_extensions has to be lower case
+
+### Scenarios
+
+Similar to [here](extending_apebench.md#your-truly-own-scenario), a custom
+scenario can be registered in the scenario dictionary. Let's assume, it is
+defined in a file `my_scenario.py` as `MyScenario`:
+```python
+import apebench
+
+from my_scenario import MyScenario
+
+apebench.scenarios.scenario_dict.update(
+    {"my_scenario": MyScenario}
+)
+
+CONFIGS = [
+    {
+        "scenario": "my_scenario",
+        "task": "predict",
+        "net": "Conv;34;10;relu",
+        "train": "one",
+        "start_seed": 0,
+        "num_seeds": 10,
+        "my_custom_arg": 42,  # Assuming MyScenario has this attribute
+    }
+]
+```
+
+Then you can run the experiment with
+```bash
+apebench test_study.py
+```
+
+!!! info
+
+    There is no hard requirement, but having lower case scenario names is generally preferred.
