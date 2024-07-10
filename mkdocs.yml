@@ -87,6 +87,14 @@ nav:
     - 'typical_workflow.md'
     - 'extending_apebench.md'
     - 'using_cli.md'
+    - Examples:
+        - Introductory:
+            - Simple Advection 1D Emulation: 'examples/simple_advection_1d_learning.ipynb'
+            - Scrape Datasets: 'examples/scrape_datasets.ipynb'
+            - Animate Learning 1D Burgers: 'examples/animate_emulator_learning_burgers.ipynb'
+        - Advanced:
+            - Randomness & Reproducibility: 'examples/sources_of_randomness_and_reproducibility.ipynb'
+            - Difficulty & Receptive Field in 1D Advection: 'examples/difficulty_and_receptive_field_advection_1d.ipynb'
     - Scenarios:
         - Overview: 'api/scenarios/overview.md'
         - Base Scenario: 'api/scenarios/base.md'
