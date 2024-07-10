@@ -13,9 +13,7 @@ def app():
     parser = argparse.ArgumentParser(
         description="Run a study by pointing to its config list"
     )
-    parser.add_argument(
-        "experiment", type=str, help="The file containig the config list"
-    )
+    parser.add_argument("study", type=str, help="The file containig the config list")
     parser.add_argument(
         "--gpu", type=int, help="The GPU to use for the experiment", default=0
     )
@@ -28,19 +26,19 @@ def app():
     parser.add_argument(
         "--dont_melt_metrics",
         action="store_true",
-        help="Do not melt the metrics across the runs in the experiment",
+        help="Do not melt the metrics across the experiments in the study",
         default=False,
     )
     parser.add_argument(
         "--dont_melt_loss",
         action="store_true",
-        help="Do not melt the train loss across the runs in the experiment",
+        help="Do not melt the train loss across the experiments in the study",
         default=False,
     )
     parser.add_argument(
         "--melt_sample_rollouts",
         action="store_true",
-        help="Melt the sample rollouts across the runs in the experiment",
+        help="Melt the sample rollouts across the experiments in the study",
         default=False,
     )
     args = parser.parse_args()
@@ -68,21 +66,21 @@ def app():
     # with open(LOG_SUBDIR + "environment.yml", "w") as f:
     #     f.write(environment_file)
 
-    experiment_path = Path(args.experiment)
+    study_path = Path(args.study)
 
-    if not os.path.exists(experiment_path):
-        print(f"Error: The file '{experiment_path}' does not exist.")
+    if not os.path.exists(study_path):
+        print(f"Error: The file '{study_path}' does not exist.")
         sys.exit(1)
 
     # Copy the config file to the log directory
-    shutil.copy(args.experiment, LOG_SUBDIR)
+    shutil.copy(study_path, LOG_SUBDIR)
 
     # Load the variable CONFIGS from the python file in experiment_path
-    experiment_dir = os.path.dirname(experiment_path)
-    sys.path.append(experiment_dir)
-    experiment = os.path.basename(experiment_path)
-    experiment_name = experiment.split(".")[0]
-    module = __import__(experiment_name)
+    study_dir = os.path.dirname(study_path)
+    sys.path.append(study_dir)
+    study = os.path.basename(study_path)
+    study_name = study.split(".")[0]
+    module = __import__(study_name)
     CONFIGS = module.CONFIGS
 
     if args.start_seed is not None:
@@ -106,7 +104,7 @@ def app():
 
     os.makedirs(MELTED_DIR, exist_ok=True)
 
-    MELTED_SUBDIR = MELTED_DIR + experiment_name + "/"
+    MELTED_SUBDIR = MELTED_DIR + study_name + "/"
 
     os.makedirs(MELTED_SUBDIR, exist_ok=True)
 
