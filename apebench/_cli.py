@@ -41,6 +41,12 @@ def app():
         help="Melt the sample rollouts across the experiments in the study",
         default=False,
     )
+    parser.add_argument(
+        "--metric_name",
+        type=str,
+        help="The name(s) of the metric(s) to melt. For multiple use a comma separated list, e.g. 'mean_nRMSE,mean_correlation'",
+        default="mean_nRMSE",
+    )
     args = parser.parse_args()
 
     # Set the GPU to use
@@ -119,6 +125,7 @@ def app():
     melt_concat_from_list(
         raw_file_list,
         MELTED_SUBDIR,
+        metric_name=args.metric_name.split(","),
         do_metrics=not args.dont_melt_metrics,
         do_loss=not args.dont_melt_loss,
         do_sample_rollouts=args.melt_sample_rollouts,
