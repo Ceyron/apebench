@@ -827,10 +827,10 @@ class BaseScenario(eqx.Module, ABC):
                 results["mean_correlation"] = ex.metrics.mean_correlation
             else:
                 metric_args = metric.split(";")
-                if metric_args[0] == "fourier_nRMSE":
+                if metric_args[0] == "mean_fourier_nRMSE":
                     low = int(metric_args[1])
                     high = int(metric_args[2])
-                    results[metric] = lambda pred, ref: ex.metrics.fourier_nRMSE(
+                    results[metric] = lambda pred, ref: ex.metrics.mean_fourier_nRMSE(
                         pred,
                         ref,
                         low=low,
