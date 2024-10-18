@@ -1,6 +1,10 @@
-# import pytest
+import pytest
 
-# import apebench
+import apebench
+
+
+def test_simple():
+    apebench.scenarios.difficulty.Advection()
 
 
 # @pytest.mark.parametrize(
