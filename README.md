@@ -1,3 +1,5 @@
+ ⚠️ ⚠️ ⚠️ This is a pre-release version of the package to test the PyPI workflow. Proper release **with breaking API changes** and extended documentation will be by end of October. ⚠️ ⚠️ ⚠️
+
 <h1 align="center">
   <img src="docs/imgs/apebench_logo.png" width="150">
   <br>
@@ -27,7 +29,7 @@
 ## Installation
 
 ```bash
-pip install git+ssh://git@github.com/Ceyron/apebench@main
+pip install apebench
 ```
 
 Requires Python 3.10+ and JAX 0.4.12+ 👉 [JAX install guide](https://jax.readthedocs.io/en/latest/installation.html).
@@ -37,10 +39,8 @@ Quick instruction with fresh Conda environment and JAX CUDA 12.
 ```bash
 conda create -n apebench python=3.12 -y
 conda activate apebench
-```
-```bash
 pip install -U "jax[cuda12]"
-pip install git+ssh://git@github.com/Ceyron/apebench@main
+pip install apebench
 ```
 
 ## Quickstart
@@ -591,12 +591,23 @@ attributes those need to be typed similarly to the base class.
     this can cause excessive memory usage
 * Reduce the logging frequency with `record_loss_every`.
 
-## License
+## Acknowledgements
 
-MIT, see [here](LICENSE.txt)
+### Citation
+
+This package was developed as part of the `APEBench paper` (accepted at Neurips 2024), we will soon add the citation here.
+
+### Funding
+
+The main author (Felix Koehler) is a PhD student in the group of [Prof. Thuerey at TUM](https://ge.in.tum.de/) and his research is funded by the [Munich Center for Machine Learning](https://mcml.ai/).
+
+### License
+
+MIT, see [here](https://github.com/Ceyron/apebench/blob/main/LICENSE.txt)
 
 ---
 
 > [fkoehler.site](https://fkoehler.site/) &nbsp;&middot;&nbsp;
 > GitHub [@ceyron](https://github.com/ceyron) &nbsp;&middot;&nbsp;
-> X [@felix_m_koehler](https://twitter.com/felix_m_koehler)
+> X [@felix_m_koehler](https://twitter.com/felix_m_koehler) &nbsp;&middot;&nbsp;
+> LinkedIn [Felix Köhler](www.linkedin.com/in/felix-koehler)
