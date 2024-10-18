@@ -48,6 +48,8 @@ pip install apebench
 Train a ConvNet to emulate 1D advection, display train loss, test error metric
 rollout, and a sample rollout.
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1SeCuoYaSfIH2J0IdNeFlDrkCypxtvRie?usp=sharing)
+
 ```python
 import apebench
 import seaborn as sns
