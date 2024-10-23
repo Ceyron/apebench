@@ -38,7 +38,7 @@ def test_builtin_scenarios(name: str):
 def test_simple_training(name: str, num_spatial_dims: int):
     NUM_TRAIN_SAMPLES = 5
     NUM_TEST_SAMPLES = 5
-    NUM_POINTS = 40
+    NUM_POINTS = 15
     OPTIM_CONFIG = "adam;10;constant;1e-4"
 
     # Some scenarios might not work in 1d, (which is the default number of spatial dims)
