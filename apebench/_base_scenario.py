@@ -777,7 +777,11 @@ class BaseScenario(eqx.Module, ABC):
     def perform_test_rollout(
         self,
         neural_stepper: eqx.Module,
-        error_fn: Callable = ex.metrics.nRMSE,
+        mean_error_fn: Callable = lambda pred, ref: ex.metrics.mean_metric(
+            ex.metrics.nRMSE,
+            pred,
+            ref,
+        ),
     ) -> Float[Array, "test_temporal_horizon"]:
         """
         Rollout the neural stepper starting from the test initial condition and
@@ -795,7 +799,7 @@ class BaseScenario(eqx.Module, ABC):
         )(test_ics)
 
         error_rollout = jax.vmap(
-            lambda pred, ref: ex.metrics.mean_metric(error_fn, pred, ref),
+            mean_error_fn,
             in_axes=1,  # over the temporal axis
         )(pred_trjs, ref_trjs)
 
@@ -816,21 +820,42 @@ class BaseScenario(eqx.Module, ABC):
 
         for metric in metrics:
             if metric == "mean_MSE":
-                results["mean_MSE"] = ex.metrics.mean_MSE
+                results["mean_MSE"] = lambda pred, ref: ex.metrics.mean_metric(
+                    ex.metrics.MSE,
+                    pred,
+                    ref,
+                )
             elif metric == "mean_nMSE":
-                results["mean_nMSE"] = ex.metrics.mean_nMSE
+                results["mean_nMSE"] = lambda pred, ref: ex.metrics.mean_metric(
+                    ex.metrics.nMSE,
+                    pred,
+                    ref,
+                )
             elif metric == "mean_RMSE":
-                results["mean_RMSE"] = ex.metrics.mean_RMSE
+                results["mean_RMSE"] = lambda pred, ref: ex.metrics.mean_metric(
+                    ex.metrics.RMSE,
+                    pred,
+                    ref,
+                )
             elif metric == "mean_nRMSE":
-                results["mean_nRMSE"] = ex.metrics.mean_nRMSE
+                results["mean_nRMSE"] = lambda pred, ref: ex.metrics.mean_metric(
+                    ex.metrics.nRMSE,
+                    pred,
+                    ref,
+                )
             elif metric == "mean_correlation":
-                results["mean_correlation"] = ex.metrics.mean_correlation
+                results["mean_correlation"] = lambda pred, ref: ex.metrics.mean_metric(
+                    ex.metrics.correlation,
+                    pred,
+                    ref,
+                )
             else:
                 metric_args = metric.split(";")
                 if metric_args[0] == "mean_fourier_nRMSE":
                     low = int(metric_args[1])
                     high = int(metric_args[2])
-                    results[metric] = lambda pred, ref: ex.metrics.mean_fourier_nRMSE(
+                    results[metric] = lambda pred, ref: ex.metrics.mean_metric(
+                        ex.metrics.fourier_nRMSE,
                         pred,
                         ref,
                         low=low,
