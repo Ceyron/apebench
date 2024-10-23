@@ -3,32 +3,6 @@ from typing import Callable, Dict
 import exponax as ex
 from jaxtyping import Array, Float
 
-# def mean_fourier_nRMSE_constructor(
-#     metric_config: str,
-# ) -> Callable[
-#     [Float[Array, "batch channel ... N"], Float[Array, "batch channel ... N"]], float
-# ]:
-#     metric_args = metric_config.split(";")
-#     low = int(metric_args[1])
-#     high = int(metric_args[2])
-#     if len(metric_args) > 3:
-#         derivative_order = float(metric_args[3])
-#     else:
-#         derivative_order = None
-
-#     def mean_fourier_nRMSE(pred, ref):
-#         return ex.metrics.mean_metric(
-#             ex.metrics.fourier_nRMSE,
-#             pred,
-#             ref,
-#             low=low,
-#             high=high,
-#             derivative_order=derivative_order,
-#         )
-
-#     return mean_fourier_nRMSE
-
-
 metrics_dict: Dict[
     str,
     Callable[
