@@ -10,6 +10,7 @@ from ..._base_scenario import BaseScenario
 class Convection(BaseScenario):
     gammas: tuple[float, ...] = (0.0, 0.0, 1.5, 0.0, 0.0)
     convection_delta: float = -1.5
+    conservative: bool = True
 
     num_substeps: int = 1
 
@@ -27,12 +28,13 @@ class Convection(BaseScenario):
         substepped_gammas = tuple(g / self.num_substeps for g in gammas)
         substepped_delta = delta / self.num_substeps
 
-        substepped_stepper = ex.normalized.DifficultyConvectionStepper(
+        substepped_stepper = ex.stepper.generic.DifficultyConvectionStepper(
             self.num_spatial_dims,
             self.num_points,
             linear_difficulties=substepped_gammas,
             # Need minus to move the convection to the right hand side
             convection_difficulty=-substepped_delta,
+            conservative=self.conservative,
             order=self.order,
             dealiasing_fraction=self.dealiasing_fraction,
             num_circle_points=self.num_circle_points,

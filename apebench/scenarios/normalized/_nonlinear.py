@@ -28,11 +28,11 @@ class Nonlinear(BaseScenario):
         substepped_alphas = tuple(a / self.num_substeps for a in alphas)
         substepped_betas = tuple(b / self.num_substeps for b in betas)
 
-        substepped_stepper = ex.normalized.NormlizedGeneralNonlinearStepper(
+        substepped_stepper = ex.stepper.generic.NormalizedNonlinearStepper(
             num_spatial_dims=self.num_spatial_dims,
             num_points=self.num_points,
-            normalized_coefficients_linear=substepped_alphas,
-            normalized_coefficients_nonlinear=substepped_betas,
+            normalized_linear_coefficients=substepped_alphas,
+            normalized_nonlinear_coefficients=substepped_betas,
             order=self.order,
             dealiasing_fraction=self.dealiasing_fraction,
             num_circle_points=self.num_circle_points,

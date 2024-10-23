@@ -8,17 +8,17 @@ class Linear(BaseScenario):
     coarse_proportion: float = 0.5
 
     def get_ref_stepper(self):
-        return ex.normalized.NormalizedLinearStepper(
+        return ex.stepper.generic.NormalizedLinearStepper(
             num_spatial_dims=self.num_spatial_dims,
             num_points=self.num_points,
-            normalized_coefficients=self.alphas,
+            normalized_linear_coefficients=self.alphas,
         )
 
     def get_coarse_stepper(self) -> ex.BaseStepper:
-        return ex.normalized.NormalizedLinearStepper(
+        return ex.stepper.generic.NormalizedLinearStepper(
             num_spatial_dims=self.num_spatial_dims,
             num_points=self.num_points,
-            normalized_coefficients=tuple(
+            normalized_linear_coefficients=tuple(
                 f * self.coarse_proportion for f in self.alphas
             ),
         )

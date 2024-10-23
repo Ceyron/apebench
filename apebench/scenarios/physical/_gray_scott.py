@@ -37,7 +37,7 @@ class GrayScott(BaseScenario):
         )
 
     def _build_stepper(self, dt):
-        substepped_stepper = ex.reaction.GrayScott(
+        substepped_stepper = ex.stepper.reaction.GrayScott(
             num_spatial_dims=self.num_spatial_dims,
             domain_extent=self.domain_extent,
             num_points=self.num_points,
@@ -177,7 +177,7 @@ class GrayScottType(BaseScenario):
 
     def _build_stepper(self, dt):
         feed_rate, kill_rate = self.get_feed_and_kill_rate(self.pattern_type)
-        substepped_stepper = ex.reaction.GrayScott(
+        substepped_stepper = ex.stepper.reaction.GrayScott(
             num_spatial_dims=self.num_spatial_dims,
             domain_extent=self.domain_extent,
             num_points=self.num_points,

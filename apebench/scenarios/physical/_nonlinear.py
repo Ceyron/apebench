@@ -28,13 +28,13 @@ class Nonlinear(BaseScenario):
         pass
 
     def _build_stepper(self, dt):
-        substepped_stepper = ex.stepper.GeneralNonlinearStepper(
+        substepped_stepper = ex.stepper.generic.GeneralNonlinearStepper(
             num_spatial_dims=self.num_spatial_dims,
             domain_extent=self.domain_extent,
             num_points=self.num_points,
             dt=dt / self.num_substeps,
-            coefficients_linear=self.a_coefs,
-            coefficients_nonlinear=self.b_coefs,
+            linear_coefficients=self.a_coefs,
+            nonlinear_coefficients=self.b_coefs,
             order=self.order,
             dealiasing_fraction=self.dealiasing_fraction,
             num_circle_points=self.num_circle_points,

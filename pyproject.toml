@@ -19,7 +19,7 @@ dependencies = [
   "matplotlib>=3.8.1",
   "pandas>=2.2.0",
   "seaborn>=0.13.0",
-  "exponax==0.0.1",
+  "exponax==0.1.0",
   "pdequinox==0.1.2",
   "trainax==0.0.2",
 ]

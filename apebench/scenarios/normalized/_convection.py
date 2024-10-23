@@ -6,6 +6,7 @@ from ..._base_scenario import BaseScenario
 class Convection(BaseScenario):
     alphas: tuple[float, ...] = (0.0, 0.0, 3.0e-5, 0.0, 0.0)
     convection_beta: float = -1.25e-2
+    conservative: bool = True
 
     num_substeps: int = 1
 
@@ -23,12 +24,13 @@ class Convection(BaseScenario):
         substepped_convection = convection / self.num_substeps
         substepped_alphas = tuple(a / self.num_substeps for a in alphas)
 
-        substepped_stepper = ex.normalized.NormalizedConvectionStepper(
+        substepped_stepper = ex.stepper.generic.NormalizedConvectionStepper(
             self.num_spatial_dims,
             self.num_points,
-            normalized_coefficients=substepped_alphas,
+            normalized_linear_coefficients=substepped_alphas,
             # Need minus to move the convection to the right hand side
             normalized_convection_scale=-substepped_convection,
+            conservative=self.conservative,
             order=self.order,
             dealiasing_fraction=self.dealiasing_fraction,
             num_circle_points=self.num_circle_points,
