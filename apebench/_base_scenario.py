@@ -15,7 +15,7 @@ from jaxtyping import Array, Float, PRNGKeyArray
 
 from ._corrected_stepper import CorrectedStepper
 from ._extensions import arch_extensions
-from .components import metrics_dict
+from .components import metric_dict
 
 
 class BaseScenario(eqx.Module, ABC):
@@ -822,7 +822,7 @@ class BaseScenario(eqx.Module, ABC):
         for metric_config in metrics:
             metric_args = metric_config.split(";")
             metric_name = metric_args[0]
-            metric_constructor = metrics_dict[metric_name]
+            metric_constructor = metric_dict[metric_name]
             metric_fn = metric_constructor(metric_config)
             results[metric_config] = metric_fn
 

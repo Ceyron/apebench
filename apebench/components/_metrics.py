@@ -3,7 +3,7 @@ from typing import Callable, Dict
 import exponax as ex
 from jaxtyping import Array, Float
 
-metrics_dict: Dict[
+metric_dict: Dict[
     str,
     Callable[
         [

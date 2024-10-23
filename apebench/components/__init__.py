@@ -1,3 +1,3 @@
-from ._metrics import metrics_dict
+from ._metrics import metric_dict
 
-__all__ = ["metrics_dict"]
+__all__ = ["metric_dict"]
