@@ -9,6 +9,7 @@ class Convection(BaseScenario):
 
     a_coefs: tuple[float, ...] = (0.0, 0.0, 0.0003, 0.0, 0.0)
     convection_coef: float = -0.125
+    conservative: bool = True
 
     num_substeps: int = 1
 
@@ -31,6 +32,7 @@ class Convection(BaseScenario):
             linear_coefficients=self.a_coefs,
             # Need minus to move the convection to the right hand side
             convection_scale=-self.convection_coef,
+            conservative=self.conservative,
             order=self.order,
             dealiasing_fraction=self.dealiasing_fraction,
             num_circle_points=self.num_circle_points,
