@@ -777,7 +777,7 @@ class BaseScenario(eqx.Module, ABC):
     def perform_test_rollout(
         self,
         neural_stepper: eqx.Module,
-        mean_error_fn: Callable = ex.metrics.mean_nRMSE,
+        error_fn: Callable = ex.metrics.nRMSE,
     ) -> Float[Array, "test_temporal_horizon"]:
         """
         Rollout the neural stepper starting from the test initial condition and
@@ -795,7 +795,7 @@ class BaseScenario(eqx.Module, ABC):
         )(test_ics)
 
         error_rollout = jax.vmap(
-            mean_error_fn,
+            lambda pred, ref: ex.metrics.mean_metric(error_fn, pred, ref),
             in_axes=1,  # over the temporal axis
         )(pred_trjs, ref_trjs)
 
