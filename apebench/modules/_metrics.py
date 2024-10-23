@@ -6,7 +6,7 @@ from jaxtyping import Array, Float
 # def mean_fourier_nRMSE_constructor(
 #     metric_config: str,
 # ) -> Callable[
-#     [Array[Float, "batch channel ... N"], Array[Float, "batch channel ... N"]], float
+#     [Float[Array, "batch channel ... N"], Float[Array, "batch channel ... N"]], float
 # ]:
 #     metric_args = metric_config.split(";")
 #     low = int(metric_args[1])
@@ -37,8 +37,8 @@ metrics_dict: Dict[
         ],
         Callable[
             [
-                Array[Float, "batch channel ... N"],  # batched pred
-                Array[Float, "batch channel ... N"],  # batched target
+                Float[Array, "batch channel ... N"],  # batched pred
+                Float[Array, "batch channel ... N"],  # batched target
             ],
             float,
         ],
