@@ -15,7 +15,7 @@ from jaxtyping import Array, Float, PRNGKeyArray
 
 from ._corrected_stepper import CorrectedStepper
 from ._extensions import arch_extensions
-from .modules import metrics_dict
+from .components import metrics_dict
 
 
 class BaseScenario(eqx.Module, ABC):
