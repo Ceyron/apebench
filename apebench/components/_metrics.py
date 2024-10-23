@@ -111,4 +111,39 @@ metric_dict: Dict[
         high=int(metric_config.split(";")[2]),
         derivative_order=float(metric_config.split(";")[3]),
     ),
+    "mean_H1_MAE": lambda metric_config: lambda pred, ref: ex.metrics.mean_metric(
+        ex.metrics.H1_MAE,
+        pred,
+        ref,
+    ),
+    "mean_H1_nMAE": lambda metric_config: lambda pred, ref: ex.metrics.mean_metric(
+        ex.metrics.H1_nMAE,
+        pred,
+        ref,
+    ),
+    "mean_H1_MSE": lambda metric_config: lambda pred, ref: ex.metrics.mean_metric(
+        ex.metrics.H1_MSE,
+        pred,
+        ref,
+    ),
+    "mean_H1_nMSE": lambda metric_config: lambda pred, ref: ex.metrics.mean_metric(
+        ex.metrics.H1_nMSE,
+        pred,
+        ref,
+    ),
+    "mean_H1_RMSE": lambda metric_config: lambda pred, ref: ex.metrics.mean_metric(
+        ex.metrics.H1_RMSE,
+        pred,
+        ref,
+    ),
+    "mean_H1_nRMSE": lambda metric_config: lambda pred, ref: ex.metrics.mean_metric(
+        ex.metrics.H1_nRMSE,
+        pred,
+        ref,
+    ),
+    "mean_correlation": lambda metric_config: lambda pred, ref: ex.metrics.mean_metric(
+        ex.metrics.correlation,
+        pred,
+        ref,
+    ),
 }
