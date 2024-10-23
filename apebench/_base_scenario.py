@@ -823,8 +823,7 @@ class BaseScenario(eqx.Module, ABC):
             metric_args = metric_config.split(";")
             metric_name = metric_args[0]
             metric_constructor = metrics_dict[metric_name]
-            # TODO: Remove hard-coded 1.0 domain_extent
-            metric_fn = metric_constructor(metric_config, 1.0)
+            metric_fn = metric_constructor(metric_config)
             results[metric_config] = metric_fn
 
         for metric_config, func in results.items():

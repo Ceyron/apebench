@@ -5,7 +5,7 @@ from jaxtyping import Array, Float
 
 
 def mean_fourier_nRMSE_constructor(
-    metric_config: str, domain_extent: float
+    metric_config: str,
 ) -> Callable[
     [Array[Float, "batch channel ... N"], Array[Float, "batch channel ... N"]], float
 ]:
@@ -18,7 +18,6 @@ def mean_fourier_nRMSE_constructor(
             ex.metrics.fourier_nRMSE,
             pred,
             ref,
-            domain_extent=domain_extent,
             low=low,
             high=high,
         )
@@ -31,7 +30,6 @@ metrics_dict: Dict[
     Callable[
         [
             str,  # metric_config
-            float,  # domain_extent
         ],
         Callable[
             [
@@ -42,32 +40,32 @@ metrics_dict: Dict[
         ],
     ],
 ] = {
-    "mean_MSE": lambda metric_config, domain_extent: lambda pred, ref: ex.metrics.mean_metric(
+    "mean_MSE": lambda metric_config: lambda pred, ref: ex.metrics.mean_metric(
         ex.metrics.MSE,
         pred,
         ref,
     ),
-    "mean_nMSE": lambda metric_config, domain_extent: lambda pred, ref: ex.metrics.mean_metric(
+    "mean_nMSE": lambda metric_config: lambda pred, ref: ex.metrics.mean_metric(
         ex.metrics.nMSE,
         pred,
         ref,
     ),
-    "mean_sMSE": lambda metric_config, domain_extent: lambda pred, ref: ex.metrics.mean_metric(
+    "mean_sMSE": lambda metric_config: lambda pred, ref: ex.metrics.mean_metric(
         ex.metrics.sMSE,
         pred,
         ref,
     ),
-    "mean_RMSE": lambda metric_config, domain_extent: lambda pred, ref: ex.metrics.mean_metric(
+    "mean_RMSE": lambda metric_config: lambda pred, ref: ex.metrics.mean_metric(
         ex.metrics.RMSE,
         pred,
         ref,
     ),
-    "mean_nRMSE": lambda metric_config, domain_extent: lambda pred, ref: ex.metrics.mean_metric(
+    "mean_nRMSE": lambda metric_config: lambda pred, ref: ex.metrics.mean_metric(
         ex.metrics.nRMSE,
         pred,
         ref,
     ),
-    "mean_sRMSE": lambda metric_config, domain_extent: lambda pred, ref: ex.metrics.mean_metric(
+    "mean_sRMSE": lambda metric_config: lambda pred, ref: ex.metrics.mean_metric(
         ex.metrics.sRMSE,
         pred,
         ref,
