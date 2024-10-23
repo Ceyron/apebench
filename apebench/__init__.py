@@ -3,7 +3,7 @@ import pdequinox
 import trainax
 
 from . import _scraper as scraper
-from . import scenarios
+from . import components, scenarios
 from ._base_scenario import BaseScenario
 from ._extensions import arch_extensions
 from ._run import (
@@ -51,4 +51,5 @@ __all__ = [
     "aggregate_gmean",
     "relative_by_config",
     "split_train",
+    "components",
 ]
