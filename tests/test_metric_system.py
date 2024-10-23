@@ -22,6 +22,13 @@ import apebench
         "mean_fourier_nMSE;0;4;0",
         "mean_fourier_RMSE;0;4;0",
         "mean_fourier_nRMSE;0;4;0",
+        "mean_H1_MAE",
+        "mean_H1_nMAE",
+        "mean_H1_MSE",
+        "mean_H1_nMSE",
+        "mean_H1_RMSE",
+        "mean_H1_nRMSE",
+        "mean_correlation",
     ],
 )
 def test_metric_execution(metric_config: str):
