@@ -1,6 +1,7 @@
-mkdocs==1.6.0
+mkdocs==1.6.1
 black==24.4.2
-mkdocs-material==9.5.27
-mkdocstrings==0.25.1
-mkdocstrings-python==1.10.5
+mkdocs-material==9.5.34
+mkdocstrings==0.26.0
+mkdocstrings-python==1.10.9
 mknotebooks==0.8.0
+griffe==1.2.0
