@@ -18,6 +18,21 @@ metrics_dict: Dict[
         ],
     ],
 ] = {
+    "mean_MAE": lambda metric_config: lambda pred, ref: ex.metrics.mean_metric(
+        ex.metrics.MAE,
+        pred,
+        ref,
+    ),
+    "mean_nMAE": lambda metric_config: lambda pred, ref: ex.metrics.mean_metric(
+        ex.metrics.nMAE,
+        pred,
+        ref,
+    ),
+    "mean_sMAE": lambda metric_config: lambda pred, ref: ex.metrics.mean_metric(
+        ex.metrics.sMAE,
+        pred,
+        ref,
+    ),
     "mean_MSE": lambda metric_config: lambda pred, ref: ex.metrics.mean_metric(
         ex.metrics.MSE,
         pred,
@@ -47,6 +62,22 @@ metrics_dict: Dict[
         ex.metrics.sRMSE,
         pred,
         ref,
+    ),
+    "mean_fourier_MAE": lambda metric_config: lambda pred, ref: ex.metrics.mean_metric(
+        ex.metrics.fourier_MAE,
+        pred,
+        ref,
+        low=int(metric_config.split(";")[1]),
+        high=int(metric_config.split(";")[2]),
+        derivative_order=float(metric_config.split(";")[3]),
+    ),
+    "mean_fourier_nMAE": lambda metric_config: lambda pred, ref: ex.metrics.mean_metric(
+        ex.metrics.fourier_nMAE,
+        pred,
+        ref,
+        low=int(metric_config.split(";")[1]),
+        high=int(metric_config.split(";")[2]),
+        derivative_order=float(metric_config.split(";")[3]),
     ),
     "mean_fourier_MSE": lambda metric_config: lambda pred, ref: ex.metrics.mean_metric(
         ex.metrics.fourier_MSE,
