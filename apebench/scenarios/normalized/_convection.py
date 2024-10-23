@@ -23,10 +23,10 @@ class Convection(BaseScenario):
         substepped_convection = convection / self.num_substeps
         substepped_alphas = tuple(a / self.num_substeps for a in alphas)
 
-        substepped_stepper = ex.normalized.NormalizedConvectionStepper(
+        substepped_stepper = ex.stepper.generic.NormalizedConvectionStepper(
             self.num_spatial_dims,
             self.num_points,
-            normalized_coefficients=substepped_alphas,
+            normalized_linear_coefficients=substepped_alphas,
             # Need minus to move the convection to the right hand side
             normalized_convection_scale=-substepped_convection,
             order=self.order,

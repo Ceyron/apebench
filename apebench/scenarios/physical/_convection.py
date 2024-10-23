@@ -23,12 +23,12 @@ class Convection(BaseScenario):
         self.num_channels = self.num_spatial_dims  # Overwrite
 
     def _build_stepper(self, dt):
-        substepped_stepper = ex.stepper.GeneralConvectionStepper(
+        substepped_stepper = ex.stepper.generic.GeneralConvectionStepper(
             num_spatial_dims=self.num_spatial_dims,
             domain_extent=self.domain_extent,
             num_points=self.num_points,
             dt=dt / self.num_substeps,
-            coefficients=self.a_coefs,
+            linear_coefficients=self.a_coefs,
             # Need minus to move the convection to the right hand side
             convection_scale=-self.convection_coef,
             order=self.order,

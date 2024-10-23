@@ -27,7 +27,7 @@ class Convection(BaseScenario):
         substepped_gammas = tuple(g / self.num_substeps for g in gammas)
         substepped_delta = delta / self.num_substeps
 
-        substepped_stepper = ex.normalized.DifficultyConvectionStepper(
+        substepped_stepper = ex.stepper.generic.DifficultyConvectionStepper(
             self.num_spatial_dims,
             self.num_points,
             linear_difficulties=substepped_gammas,

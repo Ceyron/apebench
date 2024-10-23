@@ -8,17 +8,17 @@ class Linear(BaseScenario):
     coarse_proportion: float = 0.5
 
     def get_ref_stepper(self):
-        return ex.normalized.DifficultyLinearStepper(
+        return ex.stepper.generic.DifficultyLinearStepper(
             num_spatial_dims=self.num_spatial_dims,
             num_points=self.num_points,
-            difficulties=self.gammas,
+            linear_difficulties=self.gammas,
         )
 
     def get_coarse_stepper(self) -> ex.BaseStepper:
-        return ex.normalized.DifficultyLinearStepper(
+        return ex.stepper.generic.DifficultyLinearStepper(
             num_spatial_dims=self.num_spatial_dims,
             num_points=self.num_points,
-            difficulties=tuple(f * self.coarse_proportion for f in self.gammas),
+            linear_difficulties=tuple(f * self.coarse_proportion for f in self.gammas),
         )
 
     def get_scenario_name(self) -> str:

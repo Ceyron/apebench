@@ -34,7 +34,7 @@ class Nonlinear(BaseScenario):
         substepped_gammas = tuple(g / self.num_substeps for g in gammas)
         substepped_deltas = tuple(d / self.num_substeps for d in deltas)
 
-        substepped_stepper = ex.normalized.DifficultyGeneralNonlinearStepper(
+        substepped_stepper = ex.stepper.generic.DifficultyNonlinearStepper(
             num_spatial_dims=self.num_spatial_dims,
             num_points=self.num_points,
             linear_difficulties=substepped_gammas,

@@ -11,21 +11,21 @@ class Linear(BaseScenario):
     coarse_proportion: float = 0.5
 
     def get_ref_stepper(self):
-        return ex.stepper.GeneralLinearStepper(
+        return ex.stepper.generic.GeneralLinearStepper(
             num_spatial_dims=self.num_spatial_dims,
             domain_extent=self.domain_extent,
             num_points=self.num_points,
             dt=self.dt,
-            coefficients=self.a_coefs,
+            linear_coefficients=self.a_coefs,
         )
 
     def get_coarse_stepper(self) -> ex.BaseStepper:
-        return ex.stepper.GeneralLinearStepper(
+        return ex.stepper.generic.GeneralLinearStepper(
             num_spatial_dims=self.num_spatial_dims,
             domain_extent=self.domain_extent,
             num_points=self.num_points,
             dt=self.dt * self.coarse_proportion,
-            coefficients=self.a_coefs,
+            linear_coefficients=self.a_coefs,
         )
 
     def get_scenario_name(self) -> str:

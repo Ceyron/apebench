@@ -22,14 +22,14 @@ class SwiftHohenberg(BaseScenario):
             raise ValueError("Swift-Hohenberg is only supported for 2D and 3D")
 
     def _build_stepper(self, dt):
-        substepped_stepper = ex.reaction.SwiftHohenberg(
+        substepped_stepper = ex.stepper.reaction.SwiftHohenberg(
             num_spatial_dims=self.num_spatial_dims,
             domain_extent=self.domain_extent,
             num_points=self.num_points,
             dt=dt / self.num_substeps,
             reactivity=self.reactivity,
             critical_number=self.critical_number,
-            polynomial_coefficients=self.polynomial_coefficients,
+            polynomial_linear_coefficients=self.polynomial_coefficients,
         )
 
         if self.num_substeps == 1:
