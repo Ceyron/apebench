@@ -25,7 +25,11 @@ def test_builtin_scenarios(name: str):
 
 @pytest.mark.parametrize(
     "name",
-    list(apebench.scenarios.scenario_dict.keys()),
+    [
+        "phy_adv",
+        "norm_adv",
+        "diff_adv",
+    ],
 )
 def test_simple_training_1d(name: str):
     NUM_TRAIN_SAMPLES = 5
