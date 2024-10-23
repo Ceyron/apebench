@@ -15,6 +15,7 @@ from jaxtyping import Array, Float, PRNGKeyArray
 
 from ._corrected_stepper import CorrectedStepper
 from ._extensions import arch_extensions
+from .modules import metrics_dict
 
 
 class BaseScenario(eqx.Module, ABC):
@@ -818,59 +819,21 @@ class BaseScenario(eqx.Module, ABC):
 
         results = {}
 
-        for metric in metrics:
-            if metric == "mean_MSE":
-                results["mean_MSE"] = lambda pred, ref: ex.metrics.mean_metric(
-                    ex.metrics.MSE,
-                    pred,
-                    ref,
-                )
-            elif metric == "mean_nMSE":
-                results["mean_nMSE"] = lambda pred, ref: ex.metrics.mean_metric(
-                    ex.metrics.nMSE,
-                    pred,
-                    ref,
-                )
-            elif metric == "mean_RMSE":
-                results["mean_RMSE"] = lambda pred, ref: ex.metrics.mean_metric(
-                    ex.metrics.RMSE,
-                    pred,
-                    ref,
-                )
-            elif metric == "mean_nRMSE":
-                results["mean_nRMSE"] = lambda pred, ref: ex.metrics.mean_metric(
-                    ex.metrics.nRMSE,
-                    pred,
-                    ref,
-                )
-            elif metric == "mean_correlation":
-                results["mean_correlation"] = lambda pred, ref: ex.metrics.mean_metric(
-                    ex.metrics.correlation,
-                    pred,
-                    ref,
-                )
-            else:
-                metric_args = metric.split(";")
-                if metric_args[0] == "mean_fourier_nRMSE":
-                    low = int(metric_args[1])
-                    high = int(metric_args[2])
-                    results[metric] = lambda pred, ref: ex.metrics.mean_metric(
-                        ex.metrics.fourier_nRMSE,
-                        pred,
-                        ref,
-                        low=low,
-                        high=high,
-                    )
-                else:
-                    raise ValueError(f"Unknown metric '{metric}'")
+        for metric_config in metrics:
+            metric_args = metric_config.split(";")
+            metric_name = metric_args[0]
+            metric_constructor = metrics_dict[metric_name]
+            # TODO: Remove hard-coded 1.0 domain_extent
+            metric_fn = metric_constructor(metric_config, 1.0)
+            results[metric_config] = metric_fn
 
-        for metric, func in results.items():
+        for metric_config, func in results.items():
             exec_func = lambda model: self.perform_test_rollout(model, func)
             if remove_singleton_axis:
                 # add singleton axis for compatibility
-                results[metric] = exec_func(neural_stepper)[None]
+                results[metric_config] = exec_func(neural_stepper)[None]
             else:
-                results[metric] = eqx.filter_vmap(exec_func)(neural_stepper)
+                results[metric_config] = eqx.filter_vmap(exec_func)(neural_stepper)
 
         return results
 
