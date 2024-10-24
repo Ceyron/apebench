@@ -15,7 +15,7 @@ from jaxtyping import Array, Float, PRNGKeyArray
 
 from ._corrected_stepper import CorrectedStepper
 from ._extensions import arch_extensions
-from .components import metric_dict
+from .components import lr_scheduler_dict, metric_dict, optimizer_dict
 
 
 class BaseScenario(eqx.Module, ABC):
@@ -167,37 +167,20 @@ class BaseScenario(eqx.Module, ABC):
         optim_args = self.optim_config.split(";")
         return int(optim_args[1])
 
-    def get_optimizer(self):
+    def get_optimizer(self) -> optax.GradientTransformation:
         """
         Returns the optimizer used in the scenario.
         """
         optim_args = self.optim_config.split(";")
         optimizer_name = optim_args[0]
         num_training_steps = int(optim_args[1])
-        schedule_args = optim_args[2:]
-        if schedule_args[0] == "constant":
-            lr_schedule = optax.constant_schedule(float(schedule_args[1]))
-        elif schedule_args[0] == "warmup_cosine":
-            lr_schedule = optax.warmup_cosine_decay_schedule(
-                init_value=float(schedule_args[1]),
-                peak_value=float(schedule_args[2]),
-                warmup_steps=int(schedule_args[3]),
-                decay_steps=num_training_steps,
-            )
-        elif schedule_args[0] == "exp":
-            lr_schedule = optax.exponential_decay(
-                init_value=float(schedule_args[1]),
-                transition_steps=int(schedule_args[2]),
-                decay_rate=float(schedule_args[3]),
-                staircase=schedule_args[4].lower() == "true",
-            )
-        else:
-            raise ValueError("Unknown schedule")
+        scheduler_args = optim_args[2:]
+        scheduler_name = scheduler_args[0]
 
-        if optimizer_name == "adam":
-            optimizer = optax.adam(lr_schedule)
-        else:
-            raise ValueError("Unknown optimizer")
+        lr_scheduler = lr_scheduler_dict[scheduler_name](
+            ";".join(scheduler_args), num_training_steps
+        )
+        optimizer = optimizer_dict[optimizer_name](self.optim_config)(lr_scheduler)
 
         return optimizer
 
