@@ -14,9 +14,9 @@ from exponax.ic import BaseRandomICGenerator
 from jaxtyping import Array, Float, PRNGKeyArray
 
 from ._corrected_stepper import CorrectedStepper
-from ._extensions import arch_extensions
 from .components import (
     activation_fn_dict,
+    architecture_dict,
     ic_dict,
     lr_scheduler_dict,
     metric_dict,
@@ -461,154 +461,18 @@ class BaseScenario(eqx.Module, ABC):
         """
         network_args = network_config.split(";")
 
-        if network_args[0].lower() == "conv":
-            hidden_channels = int(network_args[1])
-            depth = int(network_args[2])
-            activation = self.get_activation(network_args[3])
-            network = pdeqx.arch.ConvNet(
-                num_spatial_dims=self.num_spatial_dims,
-                in_channels=self.num_channels,
-                out_channels=self.num_channels,
-                hidden_channels=hidden_channels,
-                depth=depth,
-                activation=activation,
-                boundary_mode="periodic",
-                key=key,
-            )
-        elif network_args[0].lower() == "res":
-            hidden_channels = int(network_args[1])
-            num_blocks = int(network_args[2])
-            activation = self.get_activation(network_args[3])
+        network_name = network_args[0]
+        activation_fn_config = network_args[-1]
+        activation_fn = self.get_activation(activation_fn_config)
 
-            network = pdeqx.arch.ClassicResNet(
-                num_spatial_dims=self.num_spatial_dims,
-                in_channels=self.num_channels,
-                out_channels=self.num_channels,
-                hidden_channels=hidden_channels,
-                num_blocks=num_blocks,
-                activation=activation,
-                boundary_mode="periodic",
-                key=key,
-            )
-        elif network_args[0].lower() == "unet":
-            hidden_channels = int(network_args[1])
-            num_levels = int(network_args[2])
-            activation = self.get_activation(network_args[3])
-
-            network = pdeqx.arch.ClassicUNet(
-                num_spatial_dims=self.num_spatial_dims,
-                in_channels=self.num_channels,
-                out_channels=self.num_channels,
-                hidden_channels=hidden_channels,
-                num_levels=num_levels,
-                activation=activation,
-                boundary_mode="periodic",
-                key=key,
-            )
-        elif network_args[0].lower() == "dil":
-            dilation_depth = int(network_args[1])
-            hidden_channels = int(network_args[2])
-            num_blocks = int(network_args[3])
-            activation = self.get_activation(network_args[4])
-
-            dilation_rates = [2**i for i in range(dilation_depth + 1)]
-            dilation_rates = dilation_rates + dilation_rates[::-1][1:]
-
-            network = pdeqx.arch.DilatedResNet(
-                num_spatial_dims=self.num_spatial_dims,
-                in_channels=self.num_channels,
-                out_channels=self.num_channels,
-                hidden_channels=hidden_channels,
-                num_blocks=num_blocks,
-                dilation_rates=dilation_rates,
-                activation=activation,
-                boundary_mode="periodic",
-                key=key,
-            )
-        elif network_args[0].lower() == "fno":
-            num_modes = int(network_args[1])
-            hidden_channels = int(network_args[2])
-            num_blocks = int(network_args[3])
-            activation = self.get_activation(network_args[4])
-
-            network = pdeqx.arch.ClassicFNO(
-                num_spatial_dims=self.num_spatial_dims,
-                in_channels=self.num_channels,
-                out_channels=self.num_channels,
-                hidden_channels=hidden_channels,
-                num_blocks=num_blocks,
-                num_modes=num_modes,
-                activation=activation,
-                key=key,
-            )
-        elif network_args[0].lower() == "mlp":
-            width_size = int(network_args[1])
-            depth = int(network_args[2])
-            activation = self.get_activation(network_args[3])
-
-            network = pdeqx.arch.MLP(
-                num_spatial_dims=self.num_spatial_dims,
-                in_channels=self.num_channels,
-                out_channels=self.num_channels,
-                num_points=self.num_points,  # Has to be know a priori
-                width_size=width_size,
-                depth=depth,
-                activation=activation,
-                key=key,
-            )
-        elif network_args[0].lower() == "pure":
-            kernel_size = int(network_args[1])
-
-            network = pdeqx.conv.PhysicsConv(
-                num_spatial_dims=self.num_spatial_dims,
-                in_channels=self.num_channels,
-                out_channels=self.num_channels,
-                kernel_size=kernel_size,
-                use_bias=False,  # !!! no bias,
-                key=key,
-                boundary_mode="periodic",
-            )
-        elif network_args[0].lower() == "mores":
-            # Modern ResNet using pre-activation and group normalization
-            hidden_channels = int(network_args[1])
-            num_blocks = int(network_args[2])
-            activation = self.get_activation(network_args[3])
-
-            network = pdeqx.arch.ModernResNet(
-                num_spatial_dims=self.num_spatial_dims,
-                in_channels=self.num_channels,
-                out_channels=self.num_channels,
-                hidden_channels=hidden_channels,
-                num_blocks=num_blocks,
-                activation=activation,
-                boundary_mode="periodic",
-                key=key,
-            )
-        elif network_args[0].lower() == "mounet":
-            # Modern UNet using two resnet blocks per level
-            hidden_channels = int(network_args[1])
-            num_levels = int(network_args[2])
-            activation = self.get_activation(network_args[3])
-            network = pdeqx.arch.ModernUNet(
-                num_spatial_dims=self.num_spatial_dims,
-                in_channels=self.num_channels,
-                out_channels=self.num_channels,
-                hidden_channels=hidden_channels,
-                num_levels=num_levels,
-                activation=activation,
-                boundary_mode="periodic",
-                key=key,
-            )
-        else:
-            try:
-                network = arch_extensions[network_args[0].lower()](
-                    network_config,
-                    self.num_spatial_dims,
-                    self.num_channels,
-                    key=key,
-                )
-            except KeyError:
-                raise ValueError("Unknown network argument")
+        network = architecture_dict[network_name](
+            network_config,
+            self.num_spatial_dims,
+            self.num_points,
+            self.num_channels,
+            activation_fn,
+            key,
+        )
 
         return network
 
