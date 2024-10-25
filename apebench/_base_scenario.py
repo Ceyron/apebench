@@ -15,7 +15,13 @@ from jaxtyping import Array, Float, PRNGKeyArray
 
 from ._corrected_stepper import CorrectedStepper
 from ._extensions import arch_extensions
-from .components import ic_dict, lr_scheduler_dict, metric_dict, optimizer_dict
+from .components import (
+    activation_fn_dict,
+    ic_dict,
+    lr_scheduler_dict,
+    metric_dict,
+    optimizer_dict,
+)
 
 
 class BaseScenario(eqx.Module, ABC):
@@ -375,16 +381,9 @@ class BaseScenario(eqx.Module, ABC):
         """
         Parse a string to a callable activation function.
         """
-        if activation.lower() == "tanh":
-            return jax.nn.tanh
-        elif activation.lower() == "relu":
-            return jax.nn.relu
-        elif activation.lower() == "silu":
-            return jax.nn.silu
-        elif activation.lower() == "gelu":
-            return jax.nn.gelu
-        else:
-            raise ValueError("unknown activation string")
+        activation_fn_name = activation.split(";")[0]
+        activation_fn = activation_fn_dict[activation_fn_name](activation)
+        return activation_fn
 
     def get_network(
         self,
