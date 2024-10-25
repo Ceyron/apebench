@@ -16,4 +16,5 @@ activation_fn_dict: Dict[
     "tanh": lambda activation_fn_config: jax.nn.tanh,
     "swish": lambda activation_fn_config: jax.nn.swish,
     "gelu": lambda activation_fn_config: jax.nn.gelu,
+    "identity": lambda activation_fn_config: lambda x: x,
 }

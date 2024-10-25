@@ -12,6 +12,7 @@ import apebench
         "tanh",
         "swish",
         "gelu",
+        "identity",
     ],
 )
 def test_activation_fn(activation_fn_config: str):
