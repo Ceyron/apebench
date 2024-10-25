@@ -86,7 +86,7 @@ class BaseScenario(eqx.Module, ABC):
 
         def _get_single_channel(config):
             ic_name = config.split(";")[0]
-            ic_gen = ic_dict[ic_name](config, self.num_spatial_dims)
+            ic_gen = ic_dict[ic_name.lower()](config, self.num_spatial_dims)
             return ic_gen
 
         ic_args = self.ic_config.split(";")
@@ -147,10 +147,12 @@ class BaseScenario(eqx.Module, ABC):
         scheduler_args = optim_args[2:]
         scheduler_name = scheduler_args[0]
 
-        lr_scheduler = lr_scheduler_dict[scheduler_name](
+        lr_scheduler = lr_scheduler_dict[scheduler_name.lower()](
             ";".join(scheduler_args), num_training_steps
         )
-        optimizer = optimizer_dict[optimizer_name](self.optim_config)(lr_scheduler)
+        optimizer = optimizer_dict[optimizer_name.lower()](self.optim_config)(
+            lr_scheduler
+        )
 
         return optimizer
 
@@ -382,7 +384,7 @@ class BaseScenario(eqx.Module, ABC):
         Parse a string to a callable activation function.
         """
         activation_fn_name = activation.split(";")[0]
-        activation_fn = activation_fn_dict[activation_fn_name](activation)
+        activation_fn = activation_fn_dict[activation_fn_name.lower()](activation)
         return activation_fn
 
     def get_network(
@@ -465,7 +467,7 @@ class BaseScenario(eqx.Module, ABC):
         activation_fn_config = network_args[-1]
         activation_fn = self.get_activation(activation_fn_config)
 
-        network = architecture_dict[network_name](
+        network = architecture_dict[network_name.lower()](
             network_config,
             self.num_spatial_dims,
             self.num_points,
