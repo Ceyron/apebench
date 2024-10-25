@@ -463,17 +463,19 @@ print(metric_df.groupby(
 ## Extending APEBench
 
 You can have experiments run with your architectures. For this, you have to
-register them in the `apebench.arch_extensions` dictionary.
+register them in the `apebench.components.architecture_dict` dictionary.
 
 ```python
 import apebench
+import pdequinox as pdeqx
 
 def conv_net_extension(
     config_str: str,
     num_spatial_dims: int,
+    num_points: int,
     num_channels: int,
-    *,
-    key: PRNGKeyArray,
+    activation_fn,
+    key,
 ):
     config_args = config_str.split(";")
 
@@ -485,22 +487,24 @@ def conv_net_extension(
         out_channels=num_channels,
         hidden_channels=42,
         depth=depth,
-        activation=jax.nn.relu,
+        activation=activation_fn,
         key=key,
     )
 
-apebench.arch_extensions.update(
-    {"MyConvNet": conv_net_extension}
+apebench.components.architecture_dict.update(
+    # Ensure that the key is in lower case
+    {"myconvnet": conv_net_extension}
 )
 ```
 
-Then you can use the `Conv` architecture in the `net` configuration string.
+Then you can use the `MyConvNet` architecture in the `net` configuration string.
+We prepend `"relu"` to identify the activation function.
 
 ```python
 apebench.run_experiment(
     scenario="diff_adv",
     task="predict",
-    net="MyConvNet;42",
+    net="MyConvNet;42;relu",
     train="one",
     start_seed=0,
     num_seeds=10,
