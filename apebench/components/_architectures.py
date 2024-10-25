@@ -96,7 +96,7 @@ architecture_dict: Dict[
         out_channels=num_channels,
         num_points=num_points,
         width_size=int(architecture_config.split(";")[1]),
-        depth_size=int(architecture_config.split(";")[2]),
+        depth=int(architecture_config.split(";")[2]),
         activation=activation_fn,
         key=key,
     ),
