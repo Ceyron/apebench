@@ -15,7 +15,7 @@ from jaxtyping import Array, Float, PRNGKeyArray
 
 from ._corrected_stepper import CorrectedStepper
 from ._extensions import arch_extensions
-from .components import lr_scheduler_dict, metric_dict, optimizer_dict
+from .components import ic_dict, lr_scheduler_dict, metric_dict, optimizer_dict
 
 
 class BaseScenario(eqx.Module, ABC):
@@ -79,44 +79,8 @@ class BaseScenario(eqx.Module, ABC):
         """
 
         def _get_single_channel(config):
-            ic_args = config.split(";")
-            if ic_args[0].lower() == "fourier":
-                cutoff = int(ic_args[1])
-                zero_mean = ic_args[2].lower() == "true"
-                max_one = ic_args[3].lower() == "true"
-                if zero_mean:
-                    offset_range = (0.0, 0.0)
-                else:
-                    offset_range = (-0.5, 0.5)
-                ic_gen = ex.ic.RandomTruncatedFourierSeries(
-                    num_spatial_dims=self.num_spatial_dims,
-                    cutoff=cutoff,
-                    offset_range=offset_range,
-                    max_one=max_one,
-                )
-            elif ic_args[0].lower() == "diffused":
-                intensity = float(ic_args[1])
-                zero_mean = ic_args[2].lower() == "true"
-                max_one = ic_args[3].lower() == "true"
-                ic_gen = ex.ic.DiffusedNoise(
-                    num_spatial_dims=self.num_spatial_dims,
-                    intensity=intensity,
-                    zero_mean=zero_mean,
-                    max_one=max_one,
-                )
-            elif ic_args[0].lower() == "grf":
-                powerlaw_exponent = float(ic_args[1])
-                zero_mean = ic_args[2].lower() == "true"
-                max_one = ic_args[3].lower() == "true"
-                ic_gen = ex.ic.GaussianRandomField(
-                    num_spatial_dims=self.num_spatial_dims,
-                    powerlaw_exponent=powerlaw_exponent,
-                    zero_mean=zero_mean,
-                    max_one=max_one,
-                )
-            else:
-                raise ValueError("Unknown IC configuration")
-
+            ic_name = config.split(";")[0]
+            ic_gen = ic_dict[ic_name](config, self.num_spatial_dims)
             return ic_gen
 
         ic_args = self.ic_config.split(";")

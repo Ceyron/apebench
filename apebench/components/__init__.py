@@ -1,3 +1,4 @@
+from ._initial_condition import ic_dict
 from ._metrics import metric_dict
 from ._optimization import lr_scheduler_dict, optimizer_dict
 
@@ -5,4 +6,5 @@ __all__ = [
     "metric_dict",
     "lr_scheduler_dict",
     "optimizer_dict",
+    "ic_dict",
 ]
