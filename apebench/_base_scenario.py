@@ -618,6 +618,22 @@ class BaseScenario(eqx.Module, ABC):
 
         return error_rollout
 
+    def get_metric_fns(self):
+        """
+        Return a dictionary with all metric functions according to the
+        `report_metrics` attribute.
+        """
+        metric_fn_dict = {}
+
+        for metric_config in self.report_metrics.split(","):
+            metric_args = metric_config.split(";")
+            metric_name = metric_args[0]
+            metric_constructor = metric_dict[metric_name]
+            metric_fn = metric_constructor(metric_config)
+            metric_fn_dict[metric_config] = metric_fn
+
+        return metric_fn_dict
+
     def perform_tests(
         self,
         neural_stepper: eqx.Module,
@@ -627,18 +643,11 @@ class BaseScenario(eqx.Module, ABC):
         """
         Computes all metrics according to the `report_metrics` attribute.
         """
-        metrics = self.report_metrics.split(",")
+        metric_function_dict = self.get_metric_fns()
 
         results = {}
 
-        for metric_config in metrics:
-            metric_args = metric_config.split(";")
-            metric_name = metric_args[0]
-            metric_constructor = metric_dict[metric_name]
-            metric_fn = metric_constructor(metric_config)
-            results[metric_config] = metric_fn
-
-        for metric_config, func in results.items():
+        for metric_config, func in metric_function_dict.items():
             exec_func = lambda model: self.perform_test_rollout(model, func)
             if remove_singleton_axis:
                 # add singleton axis for compatibility
