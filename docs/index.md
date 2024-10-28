@@ -102,22 +102,22 @@ An autoregressive neural emulator $f_\theta$ is trained to mimic $\mathcal{P}_h$
     4. How many random seeds are used to draw conclusions?
 
 APEBench is a framework to holistically assess all four ingredients. Component
-(1), the discrete reference simulator $\mathcal{P}_h$, is provided by `Exponax`.
-This is a suite of
+(1), the discrete reference simulator $\mathcal{P}_h$, is provided by
+[`Exponax`](https://github.com/Ceyron/exponax). This is a suite of
 [ETDRK](https://www.sciencedirect.com/science/article/abs/pii/S0021999102969950)-based
 methods for semi-linear partial differential equations on periodic domains. This
 covers a wide range of dynamics. For the most common scenarios, a unique
 interface using normalized (non-dimensionalized) coefficients or a
 difficulty-based interface (as described in the APEBench paper) can be used. The
-second (2) component is given by `PDEquinox`. This library uses `Equinox`, a
-JAX-based deep-learning framework, to implement many commonly found
-architectures like convolutional ResNets, U-Nets, and FNOs. The third (3)
-component is `Trainax`, an abstract implementation of "trainers" that provide
-supervised rollout training and many other features. The fourth (4) component is
-to wrap up the former three and is given by this repository.
-
-### About APEBench
-
+second (2) component is given by
+[`PDEquinox`](https://github.com/Ceyron/pdequinox). This library uses
+[`Equinox`](https://github.com/patrick-kidger/equinox), a JAX-based
+deep-learning framework, to implement many commonly found architectures like
+convolutional ResNets, U-Nets, and FNOs. The third (3) component is
+[`Trainax`](https://github.com/Ceyron/trainax), an abstract implementation of
+"trainers" that provide supervised rollout training and many other features. The
+fourth (4) component is to wrap up the former three and is given by this
+repository.
 APEBench encapsulates the entire pipeline of training and evaluating an
 autoregressive neural emulator in a scenario. A scenario is a callable
 dataclass.
