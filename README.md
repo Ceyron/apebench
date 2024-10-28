@@ -9,9 +9,9 @@
     <a href="#acknowledgements">Acknowledgements</a>
 </p>
 
-<h1 align="center">
+<p align="center">
   <img src="https://github.com/user-attachments/assets/c6b88756-bc35-4e9a-8662-798a16f8302b" width="150">
-</h1>
+</p>
 
 
 ## Installation
