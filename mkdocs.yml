@@ -103,7 +103,8 @@ nav:
         - Difficulty:
             - Linear: 'api/scenarios/difficulty/linear.md'
             - Nonlinear: 'api/scenarios/difficulty/nonlinear.md'
-            - Convection: 'api/scenarios/difficulty/convection.md'
+            - Reaction-Diffusion: 'api/scenarios/difficulty/react.md'
+            - Generic: 'api/scenarios/difficulty/generic.md'
         - Physical:
             - Linear: 'api/scenarios/physical/linear.md'
         - Normalized:
