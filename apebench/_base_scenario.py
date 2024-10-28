@@ -692,7 +692,7 @@ class BaseScenario(eqx.Module, ABC):
 
         Use this function if you intend to wrap your run in further vmaps.
 
-        Returns:
+        **Returns:**
 
         - `trained_neural_stepper_s`: eqx.Module, the trained neural stepper
             for the scenario. If `num_seeds` is 1, the singleton dimension along
@@ -777,7 +777,7 @@ class BaseScenario(eqx.Module, ABC):
         Execute the scenario with the given attribute configuration and the
         additional configuration strings.
 
-        Args:
+        **Arguments:**
 
         - `task_config`: str, what the trained neural predictor should
             represent. Can be either 'predict' or 'correct;XX' where XX is the
@@ -808,10 +808,12 @@ class BaseScenario(eqx.Module, ABC):
         - `remove_singleton_axis`: bool, if True and `num_seeds` is 1, the
             singleton axis resulting from the seed parallel runs is removed
             which allows to directly use the returned neural stepper.
+
+        **Returns:**
+
         - `result_df`: pd.DataFrame, a dataframe with the results of the
             scenario. Each row represents one seed. It contains the following
             columns:
-
             - 'scenario': str, the name of the scenario, created by the
                 method `get_scenario_name`
             - 'task': str, the task configuration (as given in the
@@ -850,9 +852,8 @@ class BaseScenario(eqx.Module, ABC):
             train one network), use the `remove_singleton_axis` argument to
             remove the singleton dimension (True by default).
 
-        Notes:
-
-        - A typical workflow is to use the functions
+        !!! note
+            A typical workflow is to use the functions
             `apebench.utils.melt_loss`, `apebench.utils.melt_metrics`, and
             `apebench.utils.melt_sample_rollouts` to melt the returned dataframe
             into a long format that can be used for plotting with seaborn.
