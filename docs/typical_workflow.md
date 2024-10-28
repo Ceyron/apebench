@@ -133,7 +133,7 @@ sns.lineplot(data_loss, x="update_step", y="train_loss")
 plt.yscale("log"); plt.show()
 ```
 
-![](imgs/adv_training.png)
+![advection training loss](https://github.com/user-attachments/assets/5f617b74-7ec3-469f-9703-c41fbc889c21)
 
 The training decreased the loss by five orders of magnitude.
 
@@ -146,7 +146,7 @@ sns.lineplot(data_metrics, x="time_step", y="mean_nRMSE")
 plt.ylim(-0.05, 1.05); plt.grid(); plt.show()
 ```
 
-![](imgs/adv_metric_rollout.png)
+![advection metric rollout](https://github.com/user-attachments/assets/d83d8a92-c2ea-4048-9198-baa18a871a34)
 
 And we can also plot a sample rollout
 
@@ -159,7 +159,7 @@ plt.imshow(np.array(data_sample_rollout["sample_rollout"][0])[:, 0, :].T, origin
 plt.xlabel("time"); plt.ylabel("space"); plt.show()
 ```
 
-![](imgs/adv_sample_rollout.png)
+![advection sample rollout](https://github.com/user-attachments/assets/ccf7fa23-8b8c-4dac-8e4e-6179af63a504)
 
 ## Running interface
 
@@ -258,7 +258,7 @@ sns.lineplot(loss_df, x="update_step", y="train_loss", hue="net")
 plt.yscale("log"); plt.show()
 ```
 
-![](imgs/adv_experiment_training.png)
+![advection experiment training](https://github.com/user-attachments/assets/a16a43f2-9a80-4e27-a537-a373527a82bc)
 
 Then for the metric rollout
 
@@ -268,7 +268,7 @@ sns.lineplot(metric_df, x="time_step", y="mean_nRMSE", hue="net")
 plt.ylim(-0.05, 1.05); plt.grid(); plt.show()
 ```
 
-![](imgs/adv_experiment_metric_rollout.png)
+![advection experiment metric rollout](https://github.com/user-attachments/assets/4bf09671-41d7-4db1-9c02-10a725b59103)
 
 We can also make a tabular export (using the median over the 10 seeds)
 
