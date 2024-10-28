@@ -109,6 +109,9 @@ nav:
             - Linear: 'api/scenarios/physical/linear.md'
         - Normalized:
             - Linear: 'api/scenarios/normalized/linear.md'
+            - Nonlinear: 'api/scenarios/normalized/nonlinear.md'
+            - Reaction-Diffusion: 'api/scenarios/normalized/react.md'
+            - Generic: 'api/scenarios/normalized/generic.md'
     - API:
         - Run:
             - One Experiment: 'api/run/one_experiment.md'
