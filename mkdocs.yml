@@ -85,6 +85,7 @@ plugins:
 nav:
     - 'index.md'
     - 'typical_workflow.md'
+    - 'use_cases.md'
     - 'extending_apebench.md'
     - 'using_cli.md'
     - Examples:
