@@ -1,20 +1,18 @@
 # Getting Started
 
 ```bash
-pip install git+ssh://git@github.com/Ceyron/apebench@main
+pip install apebench
 ```
 
 Requires Python 3.10+ and JAX 0.4.12+ 👉 [JAX install guide](https://jax.readthedocs.io/en/latest/installation.html).
 
-Quick instruction with fresh Conda environment and JAX CUDA 12.
+Quick instruction with fresh Conda environment and JAX CUDA 12 on Linux.
 
 ```bash
 conda create -n apebench python=3.12 -y
 conda activate apebench
-```
-```bash
 pip install -U "jax[cuda12]"
-pip install git+ssh://git@github.com/Ceyron/apebench@main
+pip install apebench
 ```
 
 ## Quickstart
@@ -41,7 +39,7 @@ data_loss = apebench.melt_loss(data)
 data_metrics = apebench.melt_metrics(data)
 data_sample_rollout = apebench.melt_sample_rollouts(data)
 
-fig, axs = plt.subplots(3, 1, figsize=(6, 12))
+fig, axs = plt.subplots(1, 3, figsize=(13, 3))
 
 sns.lineplot(data_loss, x="update_step", y="train_loss", ax=axs[0])
 axs[0].set_yscale("log")
@@ -66,12 +64,7 @@ axs[2].set_title("Sample rollout")
 plt.show()
 ```
 
-You can explore the apebench scenarios using an interactive streamlit notebook
-by running
-
-```bash
-streamlit run explore_sample_data_streamlit.py
-```
+![](https://github.com/user-attachments/assets/10f968f4-2b30-4972-8753-22b7fad208ed)
 
 ## Background
 
@@ -131,7 +124,7 @@ dataclass.
 
 
 
-## Common Patterns in Apebench
+<!-- ## Common Patterns in Apebench
 
 * Configuration strings: many configurations (like network architecture, initial
   condition distribution, optimization config, learning methodology, etc.) are
@@ -150,9 +143,19 @@ attributes those need to be typed similarly to the base class.
 
 * Reduce the number of exported trajectories. This is 1 by default, but in 2d
     this can cause excessive memory usage
-* Reduce the logging frequency with `record_loss_every`.
+* Reduce the logging frequency with `record_loss_every`. -->
 
-## License
+## Acknowledgements
+
+### Citation
+
+This package was developed as part of the `APEBench paper` (accepted at Neurips 2024), we will soon add the citation here.
+
+### Funding
+
+The main author (Felix Koehler) is a PhD student in the group of [Prof. Thuerey at TUM](https://ge.in.tum.de/) and his research is funded by the [Munich Center for Machine Learning](https://mcml.ai/).
+
+### License
 
 MIT, see [here](https://github.com/Ceyron/apebench/blob/main/LICENSE.txt)
 
@@ -160,4 +163,5 @@ MIT, see [here](https://github.com/Ceyron/apebench/blob/main/LICENSE.txt)
 
 > [fkoehler.site](https://fkoehler.site/) &nbsp;&middot;&nbsp;
 > GitHub [@ceyron](https://github.com/ceyron) &nbsp;&middot;&nbsp;
-> X [@felix_m_koehler](https://twitter.com/felix_m_koehler)
+> X [@felix_m_koehler](https://twitter.com/felix_m_koehler) &nbsp;&middot;&nbsp;
+> LinkedIn [Felix Köhler](www.linkedin.com/in/felix-koehler)

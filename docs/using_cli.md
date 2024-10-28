@@ -114,29 +114,32 @@ define your own architecture. You have to register it right before the config
 file, like this
 ```python
 import apebench
+import pdequinox as pdeqx
 
 def conv_net_extension(
     config_str: str,
     num_spatial_dims: int,
+    num_points: int,
     num_channels: int,
-    *,
+    activation_fn,
     key,
 ):
     config_args = config_str.split(";")
 
     depth = int(config_args[1])
 
-    return apebench.pdequinox.arch.ConvNet(
+    return pdeqx.arch.ConvNet(
         num_spatial_dims=num_spatial_dims,
         in_channels=num_channels,
         out_channels=num_channels,
         hidden_channels=42,
         depth=depth,
-        activation=jax.nn.relu,
+        activation=activation_fn,
         key=key,
     )
 
-apebench.arch_extensions.update(
+apebench.components.architecture_dict.update(
+    # Ensure that the key is in lower case
     {"myconvnet": conv_net_extension}
 )
 
@@ -187,7 +190,3 @@ Then you can run the experiment with
 ```bash
 apebench test_study.py
 ```
-
-!!! info
-
-    There is no hard requirement, but having lower case scenario names is generally preferred.
