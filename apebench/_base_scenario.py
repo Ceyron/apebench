@@ -65,23 +65,23 @@ class BaseScenario(eqx.Module, ABC):
         condition generation.
 
         Allows for the following options:
-            - `fourier;CUTOFF;ZERO_MEAN;MAX_ONE` for a truncated Fourier series
-                with CUTOFF (int) number of modes, ZERO_MEAN (bool) for zero
-                mean, and MAX_ONE (bool) for having the initial condition being
-                at max in (-1, 1) but not clamped to it
-            - `diffused;INTENSITY;ZERO_MEAN;MAX_ONE` for a diffused noise with
-                INTENSITY (float) for the intensity, ZERO_MEAN (bool) for zero
-                mean, and MAX_ONE (bool) for having the initial condition being
-                at max in (-1, 1) but not clamped to it
-            - `grf;POWERLAW_EXPONENT;ZERO_MEAN;MAX_ONE` for a Gaussian random
-                field with POWERLAW_EXPONENT (float) for the powerlaw exponent,
-                ZERO_MEAN (bool) for zero mean, and MAX_ONE (bool) for having
-                the initial condition being at max in (-1, 1) but not clamped to
-                it
-            - `clamp;LOWER_BOUND;UPPER_BOUND;CONFIG` for clamping the
-                configuration to the range of LOWER_BOUND (float) to UPPER_BOUND
-                (float) and then using the configuration CONFIG for the
-                generation of the initial condition
+
+        - `fourier;CUTOFF;ZERO_MEAN;MAX_ONE` for a truncated Fourier series
+            with CUTOFF (int) number of modes, ZERO_MEAN (bool) for zero mean,
+            and MAX_ONE (bool) for having the initial condition being at max in
+            (-1, 1) but not clamped to it
+        - `diffused;INTENSITY;ZERO_MEAN;MAX_ONE` for a diffused noise with
+            INTENSITY (float) for the intensity, ZERO_MEAN (bool) for zero mean,
+            and MAX_ONE (bool) for having the initial condition being at max in
+            (-1, 1) but not clamped to it
+        - `grf;POWERLAW_EXPONENT;ZERO_MEAN;MAX_ONE` for a Gaussian random
+            field with POWERLAW_EXPONENT (float) for the powerlaw exponent,
+            ZERO_MEAN (bool) for zero mean, and MAX_ONE (bool) for having the
+            initial condition being at max in (-1, 1) but not clamped to it
+        - `clamp;LOWER_BOUND;UPPER_BOUND;CONFIG` for clamping the
+            configuration to the range of LOWER_BOUND (float) to UPPER_BOUND
+            (float) and then using the configuration CONFIG for the generation
+            of the initial condition
         """
 
         def _get_single_channel(config):
@@ -321,9 +321,10 @@ class BaseScenario(eqx.Module, ABC):
         'sup-03' for supervised rollout trainig with three rollout steps.
 
         Currently, the three major categories are available:
-            - 'one' for one step supervised training
-            - 'sup-XX' for supervised training with XX rollout steps
-            - 'div-XX' for diverted chain training with XX rollout steps
+
+        - 'one' for one step supervised training
+        - 'sup-XX' for supervised training with XX rollout steps
+        - 'div-XX' for diverted chain training with XX rollout steps
         """
         train_trjs = self.get_train_data()
 
@@ -399,8 +400,9 @@ class BaseScenario(eqx.Module, ABC):
         "Conv;34;10;relu" for a feedforward convolutional network with 34 hidden
         channels, 10 hidden layers, and the ReLU activation function.
 
-        Currently, the following constructors are available: -
-        `Conv;HIDDEN_CHANNELS;DEPTH;ACTIVATION`: A feedforward
+        Currently, the following constructors are available:
+
+        - `Conv;HIDDEN_CHANNELS;DEPTH;ACTIVATION`: A feedforward
             convolutional network with `DEPTH` hidden layers of `WIDTH` size.
             Each layer transition except for the last uses `ACTIVATION`. The
             effective receptive field is `DEPTH + 1`
@@ -459,7 +461,8 @@ class BaseScenario(eqx.Module, ABC):
         dictionary.
 
         Returns:
-            - `network`: eqx.Module, the neural architecture
+
+        - `network`: eqx.Module, the neural architecture
         """
         network_args = network_config.split(";")
 
@@ -491,9 +494,10 @@ class BaseScenario(eqx.Module, ABC):
 
         If the `task_config` is 'correct;XX', the neural architecture is wrapped
         in a `CorrectedStepper` with `XX` as the mode. Supported modes are:
-            - `sequential`
-            - `parallel`
-            - `sequential_with_bypass`
+
+        - `sequential`
+        - `parallel`
+        - `sequential_with_bypass`
         """
         network = self.get_network(network_config, key)
 
@@ -689,22 +693,21 @@ class BaseScenario(eqx.Module, ABC):
         Use this function if you intend to wrap your run in further vmaps.
 
         Returns:
-            - `trained_neural_stepper_s`: eqx.Module, the trained neural stepper
-                for the scenario. If `num_seeds` is 1, the singleton dimension
-                along the batch axis is removed (if `remove_singleton_axis` is
-                True).
-            - `loss_history_s`: Array, the loss history of the training. The
-                shape is `(num_seeds, num_training_steps//record_loss_every)`
-            - `aux_history_s`: Array, the auxiliary history of the training. The
-                shape is `(num_seeds, num_training_steps)`
-            - `metric_trj_s`: dict, the metrics computed on the test set. The
-                keys are the metric names and the values are arrays with the
-                shape `(num_seeds, test_temporal_horizon)`
-            - `sample_rollout_s`: Array, the sample rollouts produced by the
-                trained neural stepper. The shape is `(num_seeds,
-                num_trjs_returned, test_temporal_horizon+1, num_channels,
-                *num_points)`
-            - `seeds`: Array, the seeds used for the run
+
+        - `trained_neural_stepper_s`: eqx.Module, the trained neural stepper
+            for the scenario. If `num_seeds` is 1, the singleton dimension along
+            the batch axis is removed (if `remove_singleton_axis` is True).
+        - `loss_history_s`: Array, the loss history of the training. The
+            shape is `(num_seeds, num_training_steps//record_loss_every)`
+        - `aux_history_s`: Array, the auxiliary history of the training. The
+            shape is `(num_seeds, num_training_steps)`
+        - `metric_trj_s`: dict, the metrics computed on the test set. The
+            keys are the metric names and the values are arrays with the shape
+            `(num_seeds, test_temporal_horizon)`
+        - `sample_rollout_s`: Array, the sample rollouts produced by the
+            trained neural stepper. The shape is `(num_seeds, num_trjs_returned,
+            test_temporal_horizon+1, num_channels, *num_points)`
+        - `seeds`: Array, the seeds used for the run
         """
         trainer = self.get_trainer(train_config=train_config)
 
@@ -808,37 +811,38 @@ class BaseScenario(eqx.Module, ABC):
         - `result_df`: pd.DataFrame, a dataframe with the results of the
             scenario. Each row represents one seed. It contains the following
             columns:
-                - 'scenario': str, the name of the scenario, created by the
-                    method `get_scenario_name`
-                - 'task': str, the task configuration (as given in the
-                    argument)
-                - 'train': str, the training configuration (as given in the
-                    argument)
-                - 'net': str, the network configuration (as given in the
-                    argument)
-                - 'seed': int, the seed used for the run (this varies
-                    between the rows if multiple seeds are used at the same
-                    time)
-                - 'mean_nRMSE_XXXX': float, the mean nRMSE metric produced
-                    in an error rollout **after the training has finished**.
-                    Each temporal entry (staring at 1 all the way to
-                    `self.test_temporal_horizon`) is represented by a separate
-                    column.
-                - `METRICS_XXXX`: float, additional metrics (e.g., mean
-                    correlation rollout)
-                - 'train_loss_XXXXXX': float, the training loss at each
-                    training step. Each step is represented by a separate column
-                    (starting at 0 all the way to `self.num_training_steps - 1`)
-                - 'aux_XXXXXX': list, the history of auxiliary information
-                    produced by callbacks. If there is no callback active, each
-                    entry is an empty dictionary.
-                - 'sample_rollout_XXX': list, a list of lists representing
-                    the sample rollouts produced by the trained neural stepper.
-                    The outer list represents the different initial conditions,
-                    the inner lists represent the different time steps. The
-                    length of the outer list is given by the attribute
-                    `num_trjs_returned`. We use list to store (jax.)numpy
-                    arrays.
+
+            - 'scenario': str, the name of the scenario, created by the
+                method `get_scenario_name`
+            - 'task': str, the task configuration (as given in the
+                argument)
+            - 'train': str, the training configuration (as given in the
+                argument)
+            - 'net': str, the network configuration (as given in the
+                argument)
+            - 'seed': int, the seed used for the run (this varies
+                between the rows if multiple seeds are used at the same
+                time)
+            - 'mean_nRMSE_XXXX': float, the mean nRMSE metric produced
+                in an error rollout **after the training has finished**.
+                Each temporal entry (staring at 1 all the way to
+                `self.test_temporal_horizon`) is represented by a separate
+                column.
+            - `METRICS_XXXX`: float, additional metrics (e.g., mean
+                correlation rollout)
+            - 'train_loss_XXXXXX': float, the training loss at each
+                training step. Each step is represented by a separate column
+                (starting at 0 all the way to `self.num_training_steps - 1`)
+            - 'aux_XXXXXX': list, the history of auxiliary information
+                produced by callbacks. If there is no callback active, each
+                entry is an empty dictionary.
+            - 'sample_rollout_XXX': list, a list of lists representing
+                the sample rollouts produced by the trained neural stepper.
+                The outer list represents the different initial conditions,
+                the inner lists represent the different time steps. The
+                length of the outer list is given by the attribute
+                `num_trjs_returned`. We use list to store (jax.)numpy
+                arrays.
         - `trained_neural_stepper_s`: eqx.Module, the trained neural stepper
             for the scenario. This follows an structure of arrays approach to
             represent the colleciton of networks trained based on different
