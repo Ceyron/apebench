@@ -164,4 +164,4 @@ MIT, see [here](https://github.com/Ceyron/apebench/blob/main/LICENSE.txt)
 > [fkoehler.site](https://fkoehler.site/) &nbsp;&middot;&nbsp;
 > GitHub [@ceyron](https://github.com/ceyron) &nbsp;&middot;&nbsp;
 > X [@felix_m_koehler](https://twitter.com/felix_m_koehler) &nbsp;&middot;&nbsp;
-> LinkedIn [Felix Köhler](www.linkedin.com/in/felix-koehler)
+> LinkedIn [Felix Köhler](https://www.linkedin.com/in/felix-koehler)
