@@ -779,7 +779,7 @@ class BaseScenario(eqx.Module, ABC):
 
         **Arguments:**
 
-        - `task_config`: str, what the trained neural predictor should
+        - `task_config`: What the trained neural predictor should
             represent. Can be either 'predict' or 'correct;XX' where XX is the
             mode of correction. `predict` refers to a pure neural architecture.
             The neural network will fully replace the numerical timestepper. In
@@ -787,7 +787,7 @@ class BaseScenario(eqx.Module, ABC):
             stepper. To inference such a system after training, the
             corresponding coarse solver is needed, but is already baked into the
             returning module. Default is 'predict'.
-        - `network_config`: str, the configuration of the neural network.
+        - `network_config`: The configuration of the neural network.
             This begins with a general architecture type, followed by a
             architecture-dependent length list of parameters. See the method
             `get_network` for the available architectures and their
@@ -795,23 +795,24 @@ class BaseScenario(eqx.Module, ABC):
             convolutional network with 34 hidden channels over 10 hidden layers
             and the ReLU activation function (about 30k parameters for 1D
             problems)
-        - `train_config`: str, the training configuration. This determines
+        - `train_config`: The training configuration. This determines
             how neural stepper and reference numerical stepper interact during
             training. See the method `get_trainer` for the available training
             configurations. Default is 'one' which refers to a one-step
             supervised approach in which one batch of samples with a length 2
             window is sampled across all initial conditions and temporal
             horizon.
-        - `start_seed`: int, the starting seed for the random number
-            generator. Default is 0.
-        - `num_seeds`: int, the number of seeds to use. Default is 1.
+        - `start_seed`: The starting seed for the random number
+            generator of network initialization. Default is 0.
+        - `num_seeds`: The number of seeds to use. Default is 1.
         - `remove_singleton_axis`: bool, if True and `num_seeds` is 1, the
             singleton axis resulting from the seed parallel runs is removed
-            which allows to directly use the returned neural stepper.
+            which allows to directly use the returned neural stepper. Otherwise,
+            it must be wrapped in a `eqx.filter_vmap(...)`
 
         **Returns:**
 
-        - `result_df`: pd.DataFrame, a dataframe with the results of the
+        - `result_df`: A dataframe with the results of the
             scenario. Each row represents one seed. It contains the following
             columns:
             - 'scenario': str, the name of the scenario, created by the
@@ -823,11 +824,10 @@ class BaseScenario(eqx.Module, ABC):
             - 'net': str, the network configuration (as given in the
                 argument)
             - 'seed': int, the seed used for the run (this varies
-                between the rows if multiple seeds are used at the same
-                time)
+                between the rows if multiple seeds are used at the same time)
             - 'mean_nRMSE_XXXX': float, the mean nRMSE metric produced
-                in an error rollout **after the training has finished**.
-                Each temporal entry (staring at 1 all the way to
+                in an error rollout **after the training has finished**. Each
+                temporal entry (staring at 1 all the way to
                 `self.test_temporal_horizon`) is represented by a separate
                 column.
             - `METRICS_XXXX`: float, additional metrics (e.g., mean
@@ -839,15 +839,14 @@ class BaseScenario(eqx.Module, ABC):
                 produced by callbacks. If there is no callback active, each
                 entry is an empty dictionary.
             - 'sample_rollout_XXX': list, a list of lists representing
-                the sample rollouts produced by the trained neural stepper.
-                The outer list represents the different initial conditions,
-                the inner lists represent the different time steps. The
-                length of the outer list is given by the attribute
-                `num_trjs_returned`. We use list to store (jax.)numpy
-                arrays.
+                the sample rollouts produced by the trained neural stepper. The
+                outer list represents the different initial conditions, the
+                inner lists represent the different time steps. The length of
+                the outer list is given by the attribute `num_trjs_returned`. We
+                use list to store (jax.)numpy arrays.
         - `trained_neural_stepper_s`: eqx.Module, the trained neural stepper
             for the scenario. This follows an structure of arrays approach to
-            represent the colleciton of networks trained based on different
+            represent the collection of networks trained based on different
             initialization seeds. If `num_seeds` is 1 (it is only intended to
             train one network), use the `remove_singleton_axis` argument to
             remove the singleton dimension (True by default).
