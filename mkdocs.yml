@@ -107,6 +107,12 @@ nav:
             - Generic: 'api/scenarios/difficulty/generic.md'
         - Physical:
             - Linear: 'api/scenarios/physical/linear.md'
+            - Nonlinear: 'api/scenarios/physical/nonlinear.md'
+            - Reaction-Diffusion: 'api/scenarios/physical/react.md'
+            - Navier-Stokes: 'api/scenarios/physical/navier_stokes.md'
+            - Linear (Special): 'api/scenarios/physical/linear_special.md'
+            - Generic: 'api/scenarios/physical/generic.md'
+            - Poisson: 'api/scenarios/physical/poisson.md'
         - Normalized:
             - Linear: 'api/scenarios/normalized/linear.md'
             - Nonlinear: 'api/scenarios/normalized/nonlinear.md'
