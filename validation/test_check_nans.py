@@ -68,47 +68,13 @@ def check_all_data(scene: apebench.BaseScenario):
     list(apebench.scenarios.scenario_dict.keys()),
 )
 def test_check_nans_1d(name: str):
+    scene_constructor = apebench.scenarios.scenario_dict[name]
     try:
-        scene = apebench.scenarios.scenario_dict[name](num_spatial_dims=1)
+        scene = scene_constructor(num_spatial_dims=1)
     except ValueError:
         return
 
-    train_data = scene.get_train_data()
-
-    train_num_nans = compute_num_nans_trjs(train_data)
-    assert (
-        train_num_nans == 0
-    ), f"Train data has {train_num_nans} trajectories with NaNs"
-
-    del train_data
-
-    test_data = scene.get_test_data()
-
-    test_num_nans = compute_num_nans_trjs(test_data)
-    assert test_num_nans == 0, f"Test data has {test_num_nans} trajectories with NaNs"
-
-    del test_data
-
-    try:
-        train_data_coarse = scene.get_train_data_coarse()
-
-        train_num_nans_coarse = compute_num_nans_trjs(train_data_coarse)
-        assert (
-            train_num_nans_coarse == 0
-        ), f"Train data coarse has {train_num_nans_coarse} trajectories with NaNs"
-
-        del train_data_coarse
-
-        test_data_coarse = scene.get_test_data_coarse()
-
-        test_num_nans_coarse = compute_num_nans_trjs(test_data_coarse)
-        assert (
-            test_num_nans_coarse == 0
-        ), f"Test data coarse has {test_num_nans_coarse} trajectories with NaNs"
-
-        del test_data_coarse
-    except NotImplementedError:
-        return
+    check_all_data(scene)
 
 
 @pytest.mark.parametrize(
@@ -142,47 +108,13 @@ def test_nans_on_difficulty_scenarios(name: str, num_spatial_dims: int):
     list(apebench.scenarios.scenario_dict.keys()),
 )
 def test_check_nans_2d(name: str):
+    scene_constructor = apebench.scenarios.scenario_dict[name]
     try:
-        scene = apebench.scenarios.scenario_dict[name](num_spatial_dims=2)
+        scene = scene_constructor(num_spatial_dims=2)
     except ValueError:
         return
 
-    train_data = scene.get_train_data()
-
-    train_num_nans = compute_num_nans_trjs(train_data)
-    assert (
-        train_num_nans == 0
-    ), f"Train data has {train_num_nans} trajectories with NaNs"
-
-    del train_data
-
-    test_data = scene.get_test_data()
-
-    test_num_nans = compute_num_nans_trjs(test_data)
-    assert test_num_nans == 0, f"Test data has {test_num_nans} trajectories with NaNs"
-
-    del test_data
-
-    try:
-        train_data_coarse = scene.get_train_data_coarse()
-
-        train_num_nans_coarse = compute_num_nans_trjs(train_data_coarse)
-        assert (
-            train_num_nans_coarse == 0
-        ), f"Train data coarse has {train_num_nans_coarse} trajectories with NaNs"
-
-        del train_data_coarse
-
-        test_data_coarse = scene.get_test_data_coarse()
-
-        test_num_nans_coarse = compute_num_nans_trjs(test_data_coarse)
-        assert (
-            test_num_nans_coarse == 0
-        ), f"Test data coarse has {test_num_nans_coarse} trajectories with NaNs"
-
-        del test_data_coarse
-    except NotImplementedError:
-        return
+    check_all_data(scene)
 
 
 @pytest.mark.parametrize(
@@ -192,46 +124,11 @@ def test_check_nans_2d(name: str):
 def test_check_nans_3d(name: str):
     # Reduce to 32 points in 3d
     NUM_POINTS_3d = 32
+
+    scene_constructor = apebench.scenarios.scenario_dict[name]
     try:
-        scene = apebench.scenarios.scenario_dict[name](
-            num_spatial_dims=3, num_points=NUM_POINTS_3d
-        )
+        scene = scene_constructor(num_spatial_dims=3, num_points=NUM_POINTS_3d)
     except ValueError:
         return
 
-    train_data = scene.get_train_data()
-
-    train_num_nans = compute_num_nans_trjs(train_data)
-    assert (
-        train_num_nans == 0
-    ), f"Train data has {train_num_nans} trajectories with NaNs"
-
-    del train_data
-
-    test_data = scene.get_test_data()
-
-    test_num_nans = compute_num_nans_trjs(test_data)
-    assert test_num_nans == 0, f"Test data has {test_num_nans} trajectories with NaNs"
-
-    del test_data
-
-    try:
-        train_data_coarse = scene.get_train_data_coarse()
-
-        train_num_nans_coarse = compute_num_nans_trjs(train_data_coarse)
-        assert (
-            train_num_nans_coarse == 0
-        ), f"Train data coarse has {train_num_nans_coarse} trajectories with NaNs"
-
-        del train_data_coarse
-
-        test_data_coarse = scene.get_test_data_coarse()
-
-        test_num_nans_coarse = compute_num_nans_trjs(test_data_coarse)
-        assert (
-            test_num_nans_coarse == 0
-        ), f"Test data coarse has {test_num_nans_coarse} trajectories with NaNs"
-
-        del test_data_coarse
-    except NotImplementedError:
-        return
+    check_all_data(scene)
