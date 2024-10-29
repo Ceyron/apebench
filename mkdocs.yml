@@ -85,6 +85,7 @@ plugins:
 nav:
     - 'index.md'
     - 'typical_workflow.md'
+    - 'use_cases.md'
     - 'extending_apebench.md'
     - 'using_cli.md'
     - Examples:
@@ -102,11 +103,21 @@ nav:
         - Difficulty:
             - Linear: 'api/scenarios/difficulty/linear.md'
             - Nonlinear: 'api/scenarios/difficulty/nonlinear.md'
-            - Convection: 'api/scenarios/difficulty/convection.md'
+            - Reaction-Diffusion: 'api/scenarios/difficulty/react.md'
+            - Generic: 'api/scenarios/difficulty/generic.md'
         - Physical:
             - Linear: 'api/scenarios/physical/linear.md'
+            - Nonlinear: 'api/scenarios/physical/nonlinear.md'
+            - Reaction-Diffusion: 'api/scenarios/physical/react.md'
+            - Navier-Stokes: 'api/scenarios/physical/navier_stokes.md'
+            - Linear (Special): 'api/scenarios/physical/linear_special.md'
+            - Generic: 'api/scenarios/physical/generic.md'
+            - Poisson: 'api/scenarios/physical/poisson.md'
         - Normalized:
             - Linear: 'api/scenarios/normalized/linear.md'
+            - Nonlinear: 'api/scenarios/normalized/nonlinear.md'
+            - Reaction-Diffusion: 'api/scenarios/normalized/react.md'
+            - Generic: 'api/scenarios/normalized/generic.md'
     - API:
         - Run:
             - One Experiment: 'api/run/one_experiment.md'
@@ -118,3 +129,7 @@ nav:
         - Scrape:
             - Utilities: 'api/scrape/utilities.md'
             - Curations: 'api/scrape/curations.md'
+    - Misc:
+        - FAQ: 'misc/faq.md'
+        - Tips & Tricks: 'misc/tips.md'
+        - Gotchas: 'misc/gotchas.md'
