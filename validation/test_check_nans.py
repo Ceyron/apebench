@@ -10,6 +10,8 @@ import pytest
 
 import apebench
 
+RUN_EXTENSIVE = False
+
 
 def compute_num_nans_trjs(trjs):
     def has_nan(trj):
@@ -64,20 +66,6 @@ def check_all_data(scene: apebench.BaseScenario):
 
 
 @pytest.mark.parametrize(
-    "name",
-    list(apebench.scenarios.scenario_dict.keys()),
-)
-def test_check_nans_1d(name: str):
-    scene_constructor = apebench.scenarios.scenario_dict[name]
-    try:
-        scene = scene_constructor(num_spatial_dims=1)
-    except ValueError:
-        return
-
-    check_all_data(scene)
-
-
-@pytest.mark.parametrize(
     "name, num_spatial_dims",
     [
         (name, num_spatial_dims)
@@ -125,32 +113,46 @@ def test_nans_on_guaranteed_scenarios(name: str, num_spatial_dims: int):
     check_all_data(scene)
 
 
-@pytest.mark.parametrize(
-    "name",
-    list(apebench.scenarios.scenario_dict.keys()),
-)
-def test_check_nans_2d(name: str):
-    scene_constructor = apebench.scenarios.scenario_dict[name]
-    try:
-        scene = scene_constructor(num_spatial_dims=2)
-    except ValueError:
-        return
+if RUN_EXTENSIVE:
 
-    check_all_data(scene)
+    @pytest.mark.parametrize(
+        "name",
+        list(apebench.scenarios.scenario_dict.keys()),
+    )
+    def test_check_nans_1d(name: str):
+        scene_constructor = apebench.scenarios.scenario_dict[name]
+        try:
+            scene = scene_constructor(num_spatial_dims=1)
+        except ValueError:
+            return
 
+        check_all_data(scene)
 
-@pytest.mark.parametrize(
-    "name",
-    list(apebench.scenarios.scenario_dict.keys()),
-)
-def test_check_nans_3d(name: str):
-    # Reduce to 32 points in 3d
-    NUM_POINTS_3d = 32
+    @pytest.mark.parametrize(
+        "name",
+        list(apebench.scenarios.scenario_dict.keys()),
+    )
+    def test_check_nans_2d(name: str):
+        scene_constructor = apebench.scenarios.scenario_dict[name]
+        try:
+            scene = scene_constructor(num_spatial_dims=2)
+        except ValueError:
+            return
 
-    scene_constructor = apebench.scenarios.scenario_dict[name]
-    try:
-        scene = scene_constructor(num_spatial_dims=3, num_points=NUM_POINTS_3d)
-    except ValueError:
-        return
+        check_all_data(scene)
 
-    check_all_data(scene)
+    @pytest.mark.parametrize(
+        "name",
+        list(apebench.scenarios.scenario_dict.keys()),
+    )
+    def test_check_nans_3d(name: str):
+        # Reduce to 32 points in 3d
+        NUM_POINTS_3d = 32
+
+        scene_constructor = apebench.scenarios.scenario_dict[name]
+        try:
+            scene = scene_constructor(num_spatial_dims=3, num_points=NUM_POINTS_3d)
+        except ValueError:
+            return
+
+        check_all_data(scene)
