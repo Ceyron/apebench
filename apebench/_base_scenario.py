@@ -349,18 +349,30 @@ class BaseScenario(eqx.Module, ABC):
             )
         elif train_args[0].lower() == "sup":
             num_rollout_steps = int(train_args[1])
+            if len(train_args) > 2:
+                cut_bptt = train_args[2].lower() == "true"
+            else:
+                cut_bptt = False
             trainer = tx.trainer.SupervisedTrainer(
                 train_trjs,
                 optimizer=optimizer,
                 num_training_steps=self.num_training_steps,
                 batch_size=self.batch_size,
                 num_rollout_steps=num_rollout_steps,
-                cut_bptt=False,
+                cut_bptt=cut_bptt,
                 time_level_weights=None,
                 callback_fn=callback_fn,
             )
         elif train_args[0].lower() == "div":
             num_rollout_steps = int(train_args[1])
+            if len(train_args) > 2:
+                cut_bptt = train_args[2].lower() == "true"
+            else:
+                cut_bptt = False
+            if len(train_args) > 3:
+                cut_div_chain = train_args[3].lower() == "true"
+            else:
+                cut_div_chain = False
             trainer = tx.trainer.DivertedChainBranchOneTrainer(
                 train_trjs,
                 ref_stepper=ref_stepper,
@@ -368,7 +380,8 @@ class BaseScenario(eqx.Module, ABC):
                 num_training_steps=self.num_training_steps,
                 batch_size=self.batch_size,
                 num_rollout_steps=num_rollout_steps,
-                cut_bptt=False,
+                cut_bptt=cut_bptt,
+                cut_div_chain=cut_div_chain,
                 time_level_weights=None,
                 callback_fn=callback_fn,
             )
