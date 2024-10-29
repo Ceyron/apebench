@@ -5,6 +5,7 @@ reference solver. It could be solved by lowering the scenario's difficulty or
 performing substeps in the reference solver.
 """
 
+import jax
 import jax.numpy as jnp
 import pytest
 
@@ -13,7 +14,11 @@ import apebench
 RUN_EXTENSIVE = False
 
 
-def compute_num_nans_trjs(trjs):
+def compute_num_nans_trjs(trjs: jax.Array) -> int:
+    """
+    Computes the number of trajectories that contain at least one NaN value.
+    """
+
     def has_nan(trj):
         if jnp.sum(jnp.isnan(trj)) > 0:
             return 1
@@ -25,7 +30,12 @@ def compute_num_nans_trjs(trjs):
     return sum(mask)
 
 
-def check_all_data(scene: apebench.BaseScenario):
+def check_for_nan(scene: apebench.BaseScenario):
+    """
+    Check for NaNs in the train and test data of a scenario. Also checks the
+    train and test data set produced by the coarse stepper if the scenario
+    supports a correction mode. Raises an AssertionError if NaNs are found.
+    """
     train_data = scene.get_train_data()
 
     train_num_nans = compute_num_nans_trjs(train_data)
@@ -88,7 +98,7 @@ def test_nans_on_difficulty_scenarios(name: str, num_spatial_dims: int):
     except ValueError:
         return
 
-    check_all_data(scene)
+    check_for_nan(scene)
 
 
 @pytest.mark.parametrize(
@@ -110,7 +120,7 @@ def test_nans_on_guaranteed_scenarios(name: str, num_spatial_dims: int):
     except ValueError:
         return
 
-    check_all_data(scene)
+    check_for_nan(scene)
 
 
 if RUN_EXTENSIVE:
@@ -126,7 +136,7 @@ if RUN_EXTENSIVE:
         except ValueError:
             return
 
-        check_all_data(scene)
+        check_for_nan(scene)
 
     @pytest.mark.parametrize(
         "name",
@@ -139,7 +149,7 @@ if RUN_EXTENSIVE:
         except ValueError:
             return
 
-        check_all_data(scene)
+        check_for_nan(scene)
 
     @pytest.mark.parametrize(
         "name",
@@ -155,4 +165,4 @@ if RUN_EXTENSIVE:
         except ValueError:
             return
 
-        check_all_data(scene)
+        check_for_nan(scene)
