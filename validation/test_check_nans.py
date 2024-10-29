@@ -14,7 +14,7 @@ import apebench
 RUN_EXTENSIVE = False
 
 
-def compute_num_nans_trjs(trjs: jax.Array) -> int:
+def count_nan_trjs(trjs: jax.Array) -> int:
     """
     Computes the number of trajectories that contain at least one NaN value.
     """
@@ -38,7 +38,7 @@ def check_for_nan(scene: apebench.BaseScenario):
     """
     train_data = scene.get_train_data()
 
-    train_num_nans = compute_num_nans_trjs(train_data)
+    train_num_nans = count_nan_trjs(train_data)
     assert (
         train_num_nans == 0
     ), f"Train data has {train_num_nans} trajectories with NaNs"
@@ -47,7 +47,7 @@ def check_for_nan(scene: apebench.BaseScenario):
 
     test_data = scene.get_test_data()
 
-    test_num_nans = compute_num_nans_trjs(test_data)
+    test_num_nans = count_nan_trjs(test_data)
     assert test_num_nans == 0, f"Test data has {test_num_nans} trajectories with NaNs"
 
     del test_data
@@ -56,7 +56,7 @@ def check_for_nan(scene: apebench.BaseScenario):
         # Some scenarios might not support a correction mode
         train_data_coarse = scene.get_train_data_coarse()
 
-        train_num_nans_coarse = compute_num_nans_trjs(train_data_coarse)
+        train_num_nans_coarse = count_nan_trjs(train_data_coarse)
         assert (
             train_num_nans_coarse == 0
         ), f"Train data coarse has {train_num_nans_coarse} trajectories with NaNs"
@@ -65,7 +65,7 @@ def check_for_nan(scene: apebench.BaseScenario):
 
         test_data_coarse = scene.get_test_data_coarse()
 
-        test_num_nans_coarse = compute_num_nans_trjs(test_data_coarse)
+        test_num_nans_coarse = count_nan_trjs(test_data_coarse)
         assert (
             test_num_nans_coarse == 0
         ), f"Test data coarse has {test_num_nans_coarse} trajectories with NaNs"
