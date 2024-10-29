@@ -84,7 +84,6 @@ class KortewegDeVries(Nonlinear):
         return f"{self.num_spatial_dims}d_phy_kdv"
 
 
-# TODO: needs fixes!!!
 class KuramotoSivashinsky(Nonlinear):
     domain_extent: float = 60.0  # Overwrite
     gradient_norm_coef: float = -1
