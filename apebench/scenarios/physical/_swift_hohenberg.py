@@ -29,7 +29,7 @@ class SwiftHohenberg(BaseScenario):
             dt=dt / self.num_substeps,
             reactivity=self.reactivity,
             critical_number=self.critical_number,
-            polynomial_linear_coefficients=self.polynomial_coefficients,
+            polynomial_coefficients=self.polynomial_coefficients,
         )
 
         if self.num_substeps == 1:
