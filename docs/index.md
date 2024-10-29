@@ -1,20 +1,18 @@
 # Getting Started
 
 ```bash
-pip install git+ssh://git@github.com/Ceyron/apebench@main
+pip install apebench
 ```
 
 Requires Python 3.10+ and JAX 0.4.12+ 👉 [JAX install guide](https://jax.readthedocs.io/en/latest/installation.html).
 
-Quick instruction with fresh Conda environment and JAX CUDA 12.
+Quick instruction with fresh Conda environment and JAX CUDA 12 on Linux.
 
 ```bash
 conda create -n apebench python=3.12 -y
 conda activate apebench
-```
-```bash
 pip install -U "jax[cuda12]"
-pip install git+ssh://git@github.com/Ceyron/apebench@main
+pip install apebench
 ```
 
 ## Quickstart
@@ -41,7 +39,7 @@ data_loss = apebench.melt_loss(data)
 data_metrics = apebench.melt_metrics(data)
 data_sample_rollout = apebench.melt_sample_rollouts(data)
 
-fig, axs = plt.subplots(3, 1, figsize=(6, 12))
+fig, axs = plt.subplots(1, 3, figsize=(13, 3))
 
 sns.lineplot(data_loss, x="update_step", y="train_loss", ax=axs[0])
 axs[0].set_yscale("log")
@@ -66,12 +64,7 @@ axs[2].set_title("Sample rollout")
 plt.show()
 ```
 
-You can explore the apebench scenarios using an interactive streamlit notebook
-by running
-
-```bash
-streamlit run explore_sample_data_streamlit.py
-```
+![](https://github.com/user-attachments/assets/10f968f4-2b30-4972-8753-22b7fad208ed)
 
 ## Background
 
@@ -109,50 +102,37 @@ An autoregressive neural emulator $f_\theta$ is trained to mimic $\mathcal{P}_h$
     4. How many random seeds are used to draw conclusions?
 
 APEBench is a framework to holistically assess all four ingredients. Component
-(1), the discrete reference simulator $\mathcal{P}_h$, is provided by `Exponax`.
-This is a suite of
+(1), the discrete reference simulator $\mathcal{P}_h$, is provided by
+[`Exponax`](https://github.com/Ceyron/exponax). This is a suite of
 [ETDRK](https://www.sciencedirect.com/science/article/abs/pii/S0021999102969950)-based
 methods for semi-linear partial differential equations on periodic domains. This
 covers a wide range of dynamics. For the most common scenarios, a unique
 interface using normalized (non-dimensionalized) coefficients or a
 difficulty-based interface (as described in the APEBench paper) can be used. The
-second (2) component is given by `PDEquinox`. This library uses `Equinox`, a
-JAX-based deep-learning framework, to implement many commonly found
-architectures like convolutional ResNets, U-Nets, and FNOs. The third (3)
-component is `Trainax`, an abstract implementation of "trainers" that provide
-supervised rollout training and many other features. The fourth (4) component is
-to wrap up the former three and is given by this repository.
-
-### About APEBench
-
+second (2) component is given by
+[`PDEquinox`](https://github.com/Ceyron/pdequinox). This library uses
+[`Equinox`](https://github.com/patrick-kidger/equinox), a JAX-based
+deep-learning framework, to implement many commonly found architectures like
+convolutional ResNets, U-Nets, and FNOs. The third (3) component is
+[`Trainax`](https://github.com/Ceyron/trainax), an abstract implementation of
+"trainers" that provide supervised rollout training and many other features. The
+fourth (4) component is to wrap up the former three and is given by this
+repository.
 APEBench encapsulates the entire pipeline of training and evaluating an
 autoregressive neural emulator in a scenario. A scenario is a callable
 dataclass.
 
+## Acknowledgements
 
+### Citation
 
-## Common Patterns in Apebench
+This package was developed as part of the `APEBench paper` (accepted at Neurips 2024), we will soon add the citation here.
 
-* Configuration strings: many configurations (like network architecture, initial
-  condition distribution, optimization config, learning methodology, etc.) are
-  set up in terms of string which contains the configuration entries separated
-  by a semi-colon ";".
+### Funding
 
-## Gotchas
+The main author (Felix Koehler) is a PhD student in the group of [Prof. Thuerey at TUM](https://ge.in.tum.de/) and his research is funded by the [Munich Center for Machine Learning](https://mcml.ai/).
 
-**Gotcha**: When subclassing from `BaseScenario` and overriding some of the
-attributes those need to be typed similarly to the base class.
-
-
-## Tips and Tricks
-
-**Avoid excessive storage usage for experiments**:
-
-* Reduce the number of exported trajectories. This is 1 by default, but in 2d
-    this can cause excessive memory usage
-* Reduce the logging frequency with `record_loss_every`.
-
-## License
+### License
 
 MIT, see [here](https://github.com/Ceyron/apebench/blob/main/LICENSE.txt)
 
@@ -160,4 +140,5 @@ MIT, see [here](https://github.com/Ceyron/apebench/blob/main/LICENSE.txt)
 
 > [fkoehler.site](https://fkoehler.site/) &nbsp;&middot;&nbsp;
 > GitHub [@ceyron](https://github.com/ceyron) &nbsp;&middot;&nbsp;
-> X [@felix_m_koehler](https://twitter.com/felix_m_koehler)
+> X [@felix_m_koehler](https://twitter.com/felix_m_koehler) &nbsp;&middot;&nbsp;
+> LinkedIn [Felix Köhler](https://www.linkedin.com/in/felix-koehler)

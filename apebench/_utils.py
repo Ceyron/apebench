@@ -26,12 +26,13 @@ def melt_data(
     uniquifier_name: str,
     *,
     base_columns: list[str] = BASE_NAMES,
-):
+) -> pd.DataFrame:
     """
     Melt a wide APEBench result DataFrame into a long format suitable for
     visualization (e.g. with seaborn or plotly).
 
-    Args:
+    **Arguments:**
+
     * `wide_data`: The wide DataFrame to melt, must contain `quantity_name` and
         `base_columns` as columns.
     * `quantity_name`: The name of the column(s) to melt.
@@ -40,7 +41,8 @@ def melt_data(
     * `base_columns`: The columns that should be kept as is in the melted
         DataFrame.
 
-    Returns:
+    **Returns:**
+
     * A long DataFrame with the same columns as `base_columns` and the melted
         `quantity_name`.
     """
@@ -64,7 +66,7 @@ def melt_data(
 def melt_metrics(
     wide_data: pd.DataFrame,
     metric_name: Union[str, list[str]] = "mean_nRMSE",
-):
+) -> pd.DataFrame:
     """
     Melt the metrics from a wide DataFrame.
     """
@@ -75,7 +77,7 @@ def melt_metrics(
     )
 
 
-def melt_loss(wide_data: pd.DataFrame, loss_name: str = "train_loss"):
+def melt_loss(wide_data: pd.DataFrame, loss_name: str = "train_loss") -> pd.DataFrame:
     """
     Melt the loss from a wide DataFrame.
     """
@@ -89,7 +91,7 @@ def melt_loss(wide_data: pd.DataFrame, loss_name: str = "train_loss"):
 def melt_sample_rollouts(
     wide_data: pd.DataFrame,
     sample_rollout_name: str = "sample_rollout",
-):
+) -> pd.DataFrame:
     """
     Melt the sample rollouts from a wide DataFrame.
     """
@@ -102,7 +104,7 @@ def melt_sample_rollouts(
 
 def split_train(
     metric_data: pd.DataFrame,
-):
+) -> pd.DataFrame:
     """
     Decode the `train` column into `category`, `type`, and `rollout` columns.
     """
@@ -122,7 +124,7 @@ def aggregate_gmean(
     *,
     up_to: int = 100,
     grouping_cols: list[str] = BASE_NAMES,
-):
+) -> pd.DataFrame:
     """
     Aggregate an error rollout over time via the geometric mean.
 
@@ -154,7 +156,7 @@ def relative_by_config(
     norm_query: str = "train == 'one'",
     value_col: str = "mean_nRMSE",
     suffix: str = "_rel",
-):
+) -> pd.DataFrame:
     def relativate_fn(sub_df):
         rel = sub_df.query(norm_query)[value_col]
         if len(rel) != 1:
@@ -170,7 +172,7 @@ def relative_by_config(
 
 def read_in_kwargs(
     df: pd.DataFrame,
-):
+) -> pd.DataFrame:
     """
     Parse the `scenario_kwargs` column of a DataFrame and add the parsed entries
     as new columns.
