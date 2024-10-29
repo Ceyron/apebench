@@ -23,6 +23,46 @@ def compute_num_nans_trjs(trjs):
     return sum(mask)
 
 
+def check_all_data(scene: apebench.BaseScenario):
+    train_data = scene.get_train_data()
+
+    train_num_nans = compute_num_nans_trjs(train_data)
+    assert (
+        train_num_nans == 0
+    ), f"Train data has {train_num_nans} trajectories with NaNs"
+
+    del train_data
+
+    test_data = scene.get_test_data()
+
+    test_num_nans = compute_num_nans_trjs(test_data)
+    assert test_num_nans == 0, f"Test data has {test_num_nans} trajectories with NaNs"
+
+    del test_data
+
+    try:
+        # Some scenarios might not support a correction mode
+        train_data_coarse = scene.get_train_data_coarse()
+
+        train_num_nans_coarse = compute_num_nans_trjs(train_data_coarse)
+        assert (
+            train_num_nans_coarse == 0
+        ), f"Train data coarse has {train_num_nans_coarse} trajectories with NaNs"
+
+        del train_data_coarse
+
+        test_data_coarse = scene.get_test_data_coarse()
+
+        test_num_nans_coarse = compute_num_nans_trjs(test_data_coarse)
+        assert (
+            test_num_nans_coarse == 0
+        ), f"Test data coarse has {test_num_nans_coarse} trajectories with NaNs"
+
+        del test_data_coarse
+    except NotImplementedError:
+        return
+
+
 @pytest.mark.parametrize(
     "name",
     list(apebench.scenarios.scenario_dict.keys()),
@@ -69,6 +109,32 @@ def test_check_nans_1d(name: str):
         del test_data_coarse
     except NotImplementedError:
         return
+
+
+@pytest.mark.parametrize(
+    "name, num_spatial_dims",
+    [
+        (name, num_spatial_dims)
+        for name in list(apebench.scenarios.difficulty.scenario_dict.keys())
+        for num_spatial_dims in [1, 2, 3]
+    ],
+)
+def test_nans_on_difficulty_scenarios(name: str, num_spatial_dims: int):
+    scene_constructor = apebench.scenarios.scenario_dict[name]
+
+    if num_spatial_dims == 3:
+        NUM_POINTS = 32
+    else:
+        NUM_POINTS = 160
+
+    try:
+        scene = scene_constructor(
+            num_spatial_dims=num_spatial_dims, num_points=NUM_POINTS
+        )
+    except ValueError:
+        return
+
+    check_all_data(scene)
 
 
 @pytest.mark.parametrize(
