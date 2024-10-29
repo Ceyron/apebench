@@ -122,29 +122,6 @@ APEBench encapsulates the entire pipeline of training and evaluating an
 autoregressive neural emulator in a scenario. A scenario is a callable
 dataclass.
 
-
-
-<!-- ## Common Patterns in Apebench
-
-* Configuration strings: many configurations (like network architecture, initial
-  condition distribution, optimization config, learning methodology, etc.) are
-  set up in terms of string which contains the configuration entries separated
-  by a semi-colon ";".
-
-## Gotchas
-
-**Gotcha**: When subclassing from `BaseScenario` and overriding some of the
-attributes those need to be typed similarly to the base class.
-
-
-## Tips and Tricks
-
-**Avoid excessive storage usage for experiments**:
-
-* Reduce the number of exported trajectories. This is 1 by default, but in 2d
-    this can cause excessive memory usage
-* Reduce the logging frequency with `record_loss_every`. -->
-
 ## Acknowledgements
 
 ### Citation
