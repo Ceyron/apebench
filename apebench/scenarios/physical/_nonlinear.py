@@ -86,10 +86,10 @@ class KortewegDeVries(Nonlinear):
 
 # TODO: needs fixes!!!
 class KuramotoSivashinsky(Nonlinear):
-    domain_extent: float = 40.0  # Overwrite
-    gradient_norm_coef: float = -4
-    diffusion_coef: float = -0.4  # Negative diffusion; producing energy!
-    hyp_diffusion_coef: float = -0.0075
+    domain_extent: float = 60.0  # Overwrite
+    gradient_norm_coef: float = -1
+    diffusion_coef: float = -1.0  # Negative diffusion; producing energy!
+    hyp_diffusion_coef: float = -1.0
 
     num_warmup_steps: int = 500  # Overwrite
     vlim: tuple[float, float] = (-6.5, 6.5)  # Overwrite

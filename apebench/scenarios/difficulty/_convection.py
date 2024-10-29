@@ -80,7 +80,7 @@ class Burgers(Convection):
 class KuramotoSivashinskyConservative(Convection):
     convection_delta: float = -1.0  # Overwrite
     diffusion_gamma: float = -2.0  # Negative diffusion; producing energy
-    hyp_diffusion_gamma: float = -15.0
+    hyp_diffusion_gamma: float = -18.0
 
     num_warmup_steps: int = 500  # Overwrite
     vlim: tuple[float, float] = (-2.5, 2.5)  # Overwrite
