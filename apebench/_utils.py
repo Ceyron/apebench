@@ -1,7 +1,11 @@
 from typing import Union
 
+import jax
+import jax.numpy as jnp
 import pandas as pd
 from scipy.stats import gmean
+
+from ._base_scenario import BaseScenario
 
 BASE_NAMES = [
     "seed",
@@ -185,3 +189,64 @@ def read_in_kwargs(
     for entry in entries:
         df[entry] = col.apply(lambda x: x[entry])
     return df
+
+
+def count_nan_trjs(trjs: jax.Array) -> int:
+    """
+    Computes the number of trajectories that contain at least one NaN value.
+    """
+
+    def has_nan(trj):
+        if jnp.sum(jnp.isnan(trj)) > 0:
+            return 1
+        else:
+            return 0
+
+    mask = [has_nan(trj) for trj in trjs]
+
+    return sum(mask)
+
+
+def check_for_nan(scene: BaseScenario):
+    """
+    Check for NaNs in the train and test data of a scenario. Also checks the
+    train and test data set produced by the coarse stepper if the scenario
+    supports a correction mode. Raises an AssertionError if NaNs are found.
+    """
+    train_data = scene.get_train_data()
+
+    train_num_nans = count_nan_trjs(train_data)
+    assert (
+        train_num_nans == 0
+    ), f"Train data has {train_num_nans} trajectories with NaNs"
+
+    del train_data
+
+    test_data = scene.get_test_data()
+
+    test_num_nans = count_nan_trjs(test_data)
+    assert test_num_nans == 0, f"Test data has {test_num_nans} trajectories with NaNs"
+
+    del test_data
+
+    try:
+        # Some scenarios might not support a correction mode
+        train_data_coarse = scene.get_train_data_coarse()
+
+        train_num_nans_coarse = count_nan_trjs(train_data_coarse)
+        assert (
+            train_num_nans_coarse == 0
+        ), f"Train data coarse has {train_num_nans_coarse} trajectories with NaNs"
+
+        del train_data_coarse
+
+        test_data_coarse = scene.get_test_data_coarse()
+
+        test_num_nans_coarse = count_nan_trjs(test_data_coarse)
+        assert (
+            test_num_nans_coarse == 0
+        ), f"Test data coarse has {test_num_nans_coarse} trajectories with NaNs"
+
+        del test_data_coarse
+    except NotImplementedError:
+        return

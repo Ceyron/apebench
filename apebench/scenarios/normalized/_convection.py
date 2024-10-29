@@ -76,7 +76,7 @@ class Burgers(Convection):
 class KuramotoSivashinskyConservative(Convection):
     convection_delta: float = -6.0e-3
     diffusion_alpha: float = -4.0e-5
-    hyp_diffusion_alpha: float = -3.0e-9
+    hyp_diffusion_alpha: float = -3.0e-8
 
     num_warmup_steps: int = 500  # Overwrite
     vlim: tuple[float, float] = (-2.5, 2.5)  # Overwrite

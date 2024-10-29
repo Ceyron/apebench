@@ -129,6 +129,7 @@ nav:
         - Scrape:
             - Utilities: 'api/scrape/utilities.md'
             - Curations: 'api/scrape/curations.md'
+        - 'api/utils.md'
     - Misc:
         - FAQ: 'misc/faq.md'
         - Tips & Tricks: 'misc/tips.md'
