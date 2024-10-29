@@ -104,6 +104,28 @@ def test_nans_on_difficulty_scenarios(name: str, num_spatial_dims: int):
 
 
 @pytest.mark.parametrize(
+    "name, num_spatial_dims",
+    apebench.scenarios.guaranteed_non_nan,
+)
+def test_nans_on_guaranteed_scenarios(name: str, num_spatial_dims: int):
+    scene_constructor = apebench.scenarios.scenario_dict[name]
+
+    if num_spatial_dims == 3:
+        NUM_POINTS = 32
+    else:
+        NUM_POINTS = 160
+
+    try:
+        scene = scene_constructor(
+            num_spatial_dims=num_spatial_dims, num_points=NUM_POINTS
+        )
+    except ValueError:
+        return
+
+    check_all_data(scene)
+
+
+@pytest.mark.parametrize(
     "name",
     list(apebench.scenarios.scenario_dict.keys()),
 )
