@@ -29,7 +29,7 @@ ic_dict: Dict[
     "grf": lambda ic_config, num_spatial_dims: ex.ic.GaussianRandomField(
         num_spatial_dims=num_spatial_dims,
         powerlaw_exponent=float(ic_config.split(";")[1]),
-        zero_mean=ic_config.split(";")[3].lower() == "true",
+        zero_mean=ic_config.split(";")[2].lower() == "true",
         max_one=ic_config.split(";")[3].lower() == "true",
     ),
 }
