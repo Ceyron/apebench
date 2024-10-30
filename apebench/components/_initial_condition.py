@@ -15,9 +15,9 @@ ic_dict: Dict[
     "fourier": lambda ic_config, num_spatial_dims: ex.ic.RandomTruncatedFourierSeries(
         num_spatial_dims=num_spatial_dims,
         cutoff=int(ic_config.split(";")[1]),
-        offset_range=(-0.5, 0.5)
+        offset_range=(0.0, 0.0)
         if ic_config.split(";")[2].lower() == "true"
-        else (0, 0),
+        else (-0.5, 0.5),
         max_one=ic_config.split(";")[3].lower() == "true",
     ),
     "diffused": lambda ic_config, num_spatial_dims: ex.ic.DiffusedNoise(
