@@ -88,6 +88,7 @@ nav:
     - 'use_cases.md'
     - 'extending_apebench.md'
     - 'using_cli.md'
+    - 'arguments.md'
     - Examples:
         - Introductory:
             - Simple Advection 1D Emulation: 'examples/simple_advection_1d_learning.ipynb'
