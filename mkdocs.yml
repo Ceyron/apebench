@@ -129,6 +129,12 @@ nav:
         - Scrape:
             - Utilities: 'api/scrape/utilities.md'
             - Curations: 'api/scrape/curations.md'
+        - Components:
+            - 'api/components/architectures.md'
+            - 'api/components/initial_condition.md'
+            - 'api/components/activation_function.md'
+            - 'api/components/metrics.md'
+            - 'api/components/optimization.md'
         - 'api/utils.md'
     - Misc:
         - FAQ: 'misc/faq.md'
