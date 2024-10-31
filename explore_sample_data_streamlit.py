@@ -18,7 +18,6 @@ import numpy as np
 import streamlit as st
 import streamlit.components.v1 as components
 from IPython.display import DisplayObject
-from matplotlib.colors import Colormap, LinearSegmentedColormap, ListedColormap
 
 import apebench
 
@@ -192,30 +191,6 @@ class VolumeRenderer(DisplayObject):
         special characters (<>&) escaped.
         """
         return self._repr_html_()
-
-
-def felix_cmap_hack(cmap: Colormap) -> Colormap:
-    """changes the alpha channel of a colormap to be diverging (0->1, 0.5 > 0, 1->1)
-
-    Args:
-        cmap (Colormap): colormap
-
-    Returns:
-        Colormap: new colormap
-    """
-    cmap = cmap.copy()
-    if isinstance(cmap, ListedColormap):
-        for i, a in enumerate(cmap.colors):
-            a.append(2 * abs(i / cmap.N - 0.5))
-    elif isinstance(cmap, LinearSegmentedColormap):
-        cmap._segmentdata["alpha"] = np.array(
-            [[0.0, 1.0, 1.0], [0.5, 0.0, 0.0], [1.0, 1.0, 1.0]]
-        )
-    else:
-        raise TypeError(
-            "cmap must be either a ListedColormap or a LinearSegmentedColormap"
-        )
-    return cmap
 
 
 if dimension_type == "1d ST":
