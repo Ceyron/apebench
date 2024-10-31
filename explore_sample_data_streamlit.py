@@ -13,6 +13,7 @@ import random
 from dataclasses import dataclass
 from typing import Optional
 
+import jax
 import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
@@ -203,7 +204,8 @@ elif dimension_type == "2d":
     ani = apebench.exponax.viz.animate_state_2d(trj, vlim=scenario.vlim)
     components.html(ani.to_jshtml(), height=800)
 elif dimension_type == "2d ST":
-    trj_rearranged = trj.transpose(1, 0, 2, 3)[None]
+    trj_wrapped = jax.vmap(apebench.exponax.wrap_bc)(trj)
+    trj_rearranged = trj_wrapped.transpose(1, 0, 2, 3)[None]
     components.html(
         show(
             trj_rearranged,
@@ -216,9 +218,10 @@ elif dimension_type == "2d ST":
         height=800,
     )
 elif dimension_type == "3d":
+    trj_wrapped = jax.vmap(apebench.exponax.wrap_bc)(trj)
     components.html(
         show(
-            trj,
+            trj_wrapped,
             plt.get_cmap("RdBu_r"),
             width=1500,
             height=800,
