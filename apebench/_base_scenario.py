@@ -207,7 +207,11 @@ class BaseScenario(eqx.Module, ABC):
 
         return trj_set
 
-    def get_train_data(self) -> Array:
+    def get_train_data(
+        self,
+    ) -> Float[
+        Array, "num_train_samples train_temporal_horizon+1 num_channels *num_points"
+    ]:
         """
         Use the attributes to produce the reference training data.
         """
@@ -219,7 +223,11 @@ class BaseScenario(eqx.Module, ABC):
             key=jax.random.PRNGKey(self.train_seed),
         )
 
-    def get_train_data_coarse(self) -> Array:
+    def get_train_data_coarse(
+        self,
+    ) -> Float[
+        Array, "num_train_samples train_temporal_horizon+1 num_channels *num_points"
+    ]:
         """
         Use the attributes to produce training data with the coarse stepper instead.
         """
@@ -231,7 +239,11 @@ class BaseScenario(eqx.Module, ABC):
             key=jax.random.PRNGKey(self.train_seed),
         )
 
-    def get_test_data(self) -> Array:
+    def get_test_data(
+        self,
+    ) -> Float[
+        Array, "num_test_samples test_temporal_horizon+1 num_channels *num_points"
+    ]:
         """
         Use the attributes to produce the reference testing data.
         """
@@ -243,7 +255,11 @@ class BaseScenario(eqx.Module, ABC):
             key=jax.random.PRNGKey(self.test_seed),
         )
 
-    def get_test_data_coarse(self) -> Array:
+    def get_test_data_coarse(
+        self,
+    ) -> Float[
+        Array, "num_test_samples test_temporal_horizon+1 num_channels *num_points"
+    ]:
         """
         Use the attributes to produce testing data with the coarse stepper instead.
         """
@@ -255,7 +271,11 @@ class BaseScenario(eqx.Module, ABC):
             key=jax.random.PRNGKey(self.test_seed),
         )
 
-    def get_ref_sample_data(self) -> Array:
+    def get_ref_sample_data(
+        self,
+    ) -> Float[
+        Array, "num_trjs_returned test_temporal_horizon+1 num_channels *num_points"
+    ]:
         """
         Return a subset of the testing data, the number of samples is defined by
         the attribute `num_trjs_returned`
@@ -264,7 +284,7 @@ class BaseScenario(eqx.Module, ABC):
         test_trj_subset = test_trj_set[: self.num_trjs_returned]
         return test_trj_subset
 
-    def get_callback_fn(self):
+    def get_callback_fn(self) -> tx.callback.BaseCallback:
         """
         Parse the `callbacks` attribute to a list of callable functions.
         """
@@ -313,7 +333,7 @@ class BaseScenario(eqx.Module, ABC):
 
         return callback_fn
 
-    def get_trainer(self, *, train_config: str):
+    def get_trainer(self, *, train_config: str) -> tx.GeneralTrainer:
         """
         Expects a str of the defined interface for study. In the default
         configuration, it could for instance accept:
@@ -405,7 +425,7 @@ class BaseScenario(eqx.Module, ABC):
         self,
         network_config: str,
         key: PRNGKeyArray,
-    ):
+    ) -> eqx.Module:
         """
         Parse the `network_config` to the corresponding neural architectue and
         instantiate it, use the `key` to initialize the parameters.
@@ -496,7 +516,7 @@ class BaseScenario(eqx.Module, ABC):
 
     def get_neural_stepper(
         self, *, task_config: str, network_config: str, key: PRNGKeyArray
-    ):
+    ) -> eqx.Module:
         """
         Use the `network_config` to instantiate the neural architecture with
         `key` for the initial parameters. Then use the `task_config` to
@@ -532,7 +552,7 @@ class BaseScenario(eqx.Module, ABC):
     def get_parameter_count(
         self,
         network_config: str,
-    ):
+    ) -> int:
         """
         Count the number of parameters associated with `network_config` str.
 
@@ -551,7 +571,7 @@ class BaseScenario(eqx.Module, ABC):
         *,
         network_config: str,
         task_config: str,
-    ):
+    ) -> tuple[tuple[int, int], ...]:
         """
         Return the receptive field of the neural architecture for the given
         configuration.
@@ -571,7 +591,7 @@ class BaseScenario(eqx.Module, ABC):
         task_config: str,
         network_config: str,
         remove_singleton_axis: bool = True,
-    ):
+    ) -> eqx.Module:
         """
         Load the model from the given path.
         """
@@ -595,7 +615,7 @@ class BaseScenario(eqx.Module, ABC):
         model: eqx.Module,
         *,
         train_config: str,
-    ):
+    ) -> float:
         """
         Computes the loss of the model on the entire training set in the
         configuration denoted by `train_config`.
@@ -635,7 +655,21 @@ class BaseScenario(eqx.Module, ABC):
 
         return error_rollout
 
-    def get_metric_fns(self):
+    def get_metric_fns(
+        self,
+    ) -> dict[
+        str,
+        Callable[
+            [
+                Float[
+                    Array,
+                    "num_samples num_channels *num_points",
+                ],
+                Float[Array, "num_samples num_channels *num_points"],
+            ],
+            float,
+        ],
+    ]:
         """
         Return a dictionary with all metric functions according to the
         `report_metrics` attribute.
@@ -656,7 +690,7 @@ class BaseScenario(eqx.Module, ABC):
         neural_stepper: eqx.Module,
         *,
         remove_singleton_axis: bool = False,
-    ):
+    ) -> dict[str, Float[Array, "test_temporal_horizon"]]:
         """
         Computes all metrics according to the `report_metrics` attribute.
         """
@@ -674,7 +708,11 @@ class BaseScenario(eqx.Module, ABC):
 
         return results
 
-    def sample_trjs(self, neural_stepper: eqx.Module):
+    def sample_trjs(
+        self, neural_stepper: eqx.Module
+    ) -> Float[
+        Array, "num_trjs_returned test_temporal_horizon+1 num_channels *num_points"
+    ]:
         """
         Use the neural_stepper to produce a sample of trajectories. The initial
         conditions are the ones from the test set.
@@ -785,7 +823,7 @@ class BaseScenario(eqx.Module, ABC):
         start_seed: int = 0,
         num_seeds: int = 1,
         remove_singleton_axis: bool = True,
-    ):
+    ) -> tuple[pd.DataFrame, eqx.Module]:
         """
         Execute the scenario with the given attribute configuration and the
         additional configuration strings.
