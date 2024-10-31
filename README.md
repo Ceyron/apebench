@@ -1,6 +1,30 @@
 <h4 align="center">A benchmark suite for Autoregressive PDE Emulators in <a href="https://github.com/google/jax" target="_blank">JAX</a>.</h4>
 
 <p align="center">
+<a href="https://pypi.org/project/apebench/">
+  <img src="https://img.shields.io/pypi/v/apebench.svg" alt="PyPI">
+</a>
+<a href="https://github.com/ceyron/apebench/actions/workflows/test.yml">
+  <img src="https://github.com/ceyron/apebench/actions/workflows/test.yml/badge.svg" alt="Tests">
+</a>
+<a href="https://tum-pbs.github.io/apebench">
+  <img src="https://img.shields.io/badge/docs-latest-green" alt="docs-latest">
+</a>
+<a href="https://github.com/ceyron/apebench/releases">
+  <img src="https://img.shields.io/github/v/release/ceyron/apebench?include_prereleases&label=changelog" alt="Changelog">
+</a>
+<a href="https://github.com/ceyron/apebench/blob/main/LICENSE.txt">
+  <img src="https://img.shields.io/badge/license-MIT-blue" alt="License">
+</a>
+</p>
+
+<p align="center">
+<a href="https://github.com/tum-pbs/apebench-paper">
+    📝 Paper Project Page
+</a>
+</p>
+
+<p align="center">
   <a href="#installation">Installation</a> •
   <a href="#quickstart">Quickstart</a> •
     <a href="#documentation">Documentation</a> •
@@ -19,6 +43,7 @@ simulator based on spectral methods that is used for procedural data generation
 also be embedded into emulator training (e.g., for a "solver-in-the-loop"
 correction setting), this is the first benchmark suite to support
 **differentiable physics**.
+
 
 
 ## Installation
