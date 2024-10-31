@@ -129,7 +129,7 @@ Moreover, each scenario contains its respective constitutive parameters which ar
 Must be a configuration string that matches an entry of the
 [`apebench.components.architecture_dict`][]. For example, `"Conv;34;10;relu"`
 yields a feedforward convolutional neural netork with `34` hidden channels over
-`10` hidden layers, with ReLU activation functions.
+`10` hidden layers, with ReLU activation function.
 
 !!! tip
 
