@@ -102,7 +102,7 @@ streamlit run explore_sample_data_streamlit.py
 ## Documentation
 
 Documentation is a available at
-[fkoehler.site/apebench/](https://fkoehler.site/apebench/).
+[tum-pbs.github.io/apebench/](https://tum-pbs.github.io/apebench/).
 
 ## Background
 
