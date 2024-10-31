@@ -13,12 +13,12 @@ import random
 from dataclasses import dataclass
 from typing import Optional
 
+import jax
 import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
 import streamlit.components.v1 as components
 from IPython.display import DisplayObject
-from matplotlib.colors import Colormap, LinearSegmentedColormap, ListedColormap
 
 import apebench
 
@@ -88,7 +88,7 @@ trj = trj_set[trajectory_index]
 
 TEMPLATE_IFRAME = """
     <div>
-        <iframe id="{canvas_id}" src="https://keksboter.github.io/v4dv/?inline" width="{canvas_width}" height="{canvas_height}" frameBorder="0" sandbox="allow-same-origin allow-scripts"></iframe>
+        <iframe id="{canvas_id}" src="https://vape.niedermayr.dev/?inline" width="{canvas_width}" height="{canvas_height}" frameBorder="0" sandbox="allow-same-origin allow-scripts"></iframe>
     </div>
     <script>
 
@@ -124,6 +124,7 @@ class ViewerSettings:
     show_volume_info: bool
     vmin: Optional[float]
     vmax: Optional[float]
+    distance_scale: float
 
 
 def show(
@@ -136,6 +137,7 @@ def show(
     show_volume_info=False,
     vmin=None,
     vmax=None,
+    distance_scale=1.0,
 ):
     return VolumeRenderer(
         data,
@@ -148,6 +150,7 @@ def show(
             show_volume_info,
             vmin,
             vmax,
+            distance_scale,
         ),
     )
 
@@ -191,33 +194,8 @@ class VolumeRenderer(DisplayObject):
         return self._repr_html_()
 
 
-def felix_cmap_hack(cmap: Colormap) -> Colormap:
-    """changes the alpha channel of a colormap to be diverging (0->1, 0.5 > 0, 1->1)
-
-    Args:
-        cmap (Colormap): colormap
-
-    Returns:
-        Colormap: new colormap
-    """
-    cmap = cmap.copy()
-    if isinstance(cmap, ListedColormap):
-        for i, a in enumerate(cmap.colors):
-            a.append(2 * abs(i / cmap.N - 0.5))
-    elif isinstance(cmap, LinearSegmentedColormap):
-        cmap._segmentdata["alpha"] = np.array(
-            [[0.0, 1.0, 1.0], [0.5, 0.0, 0.0], [1.0, 1.0, 1.0]]
-        )
-    else:
-        raise TypeError(
-            "cmap must be either a ListedColormap or a LinearSegmentedColormap"
-        )
-    return cmap
-
-
 if dimension_type == "1d ST":
-    apebench.exponax.viz.plot_spatio_temporal(trj, vlim=scenario.vlim)
-    fig = plt.gcf()
+    fig = apebench.exponax.viz.plot_spatio_temporal(trj, vlim=scenario.vlim)
     st.pyplot(fig)
 elif dimension_type == "1d":
     ani = apebench.exponax.viz.animate_state_1d(trj, vlim=scenario.vlim)
@@ -226,7 +204,8 @@ elif dimension_type == "2d":
     ani = apebench.exponax.viz.animate_state_2d(trj, vlim=scenario.vlim)
     components.html(ani.to_jshtml(), height=800)
 elif dimension_type == "2d ST":
-    trj_rearranged = trj.transpose(1, 0, 2, 3)[None]
+    trj_wrapped = jax.vmap(apebench.exponax.wrap_bc)(trj)
+    trj_rearranged = trj_wrapped.transpose(1, 0, 2, 3)[None]
     components.html(
         show(
             trj_rearranged,
@@ -239,9 +218,10 @@ elif dimension_type == "2d ST":
         height=800,
     )
 elif dimension_type == "3d":
+    trj_wrapped = jax.vmap(apebench.exponax.wrap_bc)(trj)
     components.html(
         show(
-            trj,
+            trj_wrapped,
             plt.get_cmap("RdBu_r"),
             width=1500,
             height=800,
