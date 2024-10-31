@@ -88,7 +88,7 @@ trj = trj_set[trajectory_index]
 
 TEMPLATE_IFRAME = """
     <div>
-        <iframe id="{canvas_id}" src="https://keksboter.github.io/v4dv/?inline" width="{canvas_width}" height="{canvas_height}" frameBorder="0" sandbox="allow-same-origin allow-scripts"></iframe>
+        <iframe id="{canvas_id}" src="https://vape.niedermayr.dev/?inline" width="{canvas_width}" height="{canvas_height}" frameBorder="0" sandbox="allow-same-origin allow-scripts"></iframe>
     </div>
     <script>
 
@@ -124,6 +124,7 @@ class ViewerSettings:
     show_volume_info: bool
     vmin: Optional[float]
     vmax: Optional[float]
+    distance_scale: float
 
 
 def show(
@@ -136,6 +137,7 @@ def show(
     show_volume_info=False,
     vmin=None,
     vmax=None,
+    distance_scale=1.0,
 ):
     return VolumeRenderer(
         data,
@@ -148,6 +150,7 @@ def show(
             show_volume_info,
             vmin,
             vmax,
+            distance_scale,
         ),
     )
 
