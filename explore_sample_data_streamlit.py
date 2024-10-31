@@ -216,8 +216,7 @@ def felix_cmap_hack(cmap: Colormap) -> Colormap:
 
 
 if dimension_type == "1d ST":
-    apebench.exponax.viz.plot_spatio_temporal(trj, vlim=scenario.vlim)
-    fig = plt.gcf()
+    fig = apebench.exponax.viz.plot_spatio_temporal(trj, vlim=scenario.vlim)
     st.pyplot(fig)
 elif dimension_type == "1d":
     ani = apebench.exponax.viz.animate_state_1d(trj, vlim=scenario.vlim)
