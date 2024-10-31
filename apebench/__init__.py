@@ -1,3 +1,5 @@
+import importlib.metadata
+
 import exponax
 import pdequinox
 import trainax
@@ -26,6 +28,8 @@ from ._utils import (
     relative_by_config,
     split_train,
 )
+
+__version__ = importlib.metadata.version("apebench")
 
 __all__ = [
     "exponax",
