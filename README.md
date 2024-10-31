@@ -1,4 +1,3 @@
- ⚠️ ⚠️ ⚠️ This is a pre-release version of the package to test the PyPI workflow. Proper release **with breaking API changes** and extended documentation will be by end of October. ⚠️ ⚠️ ⚠️
 <h4 align="center">A benchmark suite for Autoregressive PDE Emulators in <a href="https://github.com/google/jax" target="_blank">JAX</a>.</h4>
 
 <p align="center">
