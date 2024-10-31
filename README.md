@@ -39,7 +39,7 @@
 APEBench is a JAX-based tool to evaluate autoregressive neural emulators for
 PDEs on periodic domains in 1d, 2d, and 3d. It comes with an efficient reference
 simulator based on spectral methods that is used for procedural data generation
-(no need to domainload large datasets with APEBench). Since this simulator can
+(no need to download large datasets with APEBench). Since this simulator can
 also be embedded into emulator training (e.g., for a "solver-in-the-loop"
 correction setting), this is the first benchmark suite to support
 **differentiable physics**.
