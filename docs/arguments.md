@@ -126,6 +126,33 @@ Moreover, each scenario contains its respective constitutive parameters which ar
 
 ### `network`
 
+Must be a configuration string that matches an entry of the
+[`apebench.components.architecture_dict`][]. For example, `"Conv;34;10;relu"`
+yields a feedforward convolutional neural netork with `34` hidden channels over
+`10` hidden layers, with ReLU activation functions.
+
+!!! tip
+
+    With an instantiated scenario, one can access the number of trainable
+    parameters and the receptive field via
+    ```python
+    adv_scenario_1d = apebench.scenarios.difficulty.Advection()
+
+    adv_scenario_1d.get_parameter_count("Conv;23;10;relu")
+    # 14652
+
+    adv_scenario_1d.get_receptive_field(
+        network_config="Conv;23;10;relu",
+        task_config="predict",
+    )
+    # ((11.0, 11.0),)  # 11 per direction in the one and only dimension
+    ```
+
+    Counting parameters is associated with a scenario because it depends
+    on the [`num_channels`](#num_channels) and the [`num_points`](#num_points)
+    of the scenario.
+
+
 ### `train`
 
 ### `start_seed`
