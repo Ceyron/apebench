@@ -184,6 +184,22 @@ yields a feedforward convolutional neural netork with `34` hidden channels over
 
 ### `train`
 
+Describes how reference simulator (the stepper one gets with
+`scenario.get_ref_stepper()`) interacts with the neural stepper (the trainable
+stepper one gets with `scenario.get_neural_stepper(....)`). The easiest
+configuration is **one-step supervised** training accessible by setting
+`train="one"`. In this case, [`num_train_samples`](#num_train_samples) initial
+conditions are drawn from the IC distribution (accessible via
+`scenario.get_ic_generator()`) and are then unrolled for
+[`train_temporal_horizon`](#train_temporal_horizon) steps (This data can also be
+accessed via `scenario.get_train_data()`). For one-step supervised training out
+of all trajectories across all time steps, [`batch_size`](#batch_size) windows
+of **length two** will be drawn.
+
+This naturally extends to **supervised unrolled** training in which the neural
+stepper is autoregressively unrolled for the specified number of steps. This is
+achieved via `"sup;T"` with `T` being the number of steps.
+
 ### `start_seed`
 
 ### `num_seeds`
