@@ -135,6 +135,24 @@ dict).
 
 ### `task`
 
+Describes how the neural stepper is composed. For a full prediction via
+`"predict"`, the neural network is supposed to fully replace the numerical
+simulator. For a correction setup via `"correct;<XX>"`, there is a coarse solver
+component. This depends on the `get_coarse_stepper()` method of the specific
+scenario. In the default settings of APEBench, this is a "defective solver" that
+is similar to the reference simulator but only performs a fraction of the time
+step $\Delta t$. More sophisticated coarse steppers like based on differences in
+numerical methods or resolution are possible. The `<XX>` is a placeholder for
+the type of correction. Currently supported are:
+
+- `"correct;sequential"`: The network is called on the output of the coarse
+  stepper
+- `"correct;parallel"`: The network and the coarse stepper are called on the same
+  previous state, and the results are added up.
+- `correct;sequential_with_bypass"`: Similar to `"correct;sequential"`, but the
+  output of the coarse stepper is also bypassed over the network and added to
+  its output.
+
 ### `network`
 
 Must be a configuration string that matches an entry of the
