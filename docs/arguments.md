@@ -122,6 +122,17 @@ Moreover, each scenario contains its respective constitutive parameters which ar
 
 ### `scenario`
 
+The identifier string of the scenario. Must be one of the keys of
+[`apebench.scenarios.scenario_dict`][]. If a custom extended scenario is to be
+used, it must be first registered in the `scenario_dict` (adding it to the
+dict).
+
+!!! note
+
+    This argument only exists if the interface via
+    [`apebench.run_experiment`][], [`apebench.run_study`][], or
+    [`apebench.run_study_convenience`][] is used. Otherwise, it is implicitly given by the scenario being instantiated.
+
 ### `task`
 
 ### `network`
