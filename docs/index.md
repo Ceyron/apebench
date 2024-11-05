@@ -126,8 +126,8 @@ dataclass.
 
 This package was developed as part of the [APEBench paper
 (arxiv.org/abs/2411.00180)](https://arxiv.org/abs/2411.00180) (accepted at
-Neurips 2024). If you find this package useful for your research, please
-consider citing it:
+Neurips 2024). If you find it useful for your research, please consider citing
+it:
 
 ```bibtex
 @article{koehler2024apebench,
