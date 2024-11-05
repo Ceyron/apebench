@@ -32,7 +32,7 @@
   <a href="#quickstart">Quickstart</a> •
     <a href="#documentation">Documentation</a> •
     <a href="#background">Background</a> •
-    <a href="#acknowledgements">Acknowledgements</a>
+    <a href="#citation">Citation</a>
 </p>
 
 <p align="center">
@@ -187,9 +187,7 @@ APEBench encapsulates the entire pipeline of training and evaluating an
 autoregressive neural emulator in a scenario. A scenario is a callable
 dataclass.
 
-## Acknowledgements
-
-### Citation
+## Citation
 
 This package was developed as part of the [APEBench paper
 (arxiv.org/abs/2411.00180)](https://arxiv.org/abs/2411.00180) (accepted at
@@ -208,11 +206,11 @@ consider citing it:
 
 (Feel free to also give the project a star on GitHub if you like it.)
 
-### Funding
+## Funding
 
 The main author (Felix Koehler) is a PhD student in the group of [Prof. Thuerey at TUM](https://ge.in.tum.de/) and his research is funded by the [Munich Center for Machine Learning](https://mcml.ai/).
 
-### License
+## License
 
 MIT, see [here](https://github.com/Ceyron/apebench/blob/main/LICENSE.txt)
 
