@@ -19,9 +19,12 @@
 </p>
 
 <p align="center">
-<a href="https://github.com/tum-pbs/apebench-paper">
-    📝 Paper Project Page
-</a>
+    <a href="https://arxiv.org/abs/2411.00180">
+        📄 Paper
+    </a> •
+    <a href="https://tum-pbs.github.io/apebench-paper/">
+        🧵 Project Page
+    </a>
 </p>
 
 <p align="center">
