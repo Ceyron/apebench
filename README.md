@@ -188,8 +188,10 @@ dataclass.
 
 ### Citation
 
-This package was developed as part of the [APEBench paper (arxiv.org/abs/2411.00180)](https://arxiv.org/abs/2411.00180) (accepted at Neurips
-2024).
+This package was developed as part of the [APEBench paper
+(arxiv.org/abs/2411.00180)](https://arxiv.org/abs/2411.00180) (accepted at
+Neurips 2024). If you find this package useful for your research, please
+consider citing it:
 
 ```bibtex
 @article{koehler2024apebench,
@@ -200,6 +202,8 @@ This package was developed as part of the [APEBench paper (arxiv.org/abs/2411.00
   year={2024}
 }
 ```
+
+(Feel free to also give the project a star on GitHub if you like it.)
 
 ### Funding
 
