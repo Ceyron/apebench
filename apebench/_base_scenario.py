@@ -156,6 +156,82 @@ class BaseScenario(eqx.Module, ABC):
 
         return optimizer
 
+    def _produce_ic_set(
+        self,
+        *,
+        stepper: BaseStepper,
+        num_samples: int,
+        key: PRNGKeyArray,
+    ) -> Float[Array, "num_samples num_channels *num_points"]:
+        """
+        Generate the number of initial conditions as samples requested and
+        discretize them on the grid. Requires the `stepper` to warmup the
+        initial conditions if necessary.
+        """
+        ic_distribution = self.get_ic_generator()
+        ic_set = ex.build_ic_set(
+            ic_distribution,
+            num_points=self.num_points,
+            num_samples=num_samples,
+            key=key,
+        )
+        if self.num_warmup_steps > 0:
+            ic_set = jax.vmap(
+                ex.repeat(
+                    stepper,
+                    self.num_warmup_steps,
+                )
+            )(ic_set)
+        return ic_set
+
+    def get_train_ic_set(
+        self,
+    ) -> Float[Array, "num_train_samples num_channels *num_points"]:
+        """
+        Use the attributes to produce the reference training initial condition set.
+        """
+        return self._produce_ic_set(
+            stepper=self.get_ref_stepper(),
+            num_samples=self.num_train_samples,
+            key=jax.random.PRNGKey(self.train_seed),
+        )
+
+    def get_train_ic_set_coarse(
+        self,
+    ) -> Float[Array, "num_train_samples num_channels *num_points"]:
+        """
+        Use the attributes to produce training initial conditions with the coarse stepper instead.
+        """
+        return self._produce_ic_set(
+            stepper=self.get_coarse_stepper(),
+            num_samples=self.num_train_samples,
+            key=jax.random.PRNGKey(self.train_seed),
+        )
+
+    def get_test_ic_set(
+        self,
+    ) -> Float[Array, "num_test_samples num_channels *num_points"]:
+        """
+        Use the attributes to produce the reference testing initial condition set.
+        """
+        return self._produce_ic_set(
+            stepper=self.get_ref_stepper(),
+            num_samples=self.num_test_samples,
+            key=jax.random.PRNGKey(self.test_seed),
+        )
+
+    def get_test_ic_set_coarse(
+        self,
+    ) -> Float[Array, "num_test_samples num_channels *num_points"]:
+        """
+        Use the attributes to produce testing initial conditions with the coarse stepper instead.
+        """
+        return self._produce_ic_set(
+            stepper=self.get_coarse_stepper(),
+            num_samples=self.num_test_samples,
+            key=jax.random.PRNGKey(self.test_seed),
+        )
+
     def produce_data(
         self,
         *,
