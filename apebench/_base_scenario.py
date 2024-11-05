@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Callable
+from typing import Callable, Optional, Union
 
 import equinox as eqx
 import exponax as ex
@@ -781,6 +781,75 @@ class BaseScenario(eqx.Module, ABC):
                 results[metric_config] = exec_func(neural_stepper)[None]
             else:
                 results[metric_config] = eqx.filter_vmap(exec_func)(neural_stepper)
+
+        return results
+
+    def perform_tests_on_rollout(
+        self,
+        neural_rollout: Union[
+            Float[
+                Array,
+                "num_samples test_temporal_horizon num_channels *num_points",
+            ],
+            Float[
+                Array,
+                "num_seeds num_samples test_temporal_horizon num_channels *num_points",
+            ],
+        ],
+        test_data_no_init: Optional[
+            Float[
+                Array,
+                "num_samples test_temporal_horizon num_channels *num_points",
+            ]
+        ] = None,
+    ) -> Union[
+        dict[str, Float[Array, "test_temporal_horizon"]],
+        dict[str, Float[Array, "num_seeds test_temporal_horizon"]],
+    ]:
+        if test_data_no_init is None:
+            test_data_no_init = self.get_test_data()[:, 1:]
+
+        if neural_rollout.shape == test_data_no_init.shape:
+            multi_seed = False
+        else:
+            if neural_rollout.shape[1:] == test_data_no_init.shape:
+                multi_seed = True
+            else:
+                raise ValueError(
+                    f"""The shape of the neural rollout is {neural_rollout.shape}
+                    and the shape of the test data is {test_data_no_init.shape}. They should
+                    either be the same or the neural rollout should have an additional
+                    leading axis for the seeds."""
+                )
+
+        metric_function_dict = self.get_metric_fns()
+
+        results = {}
+
+        for metric_config, func in metric_function_dict.items():
+            if multi_seed:
+                func_vectorized = jax.vmap(
+                    jax.vmap(
+                        func,
+                        # Vectorize over time steps
+                        in_axes=(1, 2),
+                    ),
+                    # Vectorize over seeds (but broadcast the reference)
+                    in_axes=(0, None),
+                )
+            else:
+                func_vectorized = jax.vmap(
+                    func,
+                    # Vectorize over time steps
+                    in_axes=(1, 1),
+                )
+
+            metric_rollout = func_vectorized(neural_rollout, test_data_no_init)
+            if not multi_seed:
+                # Add singletone seed axis for compatibility with `perform_tests`
+                metric_rollout = metric_rollout[None]
+
+            results[metric_config] = metric_rollout
 
         return results
 
