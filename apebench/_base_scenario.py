@@ -832,7 +832,7 @@ class BaseScenario(eqx.Module, ABC):
                     jax.vmap(
                         func,
                         # Vectorize over time steps
-                        in_axes=(1, 2),
+                        in_axes=(1, 1),
                     ),
                     # Vectorize over seeds (but broadcast the reference)
                     in_axes=(0, None),
