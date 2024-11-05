@@ -122,17 +122,30 @@ APEBench encapsulates the entire pipeline of training and evaluating an
 autoregressive neural emulator in a scenario. A scenario is a callable
 dataclass.
 
-## Acknowledgements
+## Citation
 
-### Citation
+This package was developed as part of the [APEBench paper
+(arxiv.org/abs/2411.00180)](https://arxiv.org/abs/2411.00180) (accepted at
+Neurips 2024). If you find it useful for your research, please consider citing
+it:
 
-This package was developed as part of the `APEBench paper` (accepted at Neurips 2024), we will soon add the citation here.
+```bibtex
+@article{koehler2024apebench,
+  title={{APEBench}: A Benchmark for Autoregressive Neural Emulators of {PDE}s},
+  author={Felix Koehler and Simon Niedermayr and R{\"}udiger Westermann and Nils Thuerey},
+  journal={Advances in Neural Information Processing Systems (NeurIPS)},
+  volume={38},
+  year={2024}
+}
+```
 
-### Funding
+(Feel free to also give the project a star on GitHub if you like it.)
+
+## Funding
 
 The main author (Felix Koehler) is a PhD student in the group of [Prof. Thuerey at TUM](https://ge.in.tum.de/) and his research is funded by the [Munich Center for Machine Learning](https://mcml.ai/).
 
-### License
+## License
 
 MIT, see [here](https://github.com/Ceyron/apebench/blob/main/LICENSE.txt)
 
