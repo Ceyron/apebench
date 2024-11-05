@@ -126,7 +126,19 @@ dataclass.
 
 ### Citation
 
-This package was developed as part of the `APEBench paper` (accepted at Neurips 2024), we will soon add the citation here.
+This package was developed as part of the [APEBench paper
+(arxiv.org/abs/2411.00180)](https://arxiv.org/abs/2411.00180) (accepted at
+Neurips 2024).
+
+```bibtex
+@article{koehler2024apebench,
+  title={{APEBench}: A Benchmark for Autoregressive Neural Emulators of {PDE}s},
+  author={Felix Koehler and Simon Niedermayr and R{\"}udiger Westermann and Nils Thuerey},
+  journal={Advances in Neural Information Processing Systems (NeurIPS)},
+  volume={38},
+  year={2024}
+}
+```
 
 ### Funding
 
