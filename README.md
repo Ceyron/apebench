@@ -126,6 +126,8 @@ by running
 streamlit run explore_sample_data_streamlit.py
 ```
 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://apebench-app-mca2jmqzxmoap6zdm2uvcb.streamlit.app/)
+
 ## Documentation
 
 Documentation is a available at
