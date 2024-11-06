@@ -806,6 +806,41 @@ class BaseScenario(eqx.Module, ABC):
         dict[str, Float[Array, "test_temporal_horizon"]],
         dict[str, Float[Array, "num_seeds test_temporal_horizon"]],
     ]:
+        """
+        Compute all error metrics of the `report_metrics` attribute on an
+        externally produce rollout.
+
+        !!! tip
+
+            Use this function to benchmark external models by producing the
+            initial states with `scenario.get_test_ic_set()`, roll them out in
+            their respective framework for `test_temporal_horizon` steps, and
+            then call this function on the produced rollout. (Some frameworks
+            require different array formats, e.g.,
+            [TensorFlow](https://github.com/tensorflow/tensorflow) and
+            [Flax](https://github.com/google/flax) are typically channels-last.
+            Hence, some reshaping might be necessary.)
+
+        !!! warning
+
+            The `neural_rollout` must **not** contain the initial conditions as
+            the zeroth frame.
+
+        **Arguments:**
+
+        - `neural_rollout`: The neural rollout to be tested.
+        - `test_data_no_init`: The test data without the initial conditions.
+            If not provided, the test data is procedurally generated.
+
+        **Returns:**
+
+        - `results`: A dictionary with the metric names as keys and the error
+            rollouts. The rollout arrays always have a leading `num_seeds` axis,
+            even if the `neural_rollout` did not. This is to ensure
+            compatibility with the `perform_tests` function. Certainly, this
+            will be a singleton axis if `neural_rollout` did not have a leading
+            axis.
+        """
         if test_data_no_init is None:
             test_data_no_init = self.get_test_data()[:, 1:]
 
