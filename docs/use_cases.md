@@ -11,9 +11,12 @@ I want to:
        the full pipeline of APEBench (no differentiable physics, for example).
        But you can still [scrape datasets](examples/scrape_datasets.ipynb) for
        purely data-driven training in different ecosystems and you can evaluate
-       your architectures (TODO add link) by rolling them out in your ecosystem
-       of choice and casting the results back to JAX arrays and using APEBench's
-       metric system.
+       your architectures (guides for
+       [PyTorch](examples/benchmark_pytorch_models.ipynb), [Flax with `linen`
+       API](examples/benchmark_flax_models_with_linen.ipynb), and [Flax with
+       `nnx` API](examples/benchmark_flax_models_with_nnx.ipynb)) by rolling
+       them out in your ecosystem of choice and casting the results back to JAX
+       arrays and using APEBench's metric system.
 2. **Create datasets** Consider using the [scraping API](examples/scrape_datasets.ipynb).
 3. **Conduct studies** Learn about the [typical workflow of
    APEBench](typical_workflow.md) and consider [using the command line interface
