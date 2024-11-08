@@ -96,6 +96,7 @@ nav:
             - Extending Components: 'examples/component_extensions.ipynb'
         - Advanced:
             - Benchmark Flax nnx models: 'examples/benchmark_flax_models_with_nnx.ipynb'
+            - Benchmark Flax linen models: 'examples/benchmark_flax_models_with_linen.ipynb'
             - Randomness & Reproducibility: 'examples/sources_of_randomness_and_reproducibility.ipynb'
             - Difficulty & Receptive Field in 1D Advection: 'examples/difficulty_and_receptive_field_advection_1d.ipynb'
     - Scenarios:
