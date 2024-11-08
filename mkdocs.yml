@@ -98,6 +98,7 @@ nav:
             - Randomness & Reproducibility: 'examples/sources_of_randomness_and_reproducibility.ipynb'
         - Studies:
             - Unrolled Training for high Difficulty: 'studies/unrolled_training_for_high_difficulty.ipynb'
+            - Performance across Metrics: 'studies/performance_across_metrics.ipynb'
             - Difficulty & Receptive Field in 1D Advection: 'studies/difficulty_and_receptive_field_advection_1d.ipynb'
     - Scenarios:
         - Overview: 'api/scenarios/overview.md'
