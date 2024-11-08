@@ -97,6 +97,7 @@ nav:
         - Advanced:
             - Randomness & Reproducibility: 'examples/sources_of_randomness_and_reproducibility.ipynb'
         - Studies:
+            - Overview: 'studies/overview.md'
             - Unrolled Training for high Difficulty: 'studies/unrolled_training_for_high_difficulty.ipynb'
             - Performance across Metrics: 'studies/performance_across_metrics.ipynb'
             - FNO & Active Modes: 'studies/fno_and_active_modes.ipynb'
