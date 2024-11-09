@@ -215,7 +215,8 @@ parallel training. Ultimately, the seeds investigated will be `range(start_seed,
 
 How many seeds to investigate in parallel. Oftentimes, trainings in 1D or 2D
 with low resolution (low [`num_points`](#num_points)) can be done in parallel to
-obtain seed statistics virtually for free. If you are on a modern GPU, a good rule of thumb:
+obtain seed statistics virtually for free. If you are on a modern GPU, a good
+rule of thumb is:
 
 - 1D with <200 points: 5-20 seeds in parallel possible
 - 1D in higher resolution: 1-5 seeds in parallel
