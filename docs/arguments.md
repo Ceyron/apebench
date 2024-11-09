@@ -208,7 +208,20 @@ library](https://github.com/Ceyron/trainax) for more details.
 
 ### `start_seed`
 
+The integer at which the lists of seeds start if the scenario is executed with
+parallel training. Ultimately, the seeds investigated will be `range(start_seed, start_seed + num_seeds)`.
+
 ### `num_seeds`
+
+How many seeds to investigate in parallel. Oftentimes, trainings in 1D or 2D
+with low resolution (low [`num_points`](#num_points)) can be done in parallel to
+obtain seed statistics virtually for free. If you are on a modern GPU, a good rule of thumb:
+
+- 1D with <200 points: 5-20 seeds in parallel possible
+- 1D in higher resolution: 1-5 seeds in parallel
+- 2D with <64 points: 1-3 seeds in parallel
+- Anything else: only one seed at a time (run seed statistics sequentially or
+  [distribute over multiple GPUs](using_cli.md))
 
 ### `remove_singleton_axis`
 
