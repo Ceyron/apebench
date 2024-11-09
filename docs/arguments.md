@@ -226,6 +226,17 @@ rule of thumb is:
 
 ### `remove_singleton_axis`
 
+**Only avarible when directly executing a scenario** (i.e., not in the
+experimental or study interface). If `True` and `num_seeds=1`, the returned
+`neural_stepper_s`'s internal weight arrays will not have a leading singleton
+axis and they can directly operate on state arrays. If `False` or `num_seeds >
+1`, there will always be a leading axis which represents the different seeds
+trained in parallel.
+
+!!! warning
+
+    Models with a leading seed axis in their weight arrays cannot directly operate on state arrays (due to shape mismatches). In this case, they have to be wrapped in [equinox.filter_vmap](https://docs.kidger.site/equinox/api/transformations/#equinox.filter_vmap).
+
 ### `num_spatial_dims`
 
 ### `num_points`
