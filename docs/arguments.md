@@ -276,6 +276,23 @@ Fourier pseudo-spectral solver underlying APEBench) for more details.
 
 ### `num_channels`
 
+Typical default: overwritten by the specific scenario, although most scenarios in APEBench are single-channel.
+
+The number of channels of the underlying PDE. For example, the advection
+equation always has one channel indepent of the
+[`num_spatial_dims`](#num_spatial_dims) whereas for the Burgers scenarios, the
+number of channels is equal to the number of spatial dimensions
+
+This is not an argument which is supposed to be modified.
+
+!!! info
+
+    The number of channels affect the parameter counts of the neural steppers (slightly) since their first and last layers are channel-dependent.
+
+!!! info
+
+    By default, the distribution of initial conditions (as described by [`ic_config`](#ic_config)) is the same for all channels (of course the concrete randome variates are drawn with effectively different seeds).
+
 ### `ic_config`
 
 ### `num_warmup_steps`
