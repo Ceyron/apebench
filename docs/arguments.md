@@ -239,6 +239,17 @@ trained in parallel.
 
 ### `num_spatial_dims`
 
+Typical default: `1`
+
+An integer describing the number of spatial dimensions of the problem. Must be
+`1`, `2`, or `3`. Note that some scenarios (e.g., the [Kolmogorov
+Flow](api/scenarios/physical/navier_stokes.md)) only work with some spatial
+dimensions. Since the default is always `1`, this argument must be set for these scenarios.
+
+!!! warning
+
+    With increasing spatial dimension scenarios become more challenging, not just in terms of how hard it is for the emulator obtain good results, but also in terms of the scenario's memory footprint and compute cost. Keep in mind, that the number of total degrees of freedom scale exponentially via $\propto N^D$.
+
 ### `num_points`
 
 ### `num_channels`
