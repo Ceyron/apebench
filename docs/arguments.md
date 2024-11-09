@@ -252,6 +252,28 @@ dimensions. Since the default is always `1`, this argument must be set for these
 
 ### `num_points`
 
+Typical default: `160`
+
+The number of spatial degrees of freedom **per spatial dimension**. Must be an
+integer. The total number of degrees of freedom per channel is `num_points **
+num_spatial_dims`. Note that since APEBench is designed for **periodic
+domains**, the left end of the domain is considered a degree of freedom, while
+the right end is not. See [this tutorial of
+Exponax](https://fkoehler.site/exponax/examples/simple_advection_example_1d/) (the
+Fourier pseudo-spectral solver underlying APEBench) for more details.
+
+!!! note
+
+    Also, all the data trajectories that can be produced by a scenario, e.g., by `scenario.get_train_data()`, will not have a degree of freedom at the right end of the domain. For visualizing this data, it can be helpful to periodically wrap the left boundary. This can be done with [`exponax.wrap_bc`](https://fkoehler.site/exponax/api/utilities/grid_generation/#exponax.wrap_bc). Exponax is also exported under `apebench.exponax`. Alternatively, all visualization routines of Exponax (e.g., [here](https://fkoehler.site/exponax/api/utilities/visualization/plot_states/)) already take care of this.
+
+!!! warning
+
+   Except for the most recent generation of hardware, running `num_points=160`
+   with `num_spatial_dims=3` under otherwise default settings is intractable
+   ($160^3 \approx 4 \times 10^6$ degrees of freedom per channel). The [APEBench
+   paper](https://arxiv.org/abs/2411.00180) resorted to `num_points=32` for its
+   3D runs on 12GB RTX 2080 Ti GPUs.
+
 ### `num_channels`
 
 ### `ic_config`
