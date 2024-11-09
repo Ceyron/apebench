@@ -200,6 +200,12 @@ This naturally extends to **supervised unrolled** training in which the neural
 stepper is autoregressively unrolled for the specified number of steps. This is
 achieved via `"sup;T"` with `T` being the number of steps.
 
+Beyond that, APEBench supports diverted chain training, in which the reference
+simulator is used differentiably. A simple diverted chain setup with branch
+length one is available via `"div;T"`. See the [APEBench
+paper](https://arxiv.org/abs/2411.00180) and the [Trainax
+library](https://github.com/Ceyron/trainax) for more details.
+
 ### `start_seed`
 
 ### `num_seeds`
