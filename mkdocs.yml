@@ -102,6 +102,7 @@ nav:
             - Performance across Metrics: 'studies/performance_across_metrics.ipynb'
             - FNO & Active Modes: 'studies/fno_and_active_modes.ipynb'
             - Difficulty & Receptive Field in 1D Advection: 'studies/difficulty_and_receptive_field_advection_1d.ipynb'
+            - Difficulty & Receptive Field in 1D Diffusion: 'studies/difficulty_and_receptive_field_diffusion_1d.ipynb'
     - Scenarios:
         - Overview: 'api/scenarios/overview.md'
         - Base Scenario: 'api/scenarios/base.md'
