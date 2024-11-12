@@ -15,6 +15,13 @@ pip install -U "jax[cuda12]"
 pip install apebench
 ```
 
+## APEBench Paper
+
+Accepted at Neurips 2024:
+
+- [📄 Paper](https://arxiv.org/abs/2411.00180)
+- [🧵 Project Page](https://tum-pbs.github.io/apebench-paper/)
+
 ## Quickstart
 
 Train a ConvNet to emulate 1D advection, display train loss, test error metric
