@@ -20,6 +20,7 @@ from ._run import (
 from ._utils import (
     aggregate_gmean,
     check_for_nan,
+    cumulative_aggregation,
     melt_data,
     melt_loss,
     melt_metrics,
@@ -57,4 +58,5 @@ __all__ = [
     "split_train",
     "components",
     "check_for_nan",
+    "cumulative_aggregation",
 ]

@@ -254,7 +254,7 @@ def check_for_nan(scene: BaseScenario):
         return
 
 
-def aggregate_expanding(
+def cumulative_aggregation(
     df: pd.DataFrame,
     grouping_cols: Union[str, list[str]],
     rolling_col: str,
