@@ -403,6 +403,34 @@ def compute_pvalues_against_best(
         |          50 |                 1 |            0.0001 |           0.0457 |
         |         100 |                 1 |            0      |           0.0601 |
         |         200 |                 1 |            0      |           0.0479 |
+
+        We can also visualize the p-values over time:
+        ```python
+        import seaborn as sns
+        import matplotlib.pyplot as plt
+
+        p_value_df = apebench.compute_pvalues_against_best(
+            metric_df, ["time_step",], ["net",], "mean_nRMSE", "mean"
+        )
+
+        sns.lineplot(
+            p_value_df,
+            x="time_step",
+            y="p_value",
+            hue="net",
+        )
+        plt.hlines(0.05, 0, 200, linestyles="--", colors="black")
+
+        plt.yscale("log")
+        ```
+        ![pvalue rollout over time](https://github.com/user-attachments/assets/4e99ed9b-735f-499c-8374-a7d9d94d1aca)
+
+        Since the p-value of the ConvNet (the best architecture according to its
+        mean performance) against the FNO is constantly below 0.05, we can
+        confidently say the ConvNet is significantly better than the FNO.
+        However, the UNet's performance's p-value is above 0.05 after ~50 time
+        steps and thus, for this temporal horizon, we cannot reject the null
+        hypothesis.
     """
     stats_df = (
         df.groupby(grouping_cols + sorting_cols, observed=True, group_keys=True)
