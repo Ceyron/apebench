@@ -344,6 +344,7 @@ def compute_pvalues_against_best(
     grouping_cols: list[str],
     sorting_cols: list[str],
     value_col: str,
+    performance_indicator="mean",
     alternative: Literal["two-sided", "less", "greater"] = "two-sided",
     equal_var: bool = True,
     pivot: bool = True,
@@ -359,6 +360,7 @@ def compute_pvalues_against_best(
     stats_df = (
         df.groupby(grouping_cols + sorting_cols, observed=True, group_keys=True)
         .agg(
+            performance_indicator=(value_col, performance_indicator),
             mean=(value_col, "mean"),
             std=(value_col, "std"),
             count=(value_col, "count"),
@@ -369,9 +371,9 @@ def compute_pvalues_against_best(
     stats_df = stats_df.groupby(grouping_cols, observed=True, group_keys=False).apply(
         lambda x: x.assign(
             p_value=stats.ttest_ind_from_stats(
-                mean1=x["mean"].values[x["mean"].argmin()],
-                std1=x["std"].values[x["mean"].argmin()],
-                nobs1=x["count"].values[x["mean"].argmin()],
+                mean1=x["mean"].values[x["performance_indicator"].argmin()],
+                std1=x["std"].values[x["performance_indicator"].argmin()],
+                nobs1=x["count"].values[x["performance_indicator"].argmin()],
                 mean2=x["mean"].values,
                 std2=x["std"].values,
                 nobs2=x["count"].values,
