@@ -12,4 +12,8 @@
 
 ---
 
+::: apebench.cumulative_aggregation
+
+---
+
 ::: apebench.relative_by_config
