@@ -360,6 +360,49 @@ def compute_pvalues_against_best(
     the p-value against the other configurations is below the significance level
     (typically 0.05), the best configuration can be considered significantly
     better.
+
+    !!! example
+
+        Test for the significantly better architecture when emulating advection
+        under `advection_gamma=2.0`.
+
+        ```python
+        CONFIGS = [
+            {
+                "scenario": "diff_adv",
+                "task": "predict",
+                "net": net,
+                "train": "one",
+                "start_seed": 0,
+                "num_seeds": 10,
+                "advection_gamma": 2.0,
+            }
+            for net in ["Conv;34;10;relu", "FNO;12;8;4;gelu", "UNet;12;2;relu"]
+        ]
+
+        metric_df, _, _, _ = apebench.run_study_convenience(
+            CONFIGS, "conv_vs_fno_vs_unet"
+        )
+
+        p_value_df_pivoted = apebench.compute_pvalues_against_best(
+            metric_df, ["time_step",], ["net",], "mean_nRMSE", pivot=True
+        )
+
+        print(
+            p_value_df_pivoted.query(
+                "time_step in [1, 5, 10, 50, 100, 200]"
+            ).round(4).to_markdown()
+        )
+        ```
+
+        |   time_step |   Conv;34;10;relu |   FNO;12;8;4;gelu |   UNet;12;2;relu |
+        |------------:|------------------:|------------------:|-----------------:|
+        |           1 |                 1 |            0.0017 |           0      |
+        |           5 |                 1 |            0.0013 |           0      |
+        |          10 |                 1 |            0.0007 |           0      |
+        |          50 |                 1 |            0.0001 |           0.0457 |
+        |         100 |                 1 |            0      |           0.0601 |
+        |         200 |                 1 |            0      |           0.0479 |
     """
     stats_df = (
         df.groupby(grouping_cols + sorting_cols, observed=True, group_keys=True)
