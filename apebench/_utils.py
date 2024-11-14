@@ -347,7 +347,7 @@ def compute_pvalues_against_best(
     performance_indicator="mean",
     alternative: Literal["two-sided", "less", "greater"] = "two-sided",
     equal_var: bool = True,
-    pivot: bool = True,
+    pivot: bool = False,
 ):
     """
     Performs a t-test of the best configuration in a group against all other
