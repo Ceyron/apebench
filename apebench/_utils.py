@@ -361,6 +361,44 @@ def compute_pvalues_against_best(
     (typically 0.05), the best configuration can be considered significantly
     better.
 
+    **Arguments:**
+
+    - `df`: The DataFrame to compute the p-values for.
+    - `grouping_cols`: The columns to group by. Select the `grouping_cols` such
+      that when `df.groupby(grouping_cols + sorting_cols)` is called, the groups
+      only contains single samples to be used for the hypothesis test. For
+      example, if you want to compare network architecture and training
+      methodology for all time steps and investigated scenarios, then you would
+      use `grouping_cols = ["scenario", "time_step"]` together with
+      `sorting_cols = ["net", "train"]`.
+    - `sorting_cols`: The columns to sort by. Once the dataframe is grouped by
+      `grouping_cols`, the configuration out of all combinations in
+      `sorting_cols` with the lowest aggregated value (typically the mean) is
+      considered the best.
+    - `value_col`: The column to use for the hypothesis test. Typically, this is
+      the column with a test metric. (The default metric in APEBench is
+      `mean_nRMSE`.)
+    - `performance_indicator`: The aggregation to determine the best
+      configuration. Typically, this is the mean, which is also what is checked
+      with the hypothesis test.
+    - `alternative`: The alternative hypothesis to test. Must be one of
+      `"two-sided"`, `"less"`, or `"greater"`.
+    - `equal_var`: Whether to assume equal variance in the two samples. (This is
+      a parameter of the t-test.)
+    - `pivot`: Whether to pivot the DataFrame to have the p-values in a matrix
+        form. This is useful for directly comparing across the `sorting_cols`.
+
+    See also [this SciPy
+    page](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html)
+    for more details on the t-test.
+
+    **Returns:**
+
+    - A DataFrame with the p-values of the hypothesis test. If `pivot` is
+      `True`,
+        the DataFrame is pivoted such that the p-values are in a matrix form.
+
+
     !!! example
 
         Test for the significantly better architecture when emulating advection
