@@ -261,6 +261,68 @@ def cumulative_aggregation(
     agg_fn_name: str = "mean",
     prefix: str = "cum",
 ) -> pd.DataFrame:
+    """
+    Apply a cumulative aggregation to a DataFrame. This can be used to
+    cumulatively aggregate a metric over time.
+
+    If you are only interested in the aggregation over some rows (but not
+    cumulatively), you can use the [`apebench.aggregate_gmean`][] function.
+
+    **Arguments:**
+
+    - `df`: The DataFrame to aggregate.
+    - `grouping_cols`: The columns to group by. Supply a list of column names
+      such that if `df.groupby(grouping_cols)` is called, the groups contain
+      only different time steps (or whatever you want to aggregate over).
+    - `rolling_col`: The column to aggregate. Ususally, this is the name of the
+      metric in a long DataFrame.
+    - `agg_fn_name`: The aggregation function to use. Must be one of `"mean"`
+      or, `"gmean"` (geometric mean), or `"sum"`.
+
+    **Returns:**
+
+    - A DataFrame with the cumulatively aggregated columns added.
+
+    !!! example
+
+        Train a feedforward ConvNet to emulate advection and then display the
+        mean nRMSE error rollout and the cumulative mean/gmean mean nRMSE error
+        rollout. The only column that varies is the `"see"` column, so we group
+        by that.
+
+        ```python
+        import apebench
+        advection_scenario = apebench.scenarios.difficulty.Advection()
+
+        data, trained_net = advection_scenario(num_seeds=3)
+
+        metric_data = apebench.melt_metrics(data)
+
+        metric_df = apebench.cumulative_aggregation(
+            metric_df, "seed", "mean_nRMSE", agg_fn_name="mean"
+        )
+        metric_df = apebench.cumulative_aggregation(
+            metric_df, "seed", "mean_nRMSE", agg_fn_name="gmean"
+        )
+
+        fig, ax = plt.subplots()
+        sns.lineplot(
+            data=metric_df, x="time_step",
+            y="mean_nRMSE", ax=ax, label="original"
+        )
+        sns.lineplot(
+            data=metric_df, x="time_step",
+            y="cummean_mean_nRMSE", ax=ax, label="cummean"
+        )
+        sns.lineplot(
+            data=metric_df, x="time_step",
+            y="cumgmean_mean_nRMSE", ax=ax, label="cumgmean"
+        )
+        ```
+
+        ![Metric Rollout absolutely and cumulatively aggregated via mean and
+        gmean](https://github.com/user-attachments/assets/ba342f26-a6ef-4a67-8a2c-2b1d94ddfde1)
+    """
     agg_fn = {
         "mean": np.mean,
         "gmean": stats.gmean,
