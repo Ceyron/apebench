@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Literal, Union
 
 import jax
 import jax.numpy as jnp
@@ -337,3 +337,57 @@ def cumulative_aggregation(
             }
         )
     )
+
+
+def compute_pvalues_against_best(
+    df: pd.DataFrame,
+    grouping_cols: list[str],
+    sorting_cols: list[str],
+    value_col: str,
+    alternative: Literal["two-sided", "less", "greater"] = "two-sided",
+    equal_var: bool = True,
+    pivot: bool = True,
+):
+    """
+    Performs a t-test of the best configuration in a group against all other
+    configurations and returns the p-values. "Best" is defined as the
+    configuration with the lowest aggregated value (typically the mean).
+
+    Computes the pvalues against the element in the `sorting_cols` with the
+    lowest mean value.
+    """
+    stats_df = (
+        df.groupby(grouping_cols + sorting_cols, observed=True, group_keys=True)
+        .agg(
+            mean=(value_col, "mean"),
+            std=(value_col, "std"),
+            count=(value_col, "count"),
+        )
+        .reset_index()
+    )
+
+    stats_df = stats_df.groupby(grouping_cols, observed=True, group_keys=False).apply(
+        lambda x: x.assign(
+            p_value=stats.ttest_ind_from_stats(
+                mean1=x["mean"].values[x["mean"].argmin()],
+                std1=x["std"].values[x["mean"].argmin()],
+                nobs1=x["count"].values[x["mean"].argmin()],
+                mean2=x["mean"].values,
+                std2=x["std"].values,
+                nobs2=x["count"].values,
+                alternative=alternative,
+                equal_var=equal_var,
+            ).pvalue
+        )
+    )
+
+    if not pivot:
+        return stats_df
+
+    p_value_df = stats_df.pivot(
+        index=grouping_cols,
+        columns=sorting_cols,
+        values="p_value",
+    )
+
+    return p_value_df

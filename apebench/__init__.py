@@ -20,6 +20,7 @@ from ._run import (
 from ._utils import (
     aggregate_gmean,
     check_for_nan,
+    compute_pvalues_against_best,
     cumulative_aggregation,
     melt_data,
     melt_loss,
@@ -59,4 +60,5 @@ __all__ = [
     "components",
     "check_for_nan",
     "cumulative_aggregation",
+    "compute_pvalues_against_best",
 ]
