@@ -354,8 +354,12 @@ def compute_pvalues_against_best(
     configurations and returns the p-values. "Best" is defined as the
     configuration with the lowest aggregated value (typically the mean).
 
-    Computes the pvalues against the element in the `sorting_cols` with the
-    lowest mean value.
+    The returned DataFrame can be interpreted in that the best configuation has
+    a p-value of 1.0 against itself (or 0.5 in case `alternative` is not
+    `"two-sided"`) and a lower p-value against all other configurations. Only if
+    the p-value against the other configurations is below the significance level
+    (typically 0.05), the best configuration can be considered significantly
+    better.
     """
     stats_df = (
         df.groupby(grouping_cols + sorting_cols, observed=True, group_keys=True)
