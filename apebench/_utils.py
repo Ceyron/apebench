@@ -2,7 +2,9 @@ from typing import Union
 
 import jax
 import jax.numpy as jnp
+import numpy as np
 import pandas as pd
+from scipy import stats
 from scipy.stats import gmean
 
 from ._base_scenario import BaseScenario
@@ -250,3 +252,26 @@ def check_for_nan(scene: BaseScenario):
         del test_data_coarse
     except NotImplementedError:
         return
+
+
+def aggregate_expanding(
+    df: pd.DataFrame,
+    grouping_cols: Union[str, list[str]],
+    rolling_col: str,
+    agg_fn_name: str = "mean",
+    prefix: str = "cum",
+) -> pd.DataFrame:
+    agg_fn = {
+        "mean": np.mean,
+        "gmean": stats.gmean,
+        "sum": np.sum,
+    }[agg_fn_name]
+    return df.groupby(grouping_cols, observed=True, group_keys=False).apply(
+        lambda x: x.assign(
+            **{
+                f"{prefix}{agg_fn_name}_{rolling_col}": x[rolling_col]
+                .expanding()
+                .apply(agg_fn)
+            }
+        )
+    )
